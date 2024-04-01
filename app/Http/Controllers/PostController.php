@@ -17,5 +17,6 @@ class PostController extends Controller
             'allbikes' => $allbikes,
             'users' => $users
         ]);
+
     }
 }
