@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ownerName');
-            $table->string('content_id');
-            $table->integer('like_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('content_id');
+            $table->foreign('content_id')->references('id')->on('contents')->onDelete('cascade');
+
+            $table->unsignedBigInteger('like_id')->nullable();
+            $table->foreign('like_id')->references('id')->on('likes')->onDelete('cascade');
+
             $table->unsignedBigInteger('comment_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('ownerName')->references('id')->on('users');
-            $table->foreign('content_id')->references('id')->on('contents');
-            $table->foreign('likes_id')->references('id')->on('likes');
-            $table->foreign('comment_id')->references('id')->on('comments');
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
 
 
 
