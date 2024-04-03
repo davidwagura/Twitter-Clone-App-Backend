@@ -35,6 +35,11 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($id);
         return response()->json($tweet);
+    }
 
+    public function tweetComments($id)
+    {
+        $comment = Comment::where('tweet_id', $id)->get();
+        return response()->json($comment);
     }
 }

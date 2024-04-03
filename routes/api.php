@@ -8,3 +8,4 @@ use App\Models\Tweet;
 Route::post('/tweet', [TweetController::class, 'tweet']);
 Route::post('/tweet/comment', [TweetController::class, 'comment']);
 Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
+Route::get('/comment/{id}', [TweetController::class, 'tweetComments']);
