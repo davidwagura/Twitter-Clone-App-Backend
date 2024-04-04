@@ -12,6 +12,9 @@ Route::post('/user', [TweetController::class, 'user']);
 
 Route::post('/tweet/comment', [TweetController::class, 'comment']);
 
+Route::post('/like/{id}', [TweetController::class, 'likeTweet']);
+
+
 
 
 

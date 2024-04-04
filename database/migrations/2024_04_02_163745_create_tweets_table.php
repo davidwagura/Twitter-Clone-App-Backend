@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('tweets', function (Blueprint $table) {
             $table->id();
             $table->longText('body');
+            $table->string('likes_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->integer('likes')->default(0);
             $table->integer('retweets')->default(0);

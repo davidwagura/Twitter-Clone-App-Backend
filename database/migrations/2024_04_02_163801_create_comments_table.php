@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('body');
+            $table->text('body');
             $table->unsignedBigInteger('tweet_id');
             $table->unsignedBigInteger('user_id');
             $table->integer('likes')->default(0);

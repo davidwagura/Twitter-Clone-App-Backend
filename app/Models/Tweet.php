@@ -9,6 +9,23 @@ class Tweet extends Model
 {
     use HasFactory;
 
+
+
+    protected $casts = [
+        'likes_id' => 'array',
+    ];
+
+    public function like($userId)
+    {
+        if (!in_array($userId, $this->likes_id)) {
+            $this->likes_id[] = $userId;
+            $this->save();
+        }
+    }
+
+
+
+
     public function user()
     {
         return $this->belongsTo(User::class);

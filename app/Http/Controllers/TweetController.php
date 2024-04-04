@@ -79,4 +79,15 @@ class TweetController extends Controller
         $tweet = Tweet::with('comment')->findOrFail($id);
         return response()->json($tweet);
     }
+
+    public function likeTweet(Request $request, $id)
+    {
+        $tweet = Tweet::findOrFail($id);
+        $userId = $request->user()->id; // Assuming authenticated user
+
+
+        $tweet->like($userId);
+
+        return response()->json($tweet);
+    }
 }
