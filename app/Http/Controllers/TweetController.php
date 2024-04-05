@@ -79,12 +79,28 @@ class TweetController extends Controller
         return response()->json($tweet);
     }
 
-    public function likeTweet(Request $request, $tweet_id, $user_id)
+    public function likeTweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
+
         $tweet->likes = $tweet->likes + 1;
-        $tweet->likes_id = $tweet->likes. ','. $user_id;
+
+        $likesId = $tweet->likes_id;
+
+        $likesId = explode(',' , $likesId);
+
+        if(!in_array($user_id, $likesId)) {
+            $user_id = $user_id;  
+
+            $likesId = $tweet->likes_id. ',' .$user_id;
+    
+            $tweet->likes_id = $likesId;
+        }
+
+
+
         $tweet->save();
+
         return response()->json($tweet);
 
     }
