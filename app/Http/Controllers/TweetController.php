@@ -75,19 +75,17 @@ class TweetController extends Controller
     }
     public function tweetComments($id)
     {
-        //('comment')->function name in model relationship
         $tweet = Tweet::with('comment')->findOrFail($id);
         return response()->json($tweet);
     }
 
-    public function likeTweet(Request $request, $id)
+    public function likeTweet(Request $request, $tweet_id, $user_id)
     {
-        $tweet = Tweet::findOrFail($id);
-        $userId = $request->user()->id; // Assuming authenticated user
-
-
-        $tweet->like($userId);
-
+        $tweet = Tweet::findOrFail($tweet_id);
+        $tweet->likes = $tweet->likes + 1;
+        $tweet->likes_id = $tweet->likes. ','. $user_id;
+        $tweet->save();
         return response()->json($tweet);
+
     }
 }
