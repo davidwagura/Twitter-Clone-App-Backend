@@ -85,16 +85,23 @@ class TweetController extends Controller
 
         $tweet->likes = $tweet->likes + 1;
 
-        $likesId = $tweet->likes_id;
 
-        $likesId = explode(',' , $likesId);
 
-        if(!in_array($user_id, $likesId)) {
-            $user_id = $user_id;  
+            $likesId = $tweet->likes_id;
+            
+        if($likesId > '1'){
 
-            $likesId = $tweet->likes_id. ',' .$user_id;
+            $likesId = explode(',' , $likesId);
+
+            if(!in_array($user_id, $likesId)) {
+                $user_id = $user_id;  
     
-            $tweet->likes_id = $likesId;
+                $likesId = $tweet->likes_id. ',' .$user_id;
+        
+                $tweet->likes_id = $likesId;
+            }
+        }else{
+            $tweet->likes_id = $user_id;
         }
 
 
