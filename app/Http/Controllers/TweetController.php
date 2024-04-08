@@ -88,7 +88,7 @@ class TweetController extends Controller
 
 
             $likesId = $tweet->likes_id;
-            
+
         if($likesId > '1'){
 
             $likesId = explode(',' , $likesId);
@@ -104,11 +104,13 @@ class TweetController extends Controller
             $tweet->likes_id = $user_id;
         }
 
-
-
         $tweet->save();
 
         return response()->json($tweet);
+    }
 
+    public function unlikeTweet()
+    {
+        
     }
 }
