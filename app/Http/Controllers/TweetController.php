@@ -109,8 +109,9 @@ class TweetController extends Controller
         return response()->json($tweet);
     }
 
-    public function unlikeTweet()
+    public function unlikeTweet($tweet_id, $user_id)
     {
-        
     }
+
+
 }
