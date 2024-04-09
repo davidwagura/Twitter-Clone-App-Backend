@@ -14,7 +14,7 @@ Route::post('/tweet/comment', [TweetController::class, 'comment']);
 
 Route::post('/like/{tweet_id}/{user_id}', [TweetController::class, 'likeTweet']);
 
-Route::post('/unlike/{tweet_id}/{user_id}', [TweetController::class, 'unlikeTweet']);
+Route::post('/unlike/{tweet_id}/{likes_id}', [TweetController::class, 'unlikeTweet']);
 
 
 

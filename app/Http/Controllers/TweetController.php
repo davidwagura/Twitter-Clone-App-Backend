@@ -111,7 +111,31 @@ class TweetController extends Controller
 
     public function unlikeTweet($tweet_id, $user_id)
     {
+        $tweet = Tweet::findOrFail($tweet_id);
+
+
+        $likesId = $tweet->likes_id;
+
+
+        $explodedLikesId = explode(',' , $likesId);
+
+
+        $index = array_search(strval($user_id), $explodedLikesId);
+        
+        if ($index !== false) {
+
+            unset($explodedLikesId[$index]);
+
+        }
+
+        $tweet->likes_id = implode(',', $explodedLikesId);
+
+        $tweet->likes = $tweet->likes - 1;
+
+        // \Log::debug($explodedLikesId);
+
+        $tweet->save();
+
+        return response()->json($tweet);
     }
-
-
 }
