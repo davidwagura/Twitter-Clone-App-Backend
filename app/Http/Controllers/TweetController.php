@@ -131,19 +131,34 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
+
         $retweetsId = $tweet->retweets_id;
+
 
         $explodedRetweetsId = explode(',' , $retweetsId);
 
+        // \Log::debug($explodedRetweetsId);
+
+
         $index = array_search(strval($user_id), $explodedRetweetsId);
 
+        // \Log::debug($index);
+
         if ($index !== false) {
+
             unset($explodedRetweetsId[$index]);
+
         }
 
         $tweet->retweets_id = implode(',', $explodedRetweetsId);
 
+        \Log::debug($tweet);
+
         $tweet->retweets = $tweet->retweets - 1;
+
+        $tweet->save();
+
+        return response()->json($tweet);
     }
 
     public function unlikeTweet($tweet_id, $user_id)
