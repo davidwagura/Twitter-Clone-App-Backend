@@ -19,8 +19,3 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 }
-        // if ($index !== false) {
-        //     unset($explodedLikesId[$index]);
-        // }
-
-        // $tweet->likes_id = implode(',', $explodedLikesId);

@@ -98,13 +98,42 @@ class TweetController extends Controller
         return response()->json($tweet);
     }
 
-    public function likeTweet($tweet_id, $user_id)
+    public function retweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $tweet->likes = $tweet->likes + 1;
+        $retweetsId = $tweet->retweets_id;
+
+        if($retweetsId > '1'){
+
+            $retweetsId = explode(',' , $retweetsId);
+
+            if(!in_array($user_id, $retweetsId)){
+
+                $user_id = $user_id;
+
+                $retweetsId = $tweet->retweets_id. ',' .$user_id;
+
+                $tweet->retweets_id = $retweetsId;
+
+                $tweet->retweets = $tweet->retweets + 1;
+            }
+
+                // \Log::debug($retweetsId);
+        } else {
+            $tweet->retweets_id = $user_id;
+        }
+
+        $tweet->save();
+
+        return response()->json($tweet);
+
+    }
 
 
+    public function likeTweet($tweet_id, $user_id)
+    {
+        $tweet = Tweet::findOrFail($tweet_id);
 
             $likesId = $tweet->likes_id;
 
@@ -118,6 +147,9 @@ class TweetController extends Controller
                 $likesId = $tweet->likes_id. ',' .$user_id;
         
                 $tweet->likes_id = $likesId;
+
+                $tweet->likes = $tweet->likes + 1;
+
             }
         }else{
             $tweet->likes_id = $user_id;
@@ -157,6 +189,7 @@ class TweetController extends Controller
 
         return response()->json($tweet);
     }
+
 
     public function deleteTweet($tweet_id)
     {
