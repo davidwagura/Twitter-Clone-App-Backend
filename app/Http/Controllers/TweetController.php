@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class TweetController extends Controller
 {
@@ -22,10 +23,15 @@ class TweetController extends Controller
     public function tweet(Request $request)
     {
         $tweet = new Tweet;
+
         $tweet->body = $request->body;
+
         $tweet->user_id = $request->user_id;
+
         // $tweet->likes = $request->likes;
+
         // $tweet->retweets = $request->retweets;
+
         $tweet->save();
 
         return response()->json($tweet);
@@ -34,10 +40,15 @@ class TweetController extends Controller
     public function user(Request $request)
     {
         $user = new User;
+
         $user->first_name = $request->first_name;
+
         $user->last_name = $request->last_name;
+
         $user->email = $request->email;
+
         $user->username = $request->username;
+
         $user->save();
 
         return response()->json($user);
@@ -46,9 +57,13 @@ class TweetController extends Controller
     public function comment(Request $request)
     {
         $comment = new Comment;
+
         $comment->body = $request->body;
+
         $comment->user_id = $request->user_id;
+
         $comment->tweet_id = $request->tweet_id;
+
         $comment->save();
 
         return response()->json($comment);
@@ -57,18 +72,21 @@ class TweetController extends Controller
     public function showTweet($id)
     {
         $tweet = Tweet::findOrFail($id);
+
         return response()->json($tweet);
     }
 
     public function comments($id)
     {
         $comment = Comment::where('tweet_id', $id)->get();
+
         return response()->json($comment);
     }
 
     public function userTweets($id)
     {
         // $comments = Comment::where( 'user_id', $id)->with( 'user')->get();
+
         $comments = Comment::where('tweet_id', $id)->with('tweet')->get();
 
         return response()->json($comments);
@@ -76,6 +94,7 @@ class TweetController extends Controller
     public function tweetComments($id)
     {
         $tweet = Tweet::with('comment')->findOrFail($id);
+
         return response()->json($tweet);
     }
 
@@ -138,4 +157,16 @@ class TweetController extends Controller
 
         return response()->json($tweet);
     }
-}
+
+    public function deleteTweet($tweet_id)
+    {
+        $tweet = Tweet::findOrFail($tweet_id);
+
+        $tweet->delete();
+
+        Session::flash('message', 'tweet deleted successfully');
+
+        return response()->json($tweet);
+    }
+
+}   
