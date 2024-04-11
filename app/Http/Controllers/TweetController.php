@@ -101,127 +101,128 @@ class TweetController extends Controller
     public function likeTweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
-
-            $likesId = $tweet->likes_id;
-
-        if($likesId > '1'){
-
-            $likesId = explode(',' , $likesId);
-
-            if(!in_array($user_id, $likesId)) {
-                $user_id = $user_id;  
     
-                $likesId = $tweet->likes_id. ',' .$user_id;
-        
-                $tweet->likes_id = $likesId;
+        $likesId = $tweet->likes_id;
+    
+        if (!empty($likesId)) {
 
-                $tweet->likes = $tweet->likes + 1;
+            $likesId = explode(',', $likesId);
 
+            if (!in_array($user_id, $likesId)) {
+
+                $likesId[] = $user_id;
+
+                $tweet->likes_id = implode(',', $likesId);
+
+                $tweet->likes++;
             }
-        }else{
+
+        } else {
+
             $tweet->likes_id = $user_id;
-        }
 
-        $tweet->save();
-
-        return response()->json($tweet);
-    }
-
-    public function unretweet($tweet_id, $user_id)
-    {
-        $tweet = Tweet::findOrFail($tweet_id);
-
-
-        $retweetsId = $tweet->retweets_id;
-
-
-        $explodedRetweetsId = explode(',' , $retweetsId);
-
-        // \Log::debug($explodedRetweetsId);
-
-
-        $index = array_search(strval($user_id), $explodedRetweetsId);
-
-        // \Log::debug($index);
-
-        if ($index !== false) {
-
-            unset($explodedRetweetsId[$index]);
+            $tweet->likes = 1;
 
         }
-
-        $tweet->retweets_id = implode(',', $explodedRetweetsId);
-
-        \Log::debug($tweet);
-
-        $tweet->retweets = $tweet->retweets - 1;
-
+    
         $tweet->save();
-
+    
         return response()->json($tweet);
     }
+    
 
     public function unlikeTweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
-
-
-        $likesId = $tweet->likes_id;
-
-
-        $explodedLikesId = explode(',' , $likesId);
-
-
-        $index = array_search(strval($user_id), $explodedLikesId);
         
-        if ($index !== false) {
+        $likesId = $tweet->likes_id;
+        
+        if (!empty($likesId)) {
 
-            unset($explodedLikesId[$index]);
+            $explodedLikesId = explode(',', $likesId);
 
+            $index = array_search(strval($user_id), $explodedLikesId);
+            
+            if ($index !== false) {
+
+                unset($explodedLikesId[$index]);
+
+                $tweet->likes_id = implode(',', $explodedLikesId);
+
+                $tweet->likes = max(0, $tweet->likes - 1);
+
+            }
+            // If likes array is empty, set likes to zero
+            if (empty($explodedLikesId)) {
+
+                $tweet->likes = 0;
+
+            }
+        } else {
+            
+            $tweet->likes = 0;
         }
-
-        $tweet->likes_id = implode(',', $explodedLikesId);
-
-        $tweet->likes = $tweet->likes - 1;
-
-        // \Log::debug($explodedLikesId);
-
+    
         $tweet->save();
-
+    
         return response()->json($tweet);
     }
-
-
+    
     public function retweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
-
+    
         $retweetsId = $tweet->retweets_id;
-
-        if($retweetsId > '1'){
+    
+        if(!empty($retweetsId)){
 
             $retweetsId = explode(',' , $retweetsId);
 
             if(!in_array($user_id, $retweetsId)){
 
-                $user_id = $user_id;
+                $retweetsId[] = $user_id;
 
-                $retweetsId = $tweet->retweets_id. ',' .$user_id;
+                $tweet->retweets_id = implode(',', $retweetsId);
 
-                $tweet->retweets_id = $retweetsId;
-
-                $tweet->retweets = $tweet->retweets + 1;
+                $tweet->retweets++;
             }
 
-                // \Log::debug($retweetsId);
         } else {
+
             $tweet->retweets_id = $user_id;
+
+            $tweet->retweets = 1;
         }
-
+    
         $tweet->save();
-
+    
         return response()->json($tweet);
+    }
+    
+    public function unretweet($tweet_id, $user_id)
+    {
+        $tweet = Tweet::findOrFail($tweet_id);
+    
+        $retweetsId = $tweet->retweets_id;
+    
+        if (!empty($retweetsId)) {
 
+            $explodedRetweetsId = explode(',' , $retweetsId);
+            
+            $index = array_search(strval($user_id), $explodedRetweetsId);
+    
+            if ($index !== false) {
+
+                unset($explodedRetweetsId[$index]);
+
+                $tweet->retweets_id = implode(',', $explodedRetweetsId);
+
+                $tweet->retweets = max(0, count($explodedRetweetsId));
+            }
+        }
+        $tweet->save();
+    
+        return response()->json($tweet);
     }
 
     public function deleteTweet($tweet_id)
