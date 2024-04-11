@@ -7,6 +7,7 @@ use App\Models\Tweet;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class TweetController extends Controller
 {
@@ -19,24 +20,42 @@ class TweetController extends Controller
 
     }
 
-
     public function tweet(Request $request)
     {
-        $tweet = new Tweet;
-
-        $tweet->body = $request->body;
-
-        $tweet->user_id = $request->user_id;
-
-        // $tweet->likes = $request->likes;
-
-        // $tweet->retweets = $request->retweets;
-
-        $tweet->save();
-
-        return response()->json($tweet);
+        $validator = Validator::make($request->all(), [
+            'body' => 'required',
+            'user_id' => ['required', 'integer', function ($attribute, $value, $fail) {
+                if (!is_int($value)) {
+                    $fail('The ' . $attribute . ' must be an integer.');
+                }  
+            }]
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+            ]);
+        }
+    
+        $tweet = Tweet::create([
+            'body' => $request->body,
+            'user_id' => $request->user_id
+        ]);
+    
+        if ($tweet) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Tweet created successfully'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tweet not created'
+            ]);
+        }
     }
-
+    
     public function user(Request $request)
     {
         $user = new User;
@@ -159,7 +178,7 @@ class TweetController extends Controller
 
             }
         } else {
-            
+
             $tweet->likes = 0;
         }
     
