@@ -254,36 +254,15 @@ class TweetController extends Controller
 
     public function resetPassword(Request $request, $user_id)
     {
+        $request->validate([
+            'password' => 'required|min:6|confirmed', // Laravel's built-in confirmed validation ensures password_confirmation matches password
+        ]);
+    
         $user = User::findOrFail($user_id);
-        // \Log::debug($user);
-
-        $password = $user->password;
-
-
-        $request->validate ([
-
-            'password' => 'required|min:6',
-
-            'password_confirmation' => 'required|same:password',
-
-        ]);
-
-        $password = User::create([
-            'password' => $request->password,
-            'confirm_password' => $request->confirm_password
-        ]);
-
-        $password->save();
-
-        // $request->save();
-
-        // $password = $request;
-
-        // \Log::debug($password);
-
-
-        return response()->json($password);
-
+        $user->password = bcrypt($request->password); // Hash the password before saving
+        $user->save();
+    
+        return response()->json(['message' => 'Password reset successfully']);
     }
-
+    
 }   
