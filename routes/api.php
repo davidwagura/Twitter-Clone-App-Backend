@@ -20,6 +20,8 @@ Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']
 
 Route::post('/unretweet/{tweet_id}/{likes_id}', [TweetController::class, 'unretweet']);
 
+Route::post('/resetPassword/{user_id}', [TweetController::class, 'resetPassword']);
+
 
 
 

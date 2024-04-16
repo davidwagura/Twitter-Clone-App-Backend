@@ -9,6 +9,16 @@ class User extends Model
 {
     use HasFactory;
 
+    protected $fillable = 
+    [
+        // 'first_name',
+        // 'last_name',
+        // 'email',
+        // 'username',
+        'password',
+        'password_confirmation'
+    ];
+
     public function tweet()
     {
         return $this->hasMany(Tweet::class);

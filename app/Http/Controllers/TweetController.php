@@ -43,17 +43,12 @@ class TweetController extends Controller
             'user_id' => $request->user_id
         ]);
     
-        if ($tweet) {
+
+
             return response()->json([
-                'status' => true,
-                'message' => 'Tweet created successfully'
+                'status' => $tweet ? true : false,
+                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
             ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Tweet not created'
-            ]);
-        }
     }
     
     public function user(Request $request)
@@ -67,6 +62,8 @@ class TweetController extends Controller
         $user->email = $request->email;
 
         $user->username = $request->username;
+
+        $user->password = $request->password;
 
         $user->save();
 
@@ -253,6 +250,40 @@ class TweetController extends Controller
         Session::flash('message', 'tweet deleted successfully');
 
         return response()->json($tweet);
+    }
+
+    public function resetPassword(Request $request, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+        // \Log::debug($user);
+
+        $password = $user->password;
+
+
+        $request->validate ([
+
+            'password' => 'required|min:6',
+
+            'password_confirmation' => 'required|same:password',
+
+        ]);
+
+        $password = User::create([
+            'password' => $request->password,
+            'confirm_password' => $request->confirm_password
+        ]);
+
+        $password->save();
+
+        // $request->save();
+
+        // $password = $request;
+
+        // \Log::debug($password);
+
+
+        return response()->json($password);
+
     }
 
 }   
