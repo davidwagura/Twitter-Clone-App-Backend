@@ -12,6 +12,7 @@ class User extends Model
     protected $fillable = 
     [
         // 'first_name',
+        // Session::flash('message', 'tweet deleted successfully');
         // 'last_name',
         // 'email',
         // 'username',

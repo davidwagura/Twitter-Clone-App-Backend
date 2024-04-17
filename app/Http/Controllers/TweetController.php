@@ -245,9 +245,9 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $tweet->delete();
+        $tweet->comment()->delete();
 
-        Session::flash('message', 'tweet deleted successfully');
+        $tweet->delete();
 
         return response()->json($tweet);
     }
@@ -255,11 +255,15 @@ class TweetController extends Controller
     public function resetPassword(Request $request, $user_id)
     {
         $request->validate([
-            'password' => 'required|min:6|confirmed', // Laravel's built-in confirmed validation ensures password_confirmation matches password
+
+            'password' => 'required|min:6|confirmed',
+
         ]);
     
         $user = User::findOrFail($user_id);
-        $user->password = bcrypt($request->password); // Hash the password before saving
+
+        $user->password = bcrypt($request->password);
+
         $user->save();
     
         return response()->json(['message' => 'Password reset successfully']);
