@@ -48,7 +48,7 @@ class TweetController extends Controller
             return response()->json([
                 'status' => $tweet ? true : false,
                 'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
-            ]);
+            ],200);
     }
     
     public function user(Request $request)
@@ -67,7 +67,7 @@ class TweetController extends Controller
 
         $user->save();
 
-        return response()->json($user);
+        return response()->json(['message' => 'User created successfully',200]);
     }
 
     public function comment(Request $request)
@@ -82,24 +82,24 @@ class TweetController extends Controller
 
         $comment->save();
 
-        return response()->json($comment);
+        return response()->json(['message' => 'Comment created successfully'],200);
 
     }
-    public function showTweet($id)
+    public function showTweet($id) //get
     {
         $tweet = Tweet::findOrFail($id);
 
         return response()->json($tweet);
     }
 
-    public function comments($id)
+    public function comments($id) //get
     {
         $comment = Comment::where('tweet_id', $id)->get();
 
         return response()->json($comment);
     }
 
-    public function userTweets($id)
+    public function userTweets($id) //get
     {
         // $comments = Comment::where( 'user_id', $id)->with( 'user')->get();
 
@@ -107,7 +107,7 @@ class TweetController extends Controller
 
         return response()->json($comments);
     }
-    public function tweetComments($id)
+    public function tweetComments($id) //get
     {
         $tweet = Tweet::with('comment')->findOrFail($id);
 
@@ -143,7 +143,7 @@ class TweetController extends Controller
     
         $tweet->save();
     
-        return response()->json($tweet);
+        return response()->json(['message' => 'Tweet liked successfully'],200);
     }
     
 
@@ -181,7 +181,7 @@ class TweetController extends Controller
     
         $tweet->save();
     
-        return response()->json($tweet);
+        return response()->json(['message' => 'Tweet unliked successfully'],200);
     }
     
     public function retweet($tweet_id, $user_id)
@@ -212,7 +212,7 @@ class TweetController extends Controller
     
         $tweet->save();
     
-        return response()->json($tweet);
+        return response()->json(['message' => 'Retweet successful'],200);
     }
     
     public function unretweet($tweet_id, $user_id)
@@ -238,10 +238,10 @@ class TweetController extends Controller
         }
         $tweet->save();
     
-        return response()->json($tweet);
+        return response()->json(['message' => 'Unretweet successful'],200);
     }
 
-    public function deleteTweet($tweet_id)
+    public function deleteTweet($tweet_id) //get
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
