@@ -245,11 +245,25 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $tweet->comment()->delete();
+        $count = $tweet->comments()->count(); 
 
-        $tweet->delete();
+        // \Log::debug($count);
 
-        return response()->json($tweet);
+        if($count > 1)
+        {
+
+            return response()->json(['message' => 'You can not delete the tweet with comments'],403) ;
+
+        } else {
+
+            $tweet->comments()->delete();
+
+            $tweet->delete();
+
+            return response()->json($tweet);
+
+        }
+
     }
 
     public function resetPassword(Request $request, $user_id)
@@ -266,7 +280,7 @@ class TweetController extends Controller
 
         $user->save();
     
-        return response()->json(['message' => 'Password reset successfully']);
+        return response()->json(['message' => 'Password reset successfully'],200);
     }
     
 }   
