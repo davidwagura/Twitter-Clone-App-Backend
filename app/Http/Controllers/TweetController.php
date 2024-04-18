@@ -68,7 +68,7 @@ class TweetController extends Controller
 
         $user->save();
 
-        return response()->json(['message' => 'User created successfully',200]);
+        return response()->json(['message' => 'User created successfully'],200);
     }
 
     public function comment(Request $request)
@@ -318,8 +318,16 @@ class TweetController extends Controller
         return response()->json([
 
             'message' => 'Invalid credentials',
-            
+
         ]);
     }
     
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return response()->json([
+            'message'=>'logged out'
+        ]);
+    }
 }   
