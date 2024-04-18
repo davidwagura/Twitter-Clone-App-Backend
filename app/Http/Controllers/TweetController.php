@@ -297,7 +297,7 @@ class TweetController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        \Log::debug($user);
+        // \Log::debug($user);
 
         if(!empty($user)) {
 
@@ -312,7 +312,7 @@ class TweetController extends Controller
                     'message' => "login successful",
 
                     'token' => $token
-                ]);
+                ],200);
             }
             return response()->json([
 
@@ -320,14 +320,19 @@ class TweetController extends Controller
 
                 'message' => "password didn't match",
 
-            ]);
+            ],401);
         }
+        return response()->json([
+            'message' => 'User not found.'
+        ],401);
 
     }
     
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+       $user->tokens()->delete();
+
+       \Log::debug($new);
 
         return response()->json([
 
