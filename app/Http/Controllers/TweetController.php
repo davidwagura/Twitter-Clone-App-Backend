@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -281,6 +282,44 @@ class TweetController extends Controller
         $user->save();
     
         return response()->json(['message' => 'Password reset successfully'],200);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+
+            'email' => 'required|string|email',
+
+            'password' => 'required|string',
+
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if(Auth::attempt($credentials))
+
+        {
+            $user = Auth::user();
+
+            return response()->json([
+
+                'user' => $user,
+
+                'authorization' => [
+
+                    'token' => $user->createToken('ApiToken')->plainTextToken,
+
+                    'type' => 'bearer',
+                    
+                ]
+            ]);
+        }
+
+        return response()->json([
+
+            'message' => 'Invalid credentials',
+            
+        ]);
     }
     
 }   
