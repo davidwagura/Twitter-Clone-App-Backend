@@ -7,6 +7,7 @@ use App\Models\Tweet;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -64,7 +65,7 @@ class TweetController extends Controller
 
         $user->username = $request->username;
 
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
 
         $user->save();
 
@@ -277,7 +278,7 @@ class TweetController extends Controller
     
         $user = User::findOrFail($user_id);
 
-        $user->password = bcrypt($request->password);
+        $user->password = Hash::make($request->password);
 
         $user->save();
     
@@ -288,38 +289,40 @@ class TweetController extends Controller
     {
         $request->validate([
 
-            'email' => 'required|string|email',
+            'email' => 'required',
 
-            'password' => 'required|string',
+            'password' => 'required',
 
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)->first();
 
-        if(Auth::attempt($credentials))
+        \Log::debug($user);
 
-        {
-            $user = Auth::user();
+        if(!empty($user)) {
 
+            if($user->password === $request->password){
+                
+                $token  = $user->createToken("myToken")->plainTextToken;
+
+                return response()->json([
+
+                    'status' => true,
+
+                    'message' => "login successful",
+
+                    'token' => $token
+                ]);
+            }
             return response()->json([
 
-                'user' => $user,
+                'status' => false,
 
-                'authorization' => [
+                'message' => "password didn't match",
 
-                    'token' => $user->createToken('ApiToken')->plainTextToken,
-
-                    'type' => 'bearer',
-                    
-                ]
             ]);
         }
 
-        return response()->json([
-
-            'message' => 'Invalid credentials',
-
-        ]);
     }
     
     public function logout()
@@ -327,7 +330,9 @@ class TweetController extends Controller
         auth()->user()->tokens()->delete();
 
         return response()->json([
+
             'message'=>'logged out'
+
         ]);
     }
 }   
