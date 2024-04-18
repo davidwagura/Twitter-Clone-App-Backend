@@ -24,6 +24,8 @@ Route::post('/resetPassword/{user_id}', [TweetController::class, 'resetPassword'
 
 Route::post('/login', [TweetController::class, 'login']);
 
+Route::post('/logout', [TweetController::class, 'logout']);
+
 
 
 
