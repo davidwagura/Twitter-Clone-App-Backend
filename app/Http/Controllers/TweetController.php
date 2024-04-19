@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
+use App\Models\Follower;
+use App\Models\Following;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -298,7 +300,7 @@ class TweetController extends Controller
 
         if(!empty($user)) {
 
-            if($user->password === $request->password){
+            if($user->email === $request->email){
                 
                 $token  = $user->createToken("myToken")->plainTextToken;
 
@@ -316,7 +318,7 @@ class TweetController extends Controller
 
                 'status' => false,
 
-                'message' => "password didn't match",
+                'message' => "Email didn't match",
 
             ],401);
         }
@@ -328,20 +330,26 @@ class TweetController extends Controller
         ],404);
 
     }
-    
-    public function logout()
+
+
+    public function logout(Request $request)
     {
-        $user = Auth::user()->token();
-
-        $user->revoke();
-        
-        return response()->json([
-
-            'message'=>'logged out'
-
-        ]);
+        // Check if the request is authenticated
+        if ($request->user()) {
+            // Revoke the token for the authenticated user
+            $request->user()->currentAccessToken()->delete();
+    
+            return response()->json([
+                'message' => 'Logged out successfully'
+            ], 200);
+        } else {
+            // If the request is not authenticated, return an error response
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 401);
+        }
     }
-
+        
     public function profile($user_id)
     {
         $user = User::findOrFail($user_id);
@@ -349,12 +357,50 @@ class TweetController extends Controller
         $tweets = Tweet::where('user_id', $user->id)->get();
     
         return response()->json([
-            
+
             'user' => $user,
 
             'tweets' => $tweets
 
         ], 200);
-    }}   
+    }
+
+    public function follow($follower_id, $user_to_follow_id)
+    {
+        $userToFollow = User::findOrFail($follower_id);
+    
+        $followersId = $userToFollow->followers_id;
+    
+        if(!empty($followersId)){
+
+            $followersId = explode(',' , $followersId);
+
+            if(!in_array($user_to_follow_id, $followersId)){
+
+                $followersId[] = $user_to_follow_id;
+
+                $userToFollow->followers_id = implode(',', $followersId);
+
+                $userToFollow->following++;
+            }
+
+        } else {
+
+            $userToFollow->followers_id = $user_to_follow_id;
+
+            $userToFollow->followers = 1;
+        }
+    
+        $userToFollow->save();
+
+
+        return response()->json($userToFollow);
+    
+        return response()->json(['message' => 'Follower successful'],200);
+    }
+}
+    
+
+ 
 
 
