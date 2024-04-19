@@ -400,7 +400,6 @@ class TweetController extends Controller
     
         $userToFollow->save();
 
-
         return response()->json($userToFollow);
     
         // return response()->json(['message' => 'Followed successfully'],200);
@@ -442,8 +441,6 @@ class TweetController extends Controller
         }
 
 
-
-
         $userToFollow->save();
         
         return response()->json($userToFollow);
@@ -452,10 +449,43 @@ class TweetController extends Controller
     }
 
 
-    public function following()
+    public function following($following_id, $user_to_follow_id)
     {
+        $userToFollow = User::findOrFail($following_id);
+    
+        $followingId = $userToFollow->followings_id;
 
+        // \Log::debug($followingId);
+    
+        if(!empty($followingId)){
+
+            $followingId = explode(',' , $followingId);
+
+            if(!in_array($user_to_follow_id, $followingId)){
+
+                $followingId[] = $user_to_follow_id;
+
+                $userToFollow->followings_id = implode(',', $followingId);
+
+                $userToFollow->following++;
+            }
+
+        } else {
+
+            $userToFollow->followings_id = $user_to_follow_id;
+
+            $userToFollow->following = 1;
+        }
+        
+        // \Log::debug($userToFollow);
+        $userToFollow->save();
+
+
+        return response()->json($userToFollow);
+    
+        // return response()->json(['message' => 'Followed successfully'],200);
     }
+
 }
     
 

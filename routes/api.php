@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
+
+
+Route::post('/login', [TweetController::class, 'login']);
+
+Route::post('/logout', [TweetController::class, 'logout']);
 
 Route::get('/', [TweetController::class, 'home']);
 
@@ -22,17 +26,13 @@ Route::post('/unretweet/{tweet_id}/{likes_id}', [TweetController::class, 'unretw
 
 Route::post('/resetPassword/{user_id}', [TweetController::class, 'resetPassword']);
 
-Route::post('/login', [TweetController::class, 'login']);
-
-Route::post('/logout', [TweetController::class, 'logout']);
-
-Route::post('/follow/{follower_id}/{user_to_follow_id}', [TweetController::class, 'followers']);
+Route::post('/followers/{follower_id}/{user_to_follow_id}', [TweetController::class, 'followers']);
 
 Route::post('/unfollow/{follower_id}/{user_id}', [TweetController::class, 'followersUnFollow']);
 
-Route::post('/follow/{following_id}/{user_to_follow_id}', [TweetController::class, 'following']);
+Route::post('/following/{following_id}/{user_to_follow_id}', [TweetController::class, 'following']);
 
-Route::post('/unfollow/{following_id}/{user_id}', [TweetController::class, 'followingUnFollow']);
+Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'followingUnFollow']);
 
 
 
