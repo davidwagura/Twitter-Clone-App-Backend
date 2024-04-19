@@ -26,7 +26,10 @@ Route::post('/login', [TweetController::class, 'login']);
 
 Route::post('/logout', [TweetController::class, 'logout']);
 
-Route::post('/followers/{follower_id}/{user_to_follow_id}', [TweetController::class, 'follow']);
+Route::post('/follow/{follower_id}/{user_to_follow_id}', [TweetController::class, 'follow']);
+
+Route::post('/unfollow/{follower_id}/{user_id}', [TweetController::class, 'unFollow']);
+
 
 
 

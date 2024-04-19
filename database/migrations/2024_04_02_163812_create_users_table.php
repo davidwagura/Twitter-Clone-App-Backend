@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
-            $table->unsignedBigInteger('followers_id')->nullable();
-            $table->unsignedBigInteger('followings_id')->nullable();
+            $table->string('followers_id')->nullable();
+            $table->string('followings_id')->nullable();
             $table->integer('followers')->default(0);
             $table->integer('following')->default(0);
             $table->string('username');

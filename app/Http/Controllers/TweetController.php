@@ -238,11 +238,14 @@ class TweetController extends Controller
                 $tweet->retweets_id = implode(',', $explodedRetweetsId);
 
                 $tweet->retweets = max(0, count($explodedRetweetsId));
+
+                return response()->json(['message' => 'Unretweet successful'],200);
+
             }
         }
         $tweet->save();
     
-        return response()->json(['message' => 'Unretweet successful'],200);
+        return response()->json(['message' => 'Unretweet unsuccessful'],200);
     }
 
     public function deleteTweet($tweet_id) //get
@@ -334,18 +337,22 @@ class TweetController extends Controller
 
     public function logout(Request $request)
     {
-        // Check if the request is authenticated
         if ($request->user()) {
-            // Revoke the token for the authenticated user
+
             $request->user()->currentAccessToken()->delete();
     
             return response()->json([
+
                 'message' => 'Logged out successfully'
+
             ], 200);
+
         } else {
-            // If the request is not authenticated, return an error response
+
             return response()->json([
+
                 'error' => 'Unauthorized'
+
             ], 401);
         }
     }
@@ -381,7 +388,7 @@ class TweetController extends Controller
 
                 $userToFollow->followers_id = implode(',', $followersId);
 
-                $userToFollow->following++;
+                $userToFollow->followers++;
             }
 
         } else {
@@ -396,33 +403,52 @@ class TweetController extends Controller
 
         return response()->json($userToFollow);
     
-        return response()->json(['message' => 'Follower successful'],200);
+        // return response()->json(['message' => 'Followed successfully'],200);
     }
 
-    public function unFollow($follower_id, $user_to_follow_id)
+    public function unFollow($follower_id,$user_id)
     {
         $userToFollow = User::findOrFail($follower_id);
     
         $followersId = $userToFollow->followers_id;
+
     
         if (!empty($followersId)) {
 
             $explodedFollowersId = explode(',' , $followersId);
             
-            $index = array_search(strval($user_to_follow_id), $explodedFollowersId);
+            $index = array_search(strval($user_id), $explodedFollowersId);
     
             if ($index !== false) {
 
                 unset($explodedFollowersId[$index]);
 
-                $userToFollow->follower_id = implode(',', $explodedFollowersId);
+                $userToFollow->followers_id = implode(',', $explodedFollowersId);
 
-                $userToFollow->followers_id = max(0, count($explodedFollowersId));
+                $userToFollow->followers_id = max(0, $userToFollow->followers - 1);
+
             }
+            if (empty($explodedFollowersId)) {
+
+                $userToFollow->followers = 0;
+            }
+
+        } else {
+
+            $userToFollow->followers = 0;
+
+            // return response()->json(['message' => 'Request unsuccessful.']);
+ 
         }
+
+
+
+
         $userToFollow->save();
-    
-        return response()->json(['message' => 'Unretweet successful'],200);
+        
+        return response()->json($userToFollow);
+
+        // return response()->json(['message' => 'Unfollow successful'],200);
     }
 }
     
