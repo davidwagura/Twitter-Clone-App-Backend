@@ -398,6 +398,32 @@ class TweetController extends Controller
     
         return response()->json(['message' => 'Follower successful'],200);
     }
+
+    public function unFollow($follower_id, $user_to_follow_id)
+    {
+        $userToFollow = User::findOrFail($follower_id);
+    
+        $followersId = $userToFollow->followers_id;
+    
+        if (!empty($followersId)) {
+
+            $explodedFollowersId = explode(',' , $followersId);
+            
+            $index = array_search(strval($user_to_follow_id), $explodedFollowersId);
+    
+            if ($index !== false) {
+
+                unset($explodedFollowersId[$index]);
+
+                $userToFollow->follower_id = implode(',', $explodedFollowersId);
+
+                $userToFollow->followers_id = max(0, count($explodedFollowersId));
+            }
+        }
+        $userToFollow->save();
+    
+        return response()->json(['message' => 'Unretweet successful'],200);
+    }
 }
     
 
