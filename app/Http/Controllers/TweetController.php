@@ -249,8 +249,6 @@ class TweetController extends Controller
 
         $count = $tweet->comments()->count(); 
 
-        // \Log::debug($count);
-
         if($count > 1)
         {
 
@@ -297,7 +295,6 @@ class TweetController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // \Log::debug($user);
 
         if(!empty($user)) {
 
@@ -314,6 +311,7 @@ class TweetController extends Controller
                     'token' => $token
                 ],200);
             }
+
             return response()->json([
 
                 'status' => false,
@@ -322,22 +320,32 @@ class TweetController extends Controller
 
             ],401);
         }
+
         return response()->json([
+
             'message' => 'User not found.'
-        ],401);
+            
+        ],404);
 
     }
     
     public function logout()
     {
-       $user->tokens()->delete();
+        $user = Auth::user()->token();
 
-       \Log::debug($new);
-
+        $user->revoke();
+        
         return response()->json([
 
             'message'=>'logged out'
 
         ]);
     }
+
+    public function profile()
+    {
+        
+    }
 }   
+
+
