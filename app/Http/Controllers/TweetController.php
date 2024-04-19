@@ -342,10 +342,19 @@ class TweetController extends Controller
         ]);
     }
 
-    public function profile()
+    public function profile($user_id)
     {
-        
-    }
-}   
+        $user = User::findOrFail($user_id);
+    
+        $tweets = Tweet::where('user_id', $user->id)->get();
+    
+        return response()->json([
+            
+            'user' => $user,
+
+            'tweets' => $tweets
+
+        ], 200);
+    }}   
 
 

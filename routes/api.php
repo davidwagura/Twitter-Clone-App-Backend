@@ -39,7 +39,7 @@ Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
 
 Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 
-Route::get('/profile', [TweetController::class, 'profile']);
+Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
 
 
 Route::delete('tweet/delete/{tweet_id}', [TweetController::class, 'deleteTweet']);
