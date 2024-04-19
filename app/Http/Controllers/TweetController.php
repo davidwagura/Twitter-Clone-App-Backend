@@ -372,7 +372,7 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function follow($follower_id, $user_to_follow_id)
+    public function followers($follower_id, $user_to_follow_id)
     {
         $userToFollow = User::findOrFail($follower_id);
     
@@ -406,7 +406,7 @@ class TweetController extends Controller
         // return response()->json(['message' => 'Followed successfully'],200);
     }
 
-    public function unFollow($follower_id,$user_id)
+    public function followersUnFollow($follower_id,$user_id)
     {
         $userToFollow = User::findOrFail($follower_id);
     
@@ -449,6 +449,12 @@ class TweetController extends Controller
         return response()->json($userToFollow);
 
         // return response()->json(['message' => 'Unfollow successful'],200);
+    }
+
+
+    public function following()
+    {
+
     }
 }
     
