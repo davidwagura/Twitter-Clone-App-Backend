@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('followers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('follower_id');
+            $table->unsignedBigInteger('following_id');
+            $table->integer('followers')->default(0);
+            $table->integer('following')->default(0);
             $table->timestamps();
         });
     }
