@@ -52,6 +52,8 @@ Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 
 Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
 
-
 Route::delete('tweet/delete/{tweet_id}', [TweetController::class, 'deleteTweet']);
 
+Route::get('/myFollowers/{myId}/{followerId}', [TweetController::class, 'showFollowers']);
+
+Route::get('/following/{myId}/{followingId}',[TweetController::class, 'following']);
