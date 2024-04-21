@@ -530,7 +530,16 @@ class TweetController extends Controller
     }
 
 
+    public function showFollowers($myId, $followerId)
+    {
+        $followersCount = $followerId->followers;
+        $followingCount = $followerId->following;
     
+        return response()->json([
+            'followers_count' => $followersCount,
+            'following_count' => $followingCount
+        ], 200);
+    }
 }
     
 
