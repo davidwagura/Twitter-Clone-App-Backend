@@ -529,6 +529,51 @@ class TweetController extends Controller
         ],200);
     }
 
+    public function followingUnfollow($following_id,$user_id)
+    {
+        $userUnFollow = User::findOrFail($following_id);
+    
+        $followingId = $userUnFollow->followings_id;
+
+    
+        if (!empty($followingId)) {
+
+            $explodedFollowingId = explode(',' , $followingId);
+            
+            $index = array_search(strval($user_id), $explodedFollowingId);
+    
+            if ($index !== false) {
+
+                unset($explodedFollowingId[$index]);
+
+                $userUnFollow->followings_id = implode(',', $explodedFollowingId);
+
+                $userUnFollow->followings_id = max(0, $userUnFollow->following - 1);
+
+            }
+            if (empty($explodedFollowingId)) {
+
+                $userUnFollow->following = 0;
+            }
+
+        } else {
+
+            $userUnFollow->following = 0;
+ 
+        }
+
+        $userUnFollow->save();
+        
+        return response()->json([
+            
+            'message' => 'Unfollow successful',
+
+            'userToFollow' => $userUnFollow
+    
+        ],200);
+    }
+
+
 
     public function connectionCount($myId)
     {
@@ -586,7 +631,7 @@ class TweetController extends Controller
     {
         $user = User::findOrFail($myId);
 
-        $followingIds = explode(',', $user->followings->id);
+        $followingIds = explode(',', $user->followings_id);
 
         $followings = [];
 
