@@ -530,22 +530,58 @@ class TweetController extends Controller
     }
 
 
-    public function showFollowers($myId)
+    public function connectionCount($myId)
     {
         $user = User::findOrFail($myId);
     
         $followers = explode(',', $user->followers_id);
+
         $following = explode(',', $user->followings_id);
     
         $followersCount = count(array_filter($followers, 'is_numeric'));
+
         $followingCount = count(array_filter($following, 'is_numeric'));
     
         return response()->json([
+
             'followers_count' => $followersCount,
+
             'following_count' => $followingCount
+
         ], 200);
     }
 
+    public function showFollowers($myId)
+    {    
+        $user = User::findOrFail($myId);
+
+        $followerIds = explode(',', $user->followers_id);
+    
+        $followers = [];
+
+        foreach ($followerIds as $followerId) {
+
+            $follower = User::find($followerId);
+
+            if ($follower) {
+
+                $followers[] = [
+
+                    'id' => $follower->id,
+
+                    'profile' => $follower
+
+                ];
+            }
+        }
+    
+        return response()->json([
+
+            'followers' => $followers
+            
+        ], 200);
+    }
+    
 }
     
 
