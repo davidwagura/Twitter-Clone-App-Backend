@@ -58,4 +58,4 @@ Route::get('/myFollowers/{myId}/{followerId}', [TweetController::class, 'showFol
 
 Route::get('/following/{myId}/{followingId}',[TweetController::class, 'following']);
 
-Route::get('/showFollowers/{myId}/{followerId}', [TweetController::class, 'showFollowers']);
+Route::get('/showFollowers/{myId}', [TweetController::class, 'showFollowers']);
