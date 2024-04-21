@@ -578,10 +578,39 @@ class TweetController extends Controller
         return response()->json([
 
             'followers' => $followers
-            
+
         ], 200);
     }
     
+    public function showFollowing($myId)
+    {
+        $user = User::findOrFail($myId);
+
+        $followingIds = explode(',', $user->followings->id);
+
+        $followings = [];
+
+        foreach ($followingIds as $followingId)
+        {
+            $following = User::find($followingId);
+
+            if ($following) {
+                
+                $followings[] = [
+
+                    'id' => $following->id,
+
+                    'profile' => $following
+                ];
+            }
+        }
+
+        return response()->json([
+
+            'following' => $following,
+
+        ],200);
+    }
 }
     
 

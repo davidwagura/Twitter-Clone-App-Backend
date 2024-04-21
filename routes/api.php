@@ -56,6 +56,6 @@ Route::delete('tweet/delete/{tweet_id}', [TweetController::class, 'deleteTweet']
 
 Route::get('/myFollowers/{myId}', [TweetController::class, 'showFollowers']);
 
-Route::get('/following/{myId}/{followingId}',[TweetController::class, 'following']);
+Route::get('/following/{myId}',[TweetController::class, 'showFollowing']);
 
 Route::get('/connectionCount/{myId}', [TweetController::class, 'connectionCount']);
