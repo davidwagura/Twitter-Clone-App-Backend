@@ -27,32 +27,51 @@ class TweetController extends Controller
     public function tweet(Request $request)
     {
         $validator = Validator::make($request->all(), [
+
             'body' => 'required',
+
             'user_id' => ['required', 'integer', function ($attribute, $value, $fail) {
+
                 if (!is_int($value)) {
+
                     $fail('The ' . $attribute . ' must be an integer.');
+
                 }  
+
             }]
+
         ]);
     
         if ($validator->fails()) {
+
             return response()->json([
+
                 'status' => false,
+
                 'message' => 'Validation failed',
+
             ]);
+
         }
     
         $tweet = Tweet::create([
+
             'body' => $request->body,
+
             'user_id' => $request->user_id
+
         ]);
     
 
 
-            return response()->json([
-                'status' => $tweet ? true : false,
-                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
-            ],200);
+        return response()->json([
+
+            'status' => $tweet ? true : false,
+
+            'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
+
+        ],200);
+
     }
     
     public function user(Request $request)
@@ -106,7 +125,11 @@ class TweetController extends Controller
         $tweets = Tweet::where('user_id', $user_id)->get();
     
         return response()->json([
+
             'tweets' => $tweets,
+
+            'message' => $tweets ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+
         ], 200);
     }
 
@@ -117,6 +140,8 @@ class TweetController extends Controller
         return response()->json([
 
             'comment' => $comment,
+
+            'message' => $comment ? 'Comments displayed successfully' : 'Comments failed to be displayed'
     
         ]);
     }
@@ -129,12 +154,15 @@ class TweetController extends Controller
 
         return response()->json($comments);
     }
+
+
     public function tweetComments($id) //get
     {
         $tweet = Tweet::with('comment')->findOrFail($id);
 
         return response()->json($tweet);
     }
+
 
     public function likeTweet($tweet_id, $user_id)
     {
@@ -220,16 +248,18 @@ class TweetController extends Controller
     
     public function getUserLikedTweets($user_id)
     {
-        $user = User::findOrFail($user_id);
+        $tweet = Tweet::findOrFail($user_id);
     
-        $likedTweetIds = explode(',', $user->likes_id);
+        $likedTweetIds = explode(',', $tweet->likes_id);
     
-        $likedTweets = Tweet::whereIn('id', $likedTweetIds)->get();
+        $likedTweets = User::whereIn('id', $likedTweetIds)->get();
     
         return response()->json([
 
+            'message' => $tweet ? 'User liked tweets got successfully' : 'Failed to get user liked tweets',
+
             'liked_tweets' => $likedTweets,
-            
+
         ], 200);
     }
     
@@ -321,7 +351,13 @@ class TweetController extends Controller
 
             $tweet->delete();
 
-            return response()->json($tweet);
+            return response()->json([
+
+                'tweet' => $tweet,
+            
+                'message' => $tweet ? 'Tweet deleted successfully' : 'Failed to delete tweet'
+
+            ]);
 
         }
 
@@ -341,8 +377,16 @@ class TweetController extends Controller
 
         $user->save();
     
-        return response()->json(['message' => 'Password reset successfully'],200);
+        return response()->json([
+            
+            'message' => $user ? 'Password reset successfully' : 'Password reset failed',
+
+            'user' => $user
+        
+        ],200);
     }
+
+
 
     public function login(Request $request)
     {
@@ -423,7 +467,9 @@ class TweetController extends Controller
 
             'user' => $user,
 
-            'tweets' => $tweets
+            'tweets' => $tweets,
+
+            'message' => 'Profile displayed successfully'
 
         ], 200);
     }
@@ -458,7 +504,7 @@ class TweetController extends Controller
     
         return response()->json([
             
-            'message' => 'Followed successfully',
+            'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow the user',
 
             'userToFollow' => $userToFollow
         
@@ -502,7 +548,7 @@ class TweetController extends Controller
         
         return response()->json([
             
-            'message' => 'Unfollow successful',
+            'message' => $userToFollow ? 'Unfollow successful' : 'Unfollow not successful',
 
             'userToFollow' => $userToFollow
     
@@ -540,7 +586,7 @@ class TweetController extends Controller
     
         return response()->json([
 
-            'message' => 'Followed successfully',
+            'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow user',
 
             'user' => $userToFollow
 
@@ -577,7 +623,7 @@ class TweetController extends Controller
         
         return response()->json([
 
-            'message' => 'Unfollow successful',
+            'message' => $userUnFollow ? 'Unfollow successful' : 'Unfollow unsuccessful',
 
             'userToFollow' => $userUnFollow
 
@@ -664,6 +710,8 @@ class TweetController extends Controller
         return response()->json([
 
             'followings' => $followings,
+
+            'massage' => $following ? 'Displayed successfully' : 'Failed to display'
 
         ],200);
     }

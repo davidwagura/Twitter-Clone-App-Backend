@@ -44,7 +44,7 @@ Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'f
 
 Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
 
-Route::get('/comment/{id}', [TweetController::class, 'comments']);
+Route::get('/comments/{id}', [TweetController::class, 'comments']);
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
 
