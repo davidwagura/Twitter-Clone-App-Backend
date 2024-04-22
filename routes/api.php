@@ -48,6 +48,8 @@ Route::get('/comment/{id}', [TweetController::class, 'comments']);
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
 
+Route::get('/userLikedTweets/{user_id}', [TweetController::class, 'getUserLikedTweets']);
+
 Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 
 Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
