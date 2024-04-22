@@ -109,7 +109,7 @@ class TweetController extends Controller
             'tweets' => $tweets,
         ], 200);
     }
-    
+
     public function comments($id) //get
     {
         $comment = Comment::where('tweet_id', $id)->get();
@@ -218,6 +218,22 @@ class TweetController extends Controller
         ],200);
     }
     
+    public function getUserLikedTweets($user_id)
+    {
+        $user = User::findOrFail($user_id);
+    
+        $likedTweetIds = explode(',', $user->likes_id);
+    
+        $likedTweets = Tweet::whereIn('id', $likedTweetIds)->get();
+    
+        return response()->json([
+
+            'liked_tweets' => $likedTweets,
+            
+        ], 200);
+    }
+    
+
     public function retweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
