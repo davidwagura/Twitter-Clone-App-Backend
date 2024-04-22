@@ -101,13 +101,15 @@ class TweetController extends Controller
         ],200);
 
     }
-    public function showTweet($id) //get
+    public function showTweet($user_id) //get
     {
-        $tweet = Tweet::findOrFail($id);
-
-        return response()->json($tweet);
+        $tweets = Tweet::where('user_id', $user_id)->get();
+    
+        return response()->json([
+            'tweets' => $tweets,
+        ], 200);
     }
-
+    
     public function comments($id) //get
     {
         $comment = Comment::where('tweet_id', $id)->get();
@@ -558,8 +560,11 @@ class TweetController extends Controller
         $userUnFollow->save();
         
         return response()->json([
+
             'message' => 'Unfollow successful',
+
             'userToFollow' => $userUnFollow
+
         ], 200);
     }
     
