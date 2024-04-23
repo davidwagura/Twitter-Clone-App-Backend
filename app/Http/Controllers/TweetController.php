@@ -718,9 +718,17 @@ class TweetController extends Controller
 
     public function getUserTweetComments($user_id)
     {
-        $comment = Comment::findOrFail($user_id);
+        $user = User::findOrFail($user_id);
+    
+        $comment = $user->comment()->with('tweet')->get();
+        
+        return response()->json([
 
-        \Log::debug($comment);
+            'comments' => $comment,
+
+            'message' => $comment ? 'User comments on tweets retrieved successfully' : 'No comments found for the user on tweets'
+
+        ], 200);
     }
 }
     
