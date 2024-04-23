@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+
+use function Laravel\Prompts\alert;
 
 class TweetController extends Controller
 {
@@ -729,6 +732,49 @@ class TweetController extends Controller
             'message' => $comment ? 'User comments on tweets retrieved successfully' : 'No comments found for the user on tweets'
 
         ], 200);
+    }
+
+
+    public function showHighlights()
+    {
+
+    }
+
+    public function showArticles()
+    {
+
+    }
+
+    public function showMedia()
+    {
+
+    }
+
+
+    public function userNotifications($user_id)
+    {
+        $notification = User::findOrFail($user_id);
+
+        if ($notification->isDirty('followers_id'))
+        {
+            alert('You have a new follower');
+
+            return response()->json([
+
+                'message' => 'You have a new follower',
+                
+                'notification' => $notification
+
+            ]);
+    
+        }
+
+        return response()->json([
+
+            'message' => 'No new follower'
+        ]);
+
+
     }
 
 }
