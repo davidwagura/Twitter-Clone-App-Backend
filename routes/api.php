@@ -67,3 +67,5 @@ Route::get('/userTweetComments/{user_id}', [TweetController::class, 'getUserTwee
 Route::get('/highlights/{user_id}', [TweetController::class, 'showHighlights']);
 
 Route::get('/articles/{user_id}', [TweetController::class, 'showArticles']);
+
+Route::get('/media/{user_id}', [TweetController::class, 'showMedia']);
