@@ -245,24 +245,7 @@ class TweetController extends Controller
         
         ],200);
     }
-    
-    public function getUserLikedTweets($user_id)
-    {
-        $tweet = Tweet::findOrFail($user_id);
-    
-        $likedTweetIds = explode(',', $tweet->likes_id);
-    
-        $likedTweets = User::whereIn('id', $likedTweetIds)->get();
-    
-        return response()->json([
 
-            'message' => $tweet ? 'User liked tweets got successfully' : 'Failed to get user liked tweets',
-
-            'liked_tweets' => $likedTweets,
-
-        ], 200);
-    }
-    
 
     public function retweet($tweet_id, $user_id)
     {
@@ -714,6 +697,30 @@ class TweetController extends Controller
             'massage' => $following ? 'Displayed successfully' : 'Failed to display'
 
         ],200);
+    }
+
+    public function getUserLikedTweets($user_id)
+    {
+        $tweet = Tweet::findOrFail($user_id);
+    
+        $likedTweetIds = explode(',', $tweet->likes_id);
+    
+        $likedTweets = User::whereIn('id', $likedTweetIds)->get();
+    
+        return response()->json([
+
+            'message' => $tweet ? 'User liked tweets got successfully' : 'Failed to get user liked tweets',
+
+            'liked_tweets' => $likedTweets,
+
+        ], 200);
+    }
+
+    public function getUserTweetComments($user_id)
+    {
+        $comment = Comment::findOrFail($user_id);
+
+        \Log::debug($comment);
     }
 }
     

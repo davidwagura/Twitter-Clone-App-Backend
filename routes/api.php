@@ -48,8 +48,6 @@ Route::get('/comments/{id}', [TweetController::class, 'comments']);
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
 
-Route::get('/userLikedTweets/{user_id}', [TweetController::class, 'getUserLikedTweets']);
-
 Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 
 Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
@@ -61,3 +59,7 @@ Route::get('/myFollowers/{myId}', [TweetController::class, 'showFollowers']);
 Route::get('/showFollowing/{myId}',[TweetController::class, 'showFollowing']);
 
 Route::get('/connectionCount/{myId}', [TweetController::class, 'connectionCount']);
+
+Route::get('/userLikedTweets/{user_id}', [TweetController::class, 'getUserLikedTweets']);
+
+Route::get('/userTweetComments/{user_id}', [TweetController::class, 'getUserTweetComments']);
