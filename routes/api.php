@@ -63,3 +63,5 @@ Route::get('/connectionCount/{myId}', [TweetController::class, 'connectionCount'
 Route::get('/userLikedTweets/{user_id}', [TweetController::class, 'getUserLikedTweets']);
 
 Route::get('/userTweetComments/{user_id}', [TweetController::class, 'getUserTweetComments']);
+
+Route::get('/highlights/{user_id}', [TweetController::class, 'showHighlights']);
