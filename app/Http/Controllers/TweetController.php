@@ -943,10 +943,8 @@ class TweetController extends Controller
 
             'message' => $message ? 'Message deleted successfully' : 'Failed to delete message',
 
-            
+
         ]);
-
-
     }
     
 }

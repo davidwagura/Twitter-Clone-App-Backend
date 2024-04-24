@@ -36,6 +36,7 @@ Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'f
 
 Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'messages']);
 
+Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
 
 
 
