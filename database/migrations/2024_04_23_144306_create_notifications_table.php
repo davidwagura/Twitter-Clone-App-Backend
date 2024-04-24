@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('body');
-            $table->integer('related_item');
+            $table->unsignedBigInteger('related_item_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('action_type');
-            $table->string('item');
+            $table->boolean('seen');
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use App\Models\Tweet;
 use App\Models\Comment;
 use App\Models\Follower;
 use App\Models\Following;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -170,6 +171,8 @@ class TweetController extends Controller
     public function likeTweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
+
+        $user = User::findOrFail($user_id);
     
         $likesId = $tweet->likes_id;
     
@@ -186,15 +189,46 @@ class TweetController extends Controller
                 $tweet->likes++;
             }
 
-        } else {
+        } 
+        else {
 
             $tweet->likes_id = $user_id;
 
             $tweet->likes = 1;
-
         }
     
         $tweet->save();
+
+        if ($tweet->save())
+
+        {
+            $likesId = $tweet->likes_id;
+
+            $likesId = explode(',', $likesId);
+
+            $likesId = array_map('intval', $likesId);
+
+            
+            if (!in_array($user_id, $likesId)) 
+            {
+                $notifications = new Notification;
+
+                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+
+                $notifications->related_item_id = $tweet->id;
+
+                $notifications->user_id = $user_id;
+
+                $notifications->action_type = 'like';
+            
+                $notifications->seen = false;
+
+                $notifications->save();
+
+
+            }
+
+        }
     
         return response()->json([
             
@@ -488,6 +522,9 @@ class TweetController extends Controller
     
         $userToFollow->save();
     
+
+
+        // 
         return response()->json([
             
             'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow the user',
@@ -751,31 +788,26 @@ class TweetController extends Controller
     }
 
 
-    public function userNotifications($user_id)
-    {
-        $notification = User::findOrFail($user_id);
+    // public function userNotifications(Request $request)
+    // {
+    //     $notifications = New Notification;
 
-        if ($notification->isDirty('followers_id'))
-        {
-            alert('You have a new follower');
+    //     $notifications->body = $request->body;
 
-            return response()->json([
+    //     $notifications->related_item = $request->related_item;
 
-                'message' => 'You have a new follower',
-                
-                'notification' => $notification
+    //     $notifications->action_type = $request->action_type;
 
-            ]);
-    
-        }
+    //     $notifications->item = $request->item;
 
-        return response()->json([
+    //     $notifications->save();
 
-            'message' => 'No new follower'
-        ]);
+    //     return response()->json([
 
+    //         'message' => 'Notification created successfully',
 
-    }
+    //         'notifications' => $notifications
+    // {
 
 }
     
