@@ -139,8 +139,6 @@ class TweetController extends Controller
 
         }
     
-
-
         return response()->json([
             
             'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
@@ -150,6 +148,8 @@ class TweetController extends Controller
         ],200);
 
     }
+
+
     public function showTweet($user_id) //get
     {
         $tweets = Tweet::where('user_id', $user_id)->get();
@@ -162,6 +162,7 @@ class TweetController extends Controller
 
         ], 200);
     }
+    
 
     public function comments($id) //get
     {
@@ -213,6 +214,23 @@ class TweetController extends Controller
                 $tweet->likes_id = implode(',', $likesId);
 
                 $tweet->likes++;
+
+                //create notification
+
+                $notifications = new Notification;
+
+                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+        
+                $notifications->related_item_id = $tweet->id;
+        
+                $notifications->user_id = $user_id;
+        
+                $notifications->action_type = 'like';
+                    
+                $notifications->seen = false;
+        
+                $notifications->save();            
+        
             }
 
         } 
@@ -222,40 +240,9 @@ class TweetController extends Controller
 
             $tweet->likes = 1;
         }
-    
+
         $tweet->save();
 
-        if ($tweet->save())
-
-        {
-            $likesId = $tweet->likes_id;
-
-            $likesId = explode(',', $likesId);
-
-            $likesId = array_map('intval', $likesId);
-
-            
-            if (!in_array($user_id, $likesId)) 
-            {
-                $notifications = new Notification;
-
-                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
-
-                $notifications->related_item_id = $tweet->id;
-
-                $notifications->user_id = $user_id;
-
-                $notifications->action_type = 'like';
-            
-                $notifications->seen = false;
-
-                $notifications->save();
-
-
-            }
-
-        }
-    
         return response()->json([
             
             'message' => $tweet ? 'Tweet liked successfully' : 'Error liking tweet',
@@ -300,8 +287,6 @@ class TweetController extends Controller
     
         $tweet->save();
 
-
-    
         return response()->json([
             
             'message' => $tweet ? 'Tweet unlike successfully' : 'Tweet unlike not successful',
@@ -331,6 +316,23 @@ class TweetController extends Controller
                 $tweet->retweets_id = implode(',', $retweetsId);
 
                 $tweet->retweets++;
+
+                //create notification
+
+                $notifications = new Notification;
+
+                $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
+
+                $notifications->related_item_id = $tweet_id;
+
+                $notifications->user_id = $user_id;
+
+                $notifications->action_type = 'retweet';
+                
+                $notifications->seen = false;
+
+                $notifications->save();
+
             }
 
         } else {
@@ -341,39 +343,6 @@ class TweetController extends Controller
         }
     
         $tweet->save();
-
-
-        if ($tweet->save())
-
-        {
-            $likesId = $tweet->likes_id;
-
-            $likesId = explode(',', $likesId);
-
-            $likesId = array_map('intval', $likesId);
-
-            
-            if (!in_array($user_id, $likesId)) 
-            {
-                $notifications = new Notification;
-
-                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
-
-                $notifications->related_item_id = $tweet->id;
-
-                $notifications->user_id = $user_id;
-
-                $notifications->action_type = 'retweet';
-            
-                $notifications->seen = false;
-
-                $notifications->save();
-
-
-            }
-
-        }
-
     
         return response()->json([
             
@@ -480,8 +449,6 @@ class TweetController extends Controller
             $notifications->save();
 
         }
-    
-
     
         return response()->json([
             
@@ -597,6 +564,23 @@ class TweetController extends Controller
                 $userToFollow->followers_id = implode(',', $followersId);
 
                 $userToFollow->followers++;
+
+                //create notification
+
+                $notifications = new Notification;
+        
+                $notifications->body = $userToFollow->first_name .' ' . $userToFollow->last_name . ' started following you';
+        
+                $notifications->related_item_id = $user_to_follow_id;
+        
+                $notifications->user_id = $follower_id;
+        
+                $notifications->action_type = 'follower';
+                
+                $notifications->seen = false;
+        
+                $notifications->save();
+                
             }
 
         } else {
@@ -607,42 +591,7 @@ class TweetController extends Controller
         }
     
         $userToFollow->save();
-
-        if ($userToFollow->save())
-
-        {
-            $followersId = $userToFollow->followers_id;
-
-            $followersId = explode(',', $followersId);
-
-            $followerId = array_map('intval', $followersId);
-
-            
-            if (!in_array($follower_id, $followersId)) 
-            {
-                $notifications = new Notification;
-
-                $notifications->body = $userToFollow->first_name .' ' . $userToFollow->last_name . ' started following you';
-
-                $notifications->related_item_id = $user_to_follow_id->id;
-
-                $notifications->user_id = $follower_id;
-
-                $notifications->action_type = 'follower';
-            
-                $notifications->seen = false;
-
-                $notifications->save();
-
-
-            }
-
-        }
-
-    
-
-
-        // 
+   
         return response()->json([
             
             'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow the user',
@@ -771,7 +720,6 @@ class TweetController extends Controller
         ], 200);
     }
     
-
 
     public function connectionCount($myId)
     {
@@ -913,7 +861,6 @@ class TweetController extends Controller
 
     public function messages(Request $request, $sender_id, $receiver_id)
     {
-        $sender = User::findOrFail($sender_id);
     
         $message = new Message;
         
@@ -948,19 +895,21 @@ class TweetController extends Controller
         ],200);
     }
 
-    public function deleteAllMessages($user_id)
+    public function deleteAllMessages($sender_id)
     {
-        $message = Message::findOrFail($user_id);
+        $message = Message::findOrFail($sender_id);
+    
+        // \Log::debug($message);
 
-        $message->delete();
+        // $message->delete();
 
-        return response()->json([
+        // return response()->json([
 
-            'message' => $message ? 'All messages have been deleted' : 'Error deleting messages',
+        //     'message' => $message ? 'All messages have been deleted' : 'Error deleting messages',
 
-            'data' => $message
+        //     'data' => $message
 
-        ],200);
+        // ],200);
     }
     
 }

@@ -38,7 +38,7 @@ Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'mes
 
 Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
 
-Route::post('/deleteAllMessages/{user_id}', [TweetController::class, 'deleteAllMessages']);
+Route::post('/deleteAllMessages/{sender_id}', [TweetController::class, 'deleteAllMessages']);
 
 
 
