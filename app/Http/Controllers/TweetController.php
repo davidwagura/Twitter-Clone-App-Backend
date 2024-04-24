@@ -924,14 +924,29 @@ class TweetController extends Controller
         $message->receivers_id = $receiver_id;
     
         $message->save();
-    
-        \Log::debug($sender);
-    
+        
         return response()->json([
+
             'message' => $message ? 'Message sent successfully' : 'Error sending message',
 
             'data' => $message
         ]);
+    }
+
+    public function deleteOneMessage($message_id)
+    {
+        $message = Message::findOrFail($message_id);
+
+        $message->delete();
+
+        return response()->json([
+
+            'message' => $message ? 'Message deleted successfully' : 'Failed to delete message',
+
+            
+        ]);
+
+
     }
     
 }
