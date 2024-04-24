@@ -105,6 +105,7 @@ class TweetController extends Controller
 
     public function comment(Request $request)
     {
+
         $comment = new Comment;
 
         $comment->body = $request->body;
@@ -114,6 +115,30 @@ class TweetController extends Controller
         $comment->tweet_id = $request->tweet_id;
 
         $comment->save();
+
+
+        if ($comment->save())
+
+        {
+            $user = User::findOrFail($request->user_id);
+
+            $notifications = new Notification;
+
+            $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
+
+            $notifications->related_item_id = $request->tweet_id;
+
+            $notifications->user_id = $request->user_id;
+
+            $notifications->action_type = 'comment';
+            
+            $notifications->seen = false;
+
+            $notifications->save();
+
+        }
+    
+
 
         return response()->json([
             
