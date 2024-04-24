@@ -930,7 +930,7 @@ class TweetController extends Controller
             'message' => $message ? 'Message sent successfully' : 'Error sending message',
 
             'data' => $message
-        ]);
+        ],200);
     }
 
     public function deleteOneMessage($message_id)
@@ -943,8 +943,24 @@ class TweetController extends Controller
 
             'message' => $message ? 'Message deleted successfully' : 'Failed to delete message',
 
+            'data' => $message
 
-        ]);
+        ],200);
+    }
+
+    public function deleteAllMessages($user_id)
+    {
+        $message = Message::findOrFail($user_id);
+
+        $message->delete();
+
+        return response()->json([
+
+            'message' => $message ? 'All messages have been deleted' : 'Error deleting messages',
+
+            'data' => $message
+
+        ],200);
     }
     
 }
