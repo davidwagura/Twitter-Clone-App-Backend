@@ -909,8 +909,11 @@ class TweetController extends Controller
     {
 
     }
-    
-    
+
+    public function messages()
+    {
+        
+    }
 
 
 }

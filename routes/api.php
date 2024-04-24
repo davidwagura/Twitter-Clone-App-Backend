@@ -34,6 +34,8 @@ Route::post('/following/{following_id}/{user_to_follow_id}', [TweetController::c
 
 Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'followingUnFollow']);
 
+Route::post('/userMessages/{sender_id}/{receivers_id', [TweetController::class, 'messages']);
+
 
 
 
