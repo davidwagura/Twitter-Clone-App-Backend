@@ -421,6 +421,29 @@ class TweetController extends Controller
         $user->password = Hash::make($request->password);
 
         $user->save();
+
+        if ($user->save())
+
+        {
+            $user = User::findOrFail($user_id);
+
+            $notifications = new Notification;
+
+            $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
+
+            $notifications->related_item_id = $user_id;
+
+            $notifications->user_id = $user_id;
+
+            $notifications->action_type = 'password reset';
+            
+            $notifications->seen = false;
+
+            $notifications->save();
+
+        }
+    
+
     
         return response()->json([
             
