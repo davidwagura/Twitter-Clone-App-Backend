@@ -8,6 +8,7 @@ use App\Models\Tweet;
 use App\Models\Comment;
 use App\Models\Follower;
 use App\Models\Following;
+use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -910,12 +911,29 @@ class TweetController extends Controller
 
     }
 
-    public function messages()
+    public function messages(Request $request, $sender_id, $receiver_id)
     {
+        $sender = User::findOrFail($sender_id);
+    
+        $message = new Message;
         
+        $message->body = $request->body;
+    
+        $message->sender_id = $sender_id;
+
+        $message->receivers_id = $receiver_id;
+    
+        $message->save();
+    
+        \Log::debug($sender);
+    
+        return response()->json([
+            'message' => $message ? 'Message sent successfully' : 'Error sending message',
+
+            'data' => $message
+        ]);
     }
-
-
+    
 }
     
 
