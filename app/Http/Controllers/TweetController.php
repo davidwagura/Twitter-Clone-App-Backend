@@ -606,6 +606,38 @@ class TweetController extends Controller
         }
     
         $userToFollow->save();
+
+        if ($userToFollow->save())
+
+        {
+            $followersId = $userToFollow->followers_id;
+
+            $followersId = explode(',', $followersId);
+
+            $followerId = array_map('intval', $followersId);
+
+            
+            if (!in_array($follower_id, $followersId)) 
+            {
+                $notifications = new Notification;
+
+                $notifications->body = $userToFollow->first_name .' ' . $userToFollow->last_name . ' started following you';
+
+                $notifications->related_item_id = $user_to_follow_id->id;
+
+                $notifications->user_id = $follower_id;
+
+                $notifications->action_type = 'follower';
+            
+                $notifications->seen = false;
+
+                $notifications->save();
+
+
+            }
+
+        }
+
     
 
 
@@ -873,26 +905,13 @@ class TweetController extends Controller
     }
 
 
-    // public function userNotifications(Request $request)
-    // {
-    //     $notifications = New Notification;
+    public function userNotifications(Request $request)
+    {
 
-    //     $notifications->body = $request->body;
+    }
+    
+    
 
-    //     $notifications->related_item = $request->related_item;
-
-    //     $notifications->action_type = $request->action_type;
-
-    //     $notifications->item = $request->item;
-
-    //     $notifications->save();
-
-    //     return response()->json([
-
-    //         'message' => 'Notification created successfully',
-
-    //         'notifications' => $notifications
-    // {
 
 }
     
