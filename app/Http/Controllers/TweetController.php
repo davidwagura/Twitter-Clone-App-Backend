@@ -298,6 +298,8 @@ class TweetController extends Controller
         }
     
         $tweet->save();
+
+
     
         return response()->json([
             
@@ -312,6 +314,8 @@ class TweetController extends Controller
     public function retweet($tweet_id, $user_id)
     {
         $tweet = Tweet::findOrFail($tweet_id);
+
+        $user = User::findOrFail($user_id);
     
         $retweetsId = $tweet->retweets_id;
     
@@ -336,6 +340,39 @@ class TweetController extends Controller
         }
     
         $tweet->save();
+
+
+        if ($tweet->save())
+
+        {
+            $likesId = $tweet->likes_id;
+
+            $likesId = explode(',', $likesId);
+
+            $likesId = array_map('intval', $likesId);
+
+            
+            if (!in_array($user_id, $likesId)) 
+            {
+                $notifications = new Notification;
+
+                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+
+                $notifications->related_item_id = $tweet->id;
+
+                $notifications->user_id = $user_id;
+
+                $notifications->action_type = 'retweet';
+            
+                $notifications->seen = false;
+
+                $notifications->save();
+
+
+            }
+
+        }
+
     
         return response()->json([
             
