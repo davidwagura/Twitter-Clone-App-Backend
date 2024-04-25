@@ -69,24 +69,6 @@ class TweetController extends Controller
         ]);
             //mention
 
-            $user = User::findOrFail($request->user_id);
-
-            $mention = new Notification;
-
-            $mention->body = $user->first_name. ' ' . $user->last_name. ' ' .'tagged you in a tweet.';
-    
-            $mention->createdBy = $request->receiver_id;
-    
-            $mention->related_item_id = $tweet->id;
-        
-            $mention->user_id = $request->user_id;
-    
-            $mention->action_type = 'tweet';
-    
-            $mention->seen = false;
-    
-            $mention->save();
-
         return response()->json([
 
             'status' => $tweet ? true : false,
@@ -96,6 +78,28 @@ class TweetController extends Controller
         ],200);
 
     }
+
+    public function tweetMention(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+    
+        $mention = new Notification;
+    
+        $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
+    
+        $mention->createdBy = $request->receiver_id;
+    
+        $mention->related_item_id = $request->tweet_id;
+    
+        $mention->user_id = $request->user_id;
+    
+        $mention->action_type = 'tweet';
+    
+        $mention->seen = false;
+    
+        $mention->save();
+    }
+    
     
     public function user(Request $request)
     {
