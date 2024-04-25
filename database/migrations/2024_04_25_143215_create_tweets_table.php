@@ -12,11 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+     
         Schema::create('tweets', function (Blueprint $table) {
             $table->id();
             $table->longText('body');
             $table->string('likes_id')->nullable();
             $table->string('retweets_id')->nullable();
+            $table->integer('receiver_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->integer('likes')->default(0);
             $table->integer('retweets')->default(0);

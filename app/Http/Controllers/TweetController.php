@@ -6,17 +6,18 @@ use Alert;
 use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
+use App\Models\Mention;
+use App\Models\Message;
 use App\Models\Follower;
 use App\Models\Following;
-use App\Models\Message;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use function Laravel\Prompts\alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
-use function Laravel\Prompts\alert;
 
 class TweetController extends Controller
 {
@@ -66,8 +67,25 @@ class TweetController extends Controller
             'user_id' => $request->user_id
 
         ]);
-    
+            //mention
 
+            $user = User::findOrFail($request->user_id);
+
+            $mention = new Notification;
+
+            $mention->body = $user->first_name. ' ' . $user->last_name. ' ' .'tagged you in a tweet.';
+    
+            $mention->createdBy = $request->receiver_id;
+    
+            $mention->related_item_id = $tweet->id;
+        
+            $mention->user_id = $request->user_id;
+    
+            $mention->action_type = 'tweet';
+    
+            $mention->seen = false;
+    
+            $mention->save();
 
         return response()->json([
 
@@ -136,6 +154,24 @@ class TweetController extends Controller
             $notifications->seen = false;
 
             $notifications->save();
+
+            //mention
+
+            $mention = new Notification;
+
+            $mention->body = $user->first_name. ' ' . $user->last_name. ' ' .'mentioned you in comment.';
+
+            $mention->createdBy = $request->receiver_id;
+
+            $mention->related_item_id = $request->tweet_id;
+    
+            $mention->user_id = $request->user_id;
+
+            $mention->action_type = 'comment';
+
+            $mention->seen = false;
+
+            $mention->save();
 
         }
     
@@ -229,7 +265,7 @@ class TweetController extends Controller
                     
                 $notifications->seen = false;
         
-                $notifications->save();            
+                $notifications->save();        
         
             }
 
@@ -547,7 +583,7 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function followers($follower_id, $user_to_follow_id)
+    public function followers(Request $request, $follower_id, $user_to_follow_id)
     {
         $userToFollow = User::findOrFail($follower_id);
     
@@ -863,7 +899,7 @@ class TweetController extends Controller
     {
     
         $message = new Message;
-        
+                
         $message->body = $request->body;
     
         $message->sender_id = $sender_id;
@@ -897,11 +933,16 @@ class TweetController extends Controller
 
     public function deleteAllMessages($sender_id, $receiver_id)
     {
-        // $message = User::findOrFail($sender_id);
+        // $user = User::findOrFail($sender_id, $receiver_id);
 
-        $message = Message::all();
+        // $message = Message::whereIn('id', $user,$user)->get();
 
-        \Log::debug($message);
+        $receiver = Message::findOrFail($receiver_id);
+//get both ids and delete where they exist using a delete multiple method
+
+        $message = User::whereIn('sender_id', $receiver)->get($sender_id);
+
+        // \Log::debug($message);
 
         // $message->delete();
 
@@ -914,8 +955,33 @@ class TweetController extends Controller
         // ],200);
     }
 
-    public function mentions()
+    public function userMention($user_id, $tweet_id)
     {
+        $user = User::findOrFail($user_id);
+
+        $tweet = Tweet::findOrFail($tweet_id);
+
+        // \Log::debug($tweet);
+
+        $mention = new Mention;
+
+        $mention->content = $user->first_name. ' ' . $user->last_name. ' ' .'mentioned you.';
+
+        //createdBy
+
+        $mention->message_id = $tweet_id;
+
+        $mention->user_id = $user_id;
+
+        $mention->save();
+
+        return response()->json([
+
+            'message' => $mention ? 'Mention created successfully.' : 'Failed to create mention.',
+
+            'mention' => $mention
+
+        ]);
         
     }
     

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->text('body');
-            $table->unsignedBigInteger('tweet_id');
+            $table->string('body');
+            $table->integer('createdBy')->nullable();
+            $table->unsignedBigInteger('related_item_id');
             $table->unsignedBigInteger('user_id');
-            $table->integer('likes')->default(0);
-            $table->integer('retweets')->default(0);
+            $table->string('action_type');
+            $table->boolean('seen');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('notifications');
     }
 };

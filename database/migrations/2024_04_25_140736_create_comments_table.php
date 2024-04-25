@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mentions', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->text('body');
+            $table->unsignedBigInteger('tweet_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('receiver_id')->nullable();
+            $table->integer('likes')->default(0);
+            $table->integer('retweets')->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mentions');
+        Schema::dropIfExists('comments');
     }
 };

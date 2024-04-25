@@ -40,9 +40,6 @@ Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOn
 
 Route::post('/deleteAllMessages/{sender_id}/{receiver_id}', [TweetController::class, 'deleteAllMessages']);
 
-Route::post('/mentions/{sender_id}/{receiver_id}', [TweetController::class, 'userMention']);
-
-
 
 
 
