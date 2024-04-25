@@ -895,11 +895,13 @@ class TweetController extends Controller
         ],200);
     }
 
-    public function deleteAllMessages($sender_id)
+    public function deleteAllMessages($sender_id, $receiver_id)
     {
-        $message = Message::findOrFail($sender_id);
-    
-        // \Log::debug($message);
+        // $message = User::findOrFail($sender_id);
+
+        $message = Message::all();
+
+        \Log::debug($message);
 
         // $message->delete();
 
@@ -910,6 +912,11 @@ class TweetController extends Controller
         //     'data' => $message
 
         // ],200);
+    }
+
+    public function mentions()
+    {
+        
     }
     
 }
