@@ -14,4 +14,9 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function mention()
+    {
+        return $this->hasMany(Mention::class);
+    }
 }
