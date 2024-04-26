@@ -67,31 +67,35 @@ class TweetController extends Controller
             'user_id' => $request->user_id
 
         ]);
-            //mention
 
-        return response()->json([
+        if ($tweet) {
 
-            'status' => $tweet ? true : false,
+            $this->tweetMention($tweet, $request->receiver_id);
 
-            'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
+            return response()->json([
 
-        ],200);
+                'status' => $tweet ? true : false,
+
+                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
+
+            ],200);
+        }
 
     }
 
-    public function tweetMention(Request $request)
+    public function tweetMention(Tweet $tweet,$receiverId)
     {
-        $user = User::findOrFail($request->user_id);
+        $user = $tweet->user;
     
         $mention = new Notification;
     
         $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
     
-        $mention->createdBy = $request->receiver_id;
+        $mention->createdBy = $receiverId;
     
-        $mention->related_item_id = $request->tweet_id;
+        $mention->related_item_id = $tweet->id;
     
-        $mention->user_id = $request->user_id;
+        $mention->user_id = $user->id;
     
         $mention->action_type = 'tweet';
     
@@ -159,36 +163,42 @@ class TweetController extends Controller
 
             $notifications->save();
 
-            //mention
-
-            $mention = new Notification;
-
-            $mention->body = $user->first_name. ' ' . $user->last_name. ' ' .'mentioned you in comment.';
-
-            $mention->createdBy = $request->receiver_id;
-
-            $mention->related_item_id = $request->tweet_id;
-    
-            $mention->user_id = $request->user_id;
-
-            $mention->action_type = 'comment';
-
-            $mention->seen = false;
-
-            $mention->save();
 
         }
-    
-        return response()->json([
-            
-            'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
-            
-            'comment' => $comment
-        
-        ],200);
+        if ($comment->save()) {
 
+            $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
+
+            return response()->json([
+                
+                'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
+                
+                'comment' => $comment
+            
+            ],200);
+        }
     }
 
+    public function commentMention($userId, $receiverId, $tweetId)
+    {
+        $user = User::findOrFail($userId);
+
+        $mention = new Notification;
+
+        $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
+
+        $mention->createdBy = $receiverId;
+
+        $mention->related_item_id = $tweetId;
+
+        $mention->user_id = $userId;
+
+        $mention->action_type = 'comment';
+        
+        $mention->seen = false;
+
+        $mention->save();
+    }
 
     public function showTweet($user_id) //get
     {
