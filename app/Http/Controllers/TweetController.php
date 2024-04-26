@@ -264,22 +264,6 @@ class TweetController extends Controller
                 $tweet->likes_id = implode(',', $likesId);
 
                 $tweet->likes++;
-
-                //create notification
-
-                $notifications = new Notification;
-
-                $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
-        
-                $notifications->related_item_id = $tweet->id;
-        
-                $notifications->user_id = $user_id;
-        
-                $notifications->action_type = 'like';
-                    
-                $notifications->seen = false;
-        
-                $notifications->save();        
         
             }
 
@@ -293,15 +277,41 @@ class TweetController extends Controller
 
         $tweet->save();
 
-        return response()->json([
-            
-            'message' => $tweet ? 'Tweet liked successfully' : 'Error liking tweet',
+        if($tweet->save())
+        {
 
-            'tweet' => $tweet
-        
-        ],200);
+            $this->likeNotification($tweet_id,$user_id);
+
+            return response()->json([
+                
+                'message' => $tweet ? 'Tweet liked successfully' : 'Error liking tweet',
+
+                'tweet' => $tweet
+            
+            ],200);
+        }
     }
     
+    public function likeNotification($tweet_id,$user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+
+        $notifications->related_item_id = $tweet_id;
+
+        $notifications->user_id = $user_id;
+
+        $notifications->action_type = 'like';
+            
+        $notifications->seen = false;
+
+        $notifications->save();        
+
+    }
+
 
     public function unlikeTweet($tweet_id, $user_id)
     {
