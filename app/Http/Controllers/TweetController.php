@@ -143,28 +143,6 @@ class TweetController extends Controller
 
         $comment->save();
 
-
-        if ($comment->save())
-
-        {
-            $user = User::findOrFail($request->user_id);
-
-            $notifications = new Notification;
-
-            $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
-
-            $notifications->related_item_id = $request->tweet_id;
-
-            $notifications->user_id = $request->user_id;
-
-            $notifications->action_type = 'comment';
-            
-            $notifications->seen = false;
-
-            $notifications->save();
-
-
-        }
         if ($comment->save()) {
 
             $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
@@ -198,6 +176,24 @@ class TweetController extends Controller
         $mention->seen = false;
 
         $mention->save();
+
+
+        $user = User::findOrFail($userId);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
+
+        $notifications->related_item_id = $tweetId;
+
+        $notifications->user_id = $userId;
+
+        $notifications->action_type = 'comment';
+        
+        $notifications->seen = false;
+
+        $notifications->save();
+
     }
 
     public function showTweet($user_id) //get
