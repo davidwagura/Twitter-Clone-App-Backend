@@ -614,22 +614,6 @@ class TweetController extends Controller
                 $userToFollow->followers_id = implode(',', $followersId);
 
                 $userToFollow->followers++;
-
-                //create notification
-
-                $notifications = new Notification;
-        
-                $notifications->body = $userToFollow->first_name .' ' . $userToFollow->last_name . ' started following you';
-        
-                $notifications->related_item_id = $user_to_follow_id;
-        
-                $notifications->user_id = $follower_id;
-        
-                $notifications->action_type = 'follower';
-                
-                $notifications->seen = false;
-        
-                $notifications->save();
                 
             }
 
@@ -641,15 +625,55 @@ class TweetController extends Controller
         }
     
         $userToFollow->save();
-   
-        return response()->json([
-            
-            'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow the user',
 
-            'userToFollow' => $userToFollow
-        
-        ],200);
+        if($userToFollow->save()){
+
+            $this->followerNotification($follower_id, $user_to_follow_id);
+   
+            return response()->json([
+                
+                'message' => $userToFollow ? 'Followed successfully' : 'Failed to follow the user',
+
+                'userToFollow' => $userToFollow
+            
+            ],200);
+        }
     }
+
+    public function followerNotification($follower_id,$user_to_follow_id)
+    {
+        $user = User::findOrFail($follower_id);
+
+        $notifications = new Notification;
+        
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' started following you';
+
+        $notifications->related_item_id = $user_to_follow_id;
+
+        $notifications->user_id = $follower_id;
+
+        $notifications->action_type = 'follower';
+        
+        $notifications->seen = false;
+
+        $notifications->save();
+
+    }
+
+//     $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
+
+//     return response()->json([
+        
+//         'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
+        
+//         'comment' => $comment
+    
+//     ],200);
+// }
+// }
+
+// public function commentMention($userId, $receiverId, $tweetId)
+
 
     public function followersUnFollow($follower_id,$user_id)
     {
