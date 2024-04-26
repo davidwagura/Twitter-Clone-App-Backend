@@ -945,58 +945,31 @@ class TweetController extends Controller
         ],200);
     }
 
-    public function deleteAllMessages($sender_id, $receiver_id)
+    public function deleteConversation($sender_id, $receivers_id)
     {
-        // $user = User::findOrFail($sender_id, $receiver_id);
+        $messagesToDelete = Message::where('sender_id', $sender_id)
 
-        // $message = Message::whereIn('id', $user,$user)->get();
+                                    ->where('receivers_id', $receivers_id)
 
-        $receiver = Message::findOrFail($receiver_id);
-//get both ids and delete where they exist using a delete multiple method
+                                    ->orWhere('sender_id', $receivers_id)
 
-        $message = User::whereIn('sender_id', $receiver)->get($sender_id);
+                                    ->where('receivers_id', $sender_id)
 
-        // \Log::debug($message);
+                                    ->get();
+    
+        foreach ($messagesToDelete as $message) {
 
-        // $message->delete();
+            $message->delete();
 
-        // return response()->json([
-
-        //     'message' => $message ? 'All messages have been deleted' : 'Error deleting messages',
-
-        //     'data' => $message
-
-        // ],200);
-    }
-
-    public function userMention($user_id, $tweet_id)
-    {
-        $user = User::findOrFail($user_id);
-
-        $tweet = Tweet::findOrFail($tweet_id);
-
-        // \Log::debug($tweet);
-
-        $mention = new Mention;
-
-        $mention->content = $user->first_name. ' ' . $user->last_name. ' ' .'mentioned you.';
-
-        //createdBy
-
-        $mention->message_id = $tweet_id;
-
-        $mention->user_id = $user_id;
-
-        $mention->save();
-
+        }
+    
         return response()->json([
 
-            'message' => $mention ? 'Mention created successfully.' : 'Failed to create mention.',
+            'message' => 'All messages between sender and receiver have been deleted',
 
-            'mention' => $mention
+            'deleted_messages' => $messagesToDelete
 
-        ]);
-        
+        ], 200);
     }
     
 }
