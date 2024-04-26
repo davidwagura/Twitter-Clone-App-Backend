@@ -367,22 +367,6 @@ class TweetController extends Controller
 
                 $tweet->retweets++;
 
-                //create notification
-
-                $notifications = new Notification;
-
-                $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
-
-                $notifications->related_item_id = $tweet_id;
-
-                $notifications->user_id = $user_id;
-
-                $notifications->action_type = 'retweet';
-                
-                $notifications->seen = false;
-
-                $notifications->save();
-
             }
 
         } else {
@@ -393,14 +377,39 @@ class TweetController extends Controller
         }
     
         $tweet->save();
-    
-        return response()->json([
+
+        if($tweet->save())
+        {
+            $this->retweetNotification($user_id,$tweet_id);
+
+            return response()->json([
+                
+                'message' => $tweet ? 'Retweet successful' : 'Retweet not successful',
             
-            'message' => $tweet ? 'Retweet successful' : 'Retweet not successful',
-        
-            'tweet' => $tweet
-        
-        ],200);
+                'tweet' => $tweet
+            
+            ],200);
+        }
+    }
+
+    public function retweetNotification($user_id,$tweet_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
+
+        $notifications->related_item_id = $tweet_id;
+
+        $notifications->user_id = $user_id;
+
+        $notifications->action_type = 'retweet';
+                
+        $notifications->seen = false;
+
+        $notifications->save();
+
     }
     
     public function unretweet($tweet_id, $user_id)
@@ -465,49 +474,49 @@ class TweetController extends Controller
 
     }
 
-    public function resetPassword(Request $request, $user_id)
-    {
-        $request->validate([
+    // public function resetPassword(Request $request, $user_id)
+    // {
+    //     $request->validate([
 
-            'password' => 'required|min:6|confirmed',
+    //         'password' => 'required|min:6|confirmed',
 
-        ]);
+    //     ]);
     
-        $user = User::findOrFail($user_id);
+    //     $user = User::findOrFail($user_id);
 
-        $user->password = Hash::make($request->password);
+    //     $user->password = Hash::make($request->password);
 
-        $user->save();
+    //     $user->save();
 
-        if ($user->save())
+    //     if ($user->save())
 
-        {
-            $user = User::findOrFail($user_id);
+    //     {
+    //         $user = User::findOrFail($user_id);
 
-            $notifications = new Notification;
+    //         $notifications = new Notification;
 
-            $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
+    //         $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
 
-            $notifications->related_item_id = $user_id;
+    //         $notifications->related_item_id = $user_id;
 
-            $notifications->user_id = $user_id;
+    //         $notifications->user_id = $user_id;
 
-            $notifications->action_type = 'password reset';
+    //         $notifications->action_type = 'password reset';
             
-            $notifications->seen = false;
+    //         $notifications->seen = false;
 
-            $notifications->save();
+    //         $notifications->save();
 
-        }
+    //     }
     
-        return response()->json([
+    //     return response()->json([
             
-            'message' => $user ? 'Password reset successfully' : 'Password reset failed',
+    //         'message' => $user ? 'Password reset successfully' : 'Password reset failed',
 
-            'user' => $user
+    //         'user' => $user
         
-        ],200);
-    }
+    //     ],200);
+    // }
 
 
 
@@ -659,21 +668,6 @@ class TweetController extends Controller
         $notifications->save();
 
     }
-
-//     $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
-
-//     return response()->json([
-        
-//         'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
-        
-//         'comment' => $comment
-    
-//     ],200);
-// }
-// }
-
-// public function commentMention($userId, $receiverId, $tweetId)
-
 
     public function followersUnFollow($follower_id,$user_id)
     {
