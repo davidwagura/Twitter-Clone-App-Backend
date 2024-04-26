@@ -973,9 +973,19 @@ class TweetController extends Controller
         ], 200);
     }
     
-    public function followingTweets()
+    public function followingTweets($user_id)
     {
-        
+       $user = User::where('id', $user_id)->pluck('followings_id', 'id');
+
+        $tweet = Tweet::where('user_id', $user)->get();
+
+        return response()->json([
+
+            'message' => $tweet ? 'Displaying tweets' :  'Failed to display tweets',
+
+            'tweet' => $tweet
+        ]);
+
     }
 }
     
