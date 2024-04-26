@@ -38,9 +38,7 @@ Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'mes
 
 Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
 
-Route::post('/deleteConversation/{sender_id}/{receiver_id}', [TweetController::class, 'deleteConversation']);
-
-
+Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController::class, 'deleteConversation']);
 
 
 
@@ -74,4 +72,4 @@ Route::get('/articles/{user_id}', [TweetController::class, 'showArticles']);
 
 Route::get('/media/{user_id}', [TweetController::class, 'showMedia']);
 
-Route::post('/notifications', [TweetController::class, 'userNotifications']);
+Route::get('/followingTweets',[TweetController::class, 'followingTweets']);

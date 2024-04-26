@@ -74,9 +74,9 @@ class TweetController extends Controller
 
             return response()->json([
 
-                'status' => $tweet ? true : false,
+                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed',
 
-                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed'
+                'tweet' => $tweet
 
             ],200);
         }
@@ -597,7 +597,7 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function followers(Request $request, $follower_id, $user_to_follow_id)
+    public function followers($follower_id, $user_to_follow_id)
     {
         $userToFollow = User::findOrFail($follower_id);
     
@@ -927,6 +927,7 @@ class TweetController extends Controller
             'message' => $message ? 'Message sent successfully' : 'Error sending message',
 
             'data' => $message
+
         ],200);
     }
 
@@ -972,6 +973,10 @@ class TweetController extends Controller
         ], 200);
     }
     
+    public function followingTweets()
+    {
+        
+    }
 }
     
 
