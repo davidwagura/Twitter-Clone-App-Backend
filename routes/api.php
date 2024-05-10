@@ -73,3 +73,6 @@ Route::get('/articles/{user_id}', [TweetController::class, 'showArticles']);
 Route::get('/media/{user_id}', [TweetController::class, 'showMedia']);
 
 Route::get('/followingTweets/{user_id}',[TweetController::class, 'followingTweets']);
+
+//for you tweets api route
+Route::get('/for you',[TweetController::class,'tweetForYou']);

@@ -480,49 +480,60 @@ class TweetController extends Controller
 
     }
 
-    // public function resetPassword(Request $request, $user_id)
-    // {
-    //     $request->validate([
+    public function resetPassword(Request $request, $user_id)
+    {
+        $request->validate([
 
-    //         'password' => 'required|min:6|confirmed',
+            'password' => 'required',
 
-    //     ]);
+            'new_password' => 'required'
+
+        ]);
     
-    //     $user = User::findOrFail($user_id);
+        $user = User::findOrFail($user_id);
 
-    //     $user->password = Hash::make($request->password);
+        $old_password = $user->password;
 
-    //     $user->save();
+        if($old_password === $request->password)
+        {
 
-    //     if ($user->save())
+            $old_password === $request->new_password;
 
-    //     {
-    //         $user = User::findOrFail($user_id);
-
-    //         $notifications = new Notification;
-
-    //         $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
-
-    //         $notifications->related_item_id = $user_id;
-
-    //         $notifications->user_id = $user_id;
-
-    //         $notifications->action_type = 'password reset';
-            
-    //         $notifications->seen = false;
-
-    //         $notifications->save();
-
-    //     }
-    
-    //     return response()->json([
-            
-    //         'message' => $user ? 'Password reset successfully' : 'Password reset failed',
-
-    //         'user' => $user
+            if ($user->save())
+            {
+                $this->resetPasswordNotification($user_id);
         
-    //     ],200);
-    // }
+                return response()->json([
+                        
+                    'message' => $user ? 'Password reset successfully' : 'Password reset failed',
+        
+                    'user' => $user
+                    
+                ],200);
+            }
+        }
+
+    }
+
+    public function resetPasswordNotification($user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
+
+        $notifications->related_item_id = $user_id;
+
+        $notifications->user_id = $user_id;
+
+        $notifications->action_type = 'password reset';
+        
+        $notifications->seen = false;
+
+        $notifications->save();
+
+    }
 
 
 
@@ -978,8 +989,6 @@ class TweetController extends Controller
 
                                     ->orWhere('sender_id', $receivers_id)
 
-                                    ->where('receivers_id', $sender_id)
-
                                     ->get();
     
         foreach ($messagesToDelete as $message) {
@@ -1010,6 +1019,11 @@ class TweetController extends Controller
             'tweet' => $tweet
         ]);
 
+    }
+
+    public function tweetsForYou()
+    {
+        
     }
 }
     
