@@ -12,10 +12,11 @@ use App\Models\Follower;
 use App\Models\Following;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Ramsey\Collection\Collection;
 use function Laravel\Prompts\alert;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -1023,7 +1024,20 @@ class TweetController extends Controller
 
     public function tweetsForYou()
     {
-        
+
+        $users = User::with(['tweet' => function ($query) {
+
+            $query->orderBy('created_at', 'desc');
+
+        }])->get();
+            
+
+        return response()->json([
+
+            'user' => $users,
+
+            'message' => $users ? 'Tweets displayed successfully' : 'Failed to load tweets',
+        ]);
     }
 }
     
