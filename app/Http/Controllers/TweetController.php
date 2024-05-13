@@ -1039,6 +1039,24 @@ class TweetController extends Controller
             'message' => $users ? 'Tweets displayed successfully' : 'Failed to load tweets',
         ]);
     }
+
+    public function trends()
+    {
+
+        $tweetWithMostComments = Tweet::withCount('comments')
+
+            ->orderByDesc('comments_count')
+
+            ->first();
+
+        return response()->json([
+
+            'trending' => $tweetWithMostComments,
+
+            'trending' => $tweetWithMostComments ? 'Trending tweets displayed successfully' : 'Error displaying trends',
+
+        ]);
+    }
 }
     
 
