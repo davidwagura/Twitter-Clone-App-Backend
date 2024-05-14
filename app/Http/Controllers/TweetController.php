@@ -942,6 +942,7 @@ class TweetController extends Controller
 
     public function userNotifications(Request $request)
     {
+        
 
     }
 
@@ -1042,6 +1043,7 @@ class TweetController extends Controller
 
     public function trends()
     {
+        //withCount-> count the number of comments associated with each tweet
 
         $tweetWithMostComments = Tweet::withCount('comments')
 

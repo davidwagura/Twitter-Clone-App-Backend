@@ -116,3 +116,7 @@ Route::get('/for you',[TweetController::class,'tweetsForYou']);
 //trending tweets api
 
 Route::get('/trends', [TweetController::class, 'trends']);
+
+//user notifications api
+
+Route::get('/notifications', [TweetController::class, 'getNotifications']);
