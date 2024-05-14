@@ -120,3 +120,7 @@ Route::get('/trends', [TweetController::class, 'trends']);
 //user notifications api
 
 Route::get('/notifications/{user_id}', [TweetController::class, 'getNotifications']);
+
+//user mentions api
+
+Route::get('/mentions/{user_id}', [TweetController::class, 'getMentions']);

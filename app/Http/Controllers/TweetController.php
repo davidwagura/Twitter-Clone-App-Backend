@@ -939,6 +939,19 @@ class TweetController extends Controller
 
     }
 
+    // public function getMentions($user_id)
+    // {
+    //     $mention = User::findOrFail($user_id);
+
+    //     \Log::debug($mention);
+
+    //     return response()->json([
+    //         'mention' => $mention,
+
+    //         'message' => $mention ? 'Mentions displayed successfully' : 'Failed to display mentions'
+    //     ]);
+    // }
+
 
     public function getNotifications($user_id)
     {
