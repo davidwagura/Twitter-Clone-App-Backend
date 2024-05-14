@@ -1073,7 +1073,7 @@ class TweetController extends Controller
 
             ->orderByDesc('comments_count')
 
-            ->first();
+            ->take(10)->get();
 
         return response()->json([
 
