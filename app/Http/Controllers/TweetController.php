@@ -940,10 +940,21 @@ class TweetController extends Controller
     }
 
 
-    public function userNotifications(Request $request)
+    public function getNotifications()
     {
-        
+        $user = User::with(['notifications' => function ($query) {
 
+            $query->orderBy('created_at', 'desc');
+
+        }])->get();
+
+        return response()->json([
+
+            'notification' => $user,
+
+            'message' => $user ? 'Notifications displayed successfully' : 'Failed to display notifications'
+        
+        ]);
     }
 
     public function messages(Request $request, $sender_id, $receiver_id)
