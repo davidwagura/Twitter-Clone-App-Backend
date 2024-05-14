@@ -1053,7 +1053,7 @@ class TweetController extends Controller
 
             'trending' => $tweetWithMostComments,
 
-            'trending' => $tweetWithMostComments ? 'Trending tweets displayed successfully' : 'Error displaying trends',
+            'message' => $tweetWithMostComments ? 'Trending tweets displayed successfully' : 'Error displaying trends',
 
         ]);
     }
