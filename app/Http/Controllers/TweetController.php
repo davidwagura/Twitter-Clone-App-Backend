@@ -939,25 +939,23 @@ class TweetController extends Controller
 
     }
 
-    // public function getMentions($user_id)
-    // {
-    //     $mention = User::findOrFail($user_id);
+    public function getMentions($user_id)
+    {
+        $mention = User::findOrFail($user_id);
 
-    //     \Log::debug($mention);
+        // \Log::debug($mention);
 
-    //     return response()->json([
-    //         'mention' => $mention,
+        return response()->json([
+            'mention' => $mention,
 
-    //         'message' => $mention ? 'Mentions displayed successfully' : 'Failed to display mentions'
-    //     ]);
-    // }
+            'message' => $mention ? 'Mentions displayed successfully' : 'Failed to display mentions'
+        ]);
+    }
 
 
     public function getNotifications($user_id)
     {
-        $user = User::findOrFail($user_id);
-
-        $user->with(['notifications' => function ($query) {
+        $user = User::where('id' ,$user_id)->with(['notifications' => function ($query) {
 
             $query->orderBy('created_at', 'desc');
 
