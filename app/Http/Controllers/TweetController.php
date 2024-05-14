@@ -1025,7 +1025,7 @@ class TweetController extends Controller
     
         return response()->json([
 
-            'message' => 'All messages between sender and receiver have been deleted',
+            'message' => $messagesToDelete ? 'All messages between sender and receiver have been deleted' : 'No Messages to be deleted',
 
             'deleted_messages' => $messagesToDelete
 
