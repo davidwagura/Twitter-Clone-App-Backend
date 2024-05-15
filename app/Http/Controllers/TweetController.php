@@ -1092,9 +1092,17 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function editProfile()
+    public function editProfile($user_id)
     {
-        
+        $user = User::findOrFail($user_id);
+
+        return response()->json([
+
+            'user' => $user,
+
+            'message' => $user ? 'Profile updated successfully' : 'Failed to updated profile'
+
+        ]);
     }
 }
     
