@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->longText('bio');
-            $table->string('location');
-            $table->string('website');
-            $table->date('birth_date');
+            $table->longText('bio')->nullable();
+            $table->string('location')->nullable();
+            $table->string('website')->nullable();
+            $table->date('birth_date')->nullable();
             $table->timestamps();
         });
     }

@@ -100,7 +100,7 @@ Route::post('/profile', [TweetController::class, 'createProfile']);
 
 //update user profile
 
-Route::post('/update/{user_id}', [TweetController::class, 'editProfile']);
+Route::put('/update/{user_id}', [TweetController::class, 'editProfile']);
 
 
 
