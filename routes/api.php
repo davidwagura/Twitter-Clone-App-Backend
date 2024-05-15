@@ -77,7 +77,7 @@ Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController:
 
 //update user profile
 
-
+Route::post('/update', [TweetController::class, 'editProfile']);
 
 
 //get a tweet by it's Id

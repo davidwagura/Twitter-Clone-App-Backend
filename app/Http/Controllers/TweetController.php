@@ -1092,6 +1092,10 @@ class TweetController extends Controller
         ], 200);
     }
 
+    public function editProfile()
+    {
+        
+    }
 }
     
 
