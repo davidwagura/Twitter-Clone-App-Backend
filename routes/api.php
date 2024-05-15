@@ -95,7 +95,7 @@ Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController:
 
 //create user profile
 
-Route::post('/profile/{user_id}', [TweetController::class, 'createProfile']);
+Route::post('/profile', [TweetController::class, 'createProfile']);
 
 
 //update user profile
