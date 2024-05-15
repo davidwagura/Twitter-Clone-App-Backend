@@ -39,4 +39,9 @@ class User extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
 }
