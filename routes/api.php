@@ -3,42 +3,79 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
 
-
-Route::post('/login', [TweetController::class, 'login']);
-
-Route::post('/logout', [TweetController::class, 'logout']);
+//home page
 
 Route::get('/', [TweetController::class, 'home']);
 
+//login to your account
+
+Route::post('/login', [TweetController::class, 'login']);
+
+//logout out of your account
+
+Route::post('/logout', [TweetController::class, 'logout']);
+
+//create a new tweet
+
 Route::post('/tweet', [TweetController::class, 'tweet']);
+
+//create a new user(register)
 
 Route::post('/user', [TweetController::class, 'user']);
 
+//comment on a tweet
+
 Route::post('/tweet/comment', [TweetController::class, 'comment']);
+
+//like a tweet
 
 Route::post('/like/{tweet_id}/{user_id}', [TweetController::class, 'likeTweet']);
 
+//unlike a already liked tweet
+
 Route::post('/unlike/{tweet_id}/{likes_id}', [TweetController::class, 'unlikeTweet']);
+
+//retweet a tweet
 
 Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']);
 
+//remove a retweeted tweet
+
 Route::post('/unretweet/{tweet_id}/{likes_id}', [TweetController::class, 'unretweet']);
+
+//reset user password
 
 Route::post('/resetPassword/{user_id}', [TweetController::class, 'resetPassword']);
 
+//route for users to follow you
+
 Route::post('/followers/{follower_id}/{user_to_follow_id}', [TweetController::class, 'followers']);
+
+//user following you unfollow route
 
 Route::post('/unfollow/{follower_id}/{user_id}', [TweetController::class, 'followersUnFollow']);
 
+//follow a user
+
 Route::post('/following/{following_id}/{user_to_follow_id}', [TweetController::class, 'following']);
+
+//unfollow a user you were following
 
 Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'followingUnFollow']);
 
+//send a message to an user
+
 Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'messages']);
+
+//delete a single message in a conversation
 
 Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
 
+//delete a conversation between two users
+
 Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController::class, 'deleteConversation']);
+
+//update user profile
 
 
 
@@ -46,7 +83,6 @@ Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController:
 //get a tweet by it's Id
 
 Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
-
 
 //get  all the comments of a tweet by it's Id
 
