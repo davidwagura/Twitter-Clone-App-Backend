@@ -939,19 +939,27 @@ class TweetController extends Controller
 
     }
 
-    public function getMentions($user_id)
+    public function getMentions($createdBy, $user_id)
     {
-        $mention = User::findOrFail($user_id);
+        $mentions = Notification::where('createdBy', $createdBy)
 
-        // \Log::debug($mention);
+                                ->orderBy('created_at', 'desc')
 
+                                ->get();
+
+        $user =  Notification::where('user_id', $user_id)->get();
+        
         return response()->json([
-            'mention' => $mention,
 
-            'message' => $mention ? 'Mentions displayed successfully' : 'Failed to display mentions'
+            'user' => $user,
+
+            'mentions' => $mentions,
+
+            'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
+
         ]);
     }
-
+    
 
     public function getNotifications($user_id)
     {
