@@ -8,14 +8,15 @@ use App\Models\Tweet;
 use App\Models\Comment;
 use App\Models\Mention;
 use App\Models\Message;
+use App\Models\Profile;
 use App\Models\Follower;
 use App\Models\Following;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Ramsey\Collection\Collection;
 use function Laravel\Prompts\alert;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -1090,6 +1091,33 @@ class TweetController extends Controller
             'message' => $tweetWithMostComments ? 'Trending tweets displayed successfully' : 'Error displaying trends',
 
         ], 200);
+    }
+
+    public function createProfile(Request $request)
+    {
+        $profile = new Profile;
+
+        $profile->user_id = $request->user_id;
+
+        $profile->name = $request->name;
+
+        $profile->bio = $request->bio;
+
+        $profile->location = $request->location;
+
+        $profile->website = $request->website;
+
+        $profile->birth_date = $request->birth_date;
+
+        $profile->save();
+
+        return response()->json([
+
+            'profile' => $profile,
+
+            'message' => $profile ? 'Profile created successfully' : 'Error creating profile',
+        ],200);
+        
     }
 
     public function editProfile($user_id)
