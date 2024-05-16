@@ -1122,31 +1122,31 @@ class TweetController extends Controller
 
     public function editProfile(Request $request , $user_id)
     {
-        $update = Profile::where('user_id', $user_id)->get();
+        $record = Profile::where('user_id', $user_id)->get();
 
-        foreach($update as $record)
-        {
-            $record->name = $request->name;
+        $record->name = $request->name;
 
-            $record->bio = $request->bio;
+        $record->bio = $request->bio;
     
-            $record->location = $request->location;
+        $record->location = $request->location;
     
-            $record->website = $request->website;
+        $record->website = $request->website;
     
-            $record->birth_date = $request->birth_date;
+        $record->birth_date = $request->birth_date;
+
+        \Log::debug($request);
+
     
-            $record->save();
-        }
+        // return response()->json([
 
-        return response()->json([
+        //     'userProfile' => $record,
 
-            'userProfile' => $record,
+        //     'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
 
-            'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
-
-        ],200);
+        // ],200);
     }
+
+    
 }
     
 
