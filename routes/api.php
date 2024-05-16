@@ -171,7 +171,7 @@ Route::get('/media/{user_id}', [TweetController::class, 'showMedia']);
 
 //show all user comments
 
-Route::get('/comments', [TweetController::class, 'userComments']);
+Route::get('/comments/{user_id}', [TweetController::class, 'userComments']);
 
 
 //get all users I'm following tweets
