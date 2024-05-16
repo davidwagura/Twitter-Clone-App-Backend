@@ -1133,9 +1133,6 @@ class TweetController extends Controller
         $record->website = $request->website;
     
         $record->birth_date = $request->birth_date;
-
-        \Log::debug($request);
-
     
         // return response()->json([
 
@@ -1146,6 +1143,24 @@ class TweetController extends Controller
         // ],200);
     }
 
+    public function userComments($user_id)
+    {
+
+        $comments = Comment::where('user_id', $user_id)
+                            
+                            ->with('tweet')
+                            
+                            ->latest()
+                            
+                            ->get();
+
+        return response()->json([
+
+            'comment' => $comments,
+
+            'message' => $comments ? 'User comments displayed successfully' : 'No user comment found'
+        ]);
+    }
 }
     
 
