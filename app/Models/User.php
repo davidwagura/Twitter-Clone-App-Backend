@@ -44,4 +44,14 @@ class User extends Model
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function sender()
+    {
+        return $this->hasMany(Sender::class);
+    }
+
+    public function receiver()
+    {
+        return $this->hasMany(Receiver::class);
+    }
 }
