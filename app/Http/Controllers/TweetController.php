@@ -1164,6 +1164,24 @@ class TweetController extends Controller
             'message' => $comments ? 'User comments displayed successfully' : 'No user comment found'
         ]);
     }
+
+    public function userConversations($user_id)
+    {
+        $conversations = Message::where('sender_id', $user_id)
+
+                                ->with('user')
+                                
+                                ->get();
+
+        // \Log::debug($conversations);
+
+        return response()->json([
+
+            'conversations' => $conversations,
+
+            'message' => $conversations ? 'Conversation displayed successfully' : 'Failed to display conversations'
+        ]);
+    }
 }
     
 
