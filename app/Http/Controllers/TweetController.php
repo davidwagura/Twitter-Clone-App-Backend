@@ -1165,21 +1165,19 @@ class TweetController extends Controller
         ]);
     }
 
-    public function userConversations($user_id)
+    public function userConversations($sender_id, $receiver_id)
     {
-        $conversations = Message::where('sender_id', $user_id)
+        $conversations = Message::where('receivers_id', $receiver_id)
 
-                                ->with('user')
+                                ->where('sender_id', $sender_id)
                                 
                                 ->get();
-
-        // \Log::debug($conversations);
 
         return response()->json([
 
             'conversations' => $conversations,
 
-            'message' => $conversations ? 'Conversation displayed successfully' : 'Failed to display conversations'
+            'message' => !$conversations->isEmpty() ? 'Conversation displayed successfully' : 'Empty conversation'
         ]);
     }
 }

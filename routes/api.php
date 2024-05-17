@@ -200,4 +200,4 @@ Route::get('/mentions/{created_by}/{user_id}', [TweetController::class, 'getMent
 
 //get conversations
 
-Route::get('/conversations/{user_id}', [TweetController::class, 'userConversations']);
+Route::get('/conversations/{sender_id}/{receiver_id}', [TweetController::class, 'userConversations']);
