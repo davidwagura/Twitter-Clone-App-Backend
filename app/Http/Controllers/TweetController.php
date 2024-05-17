@@ -1124,23 +1124,26 @@ class TweetController extends Controller
     {
         $record = Profile::where('user_id', $user_id)->get();
 
-        $record->name = $request->name;
+        // $record->name = $request->name;
 
-        $record->bio = $request->bio;
+        // $record->bio = $request->bio;
     
-        $record->location = $request->location;
+        // $record->location = $request->location;
     
-        $record->website = $request->website;
+        // $record->website = $request->website;
     
-        $record->birth_date = $request->birth_date;
-    
-        // return response()->json([
+        // $record->birth_date = $request->birth_date;
 
-        //     'userProfile' => $record,
+
+        \Log::debug($request);
+    
+        return response()->json([
+
+            'userProfile' => $record,
 
         //     'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
 
-        // ],200);
+        ],200);
     }
 
     public function userComments($user_id)

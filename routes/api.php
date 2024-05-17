@@ -83,16 +83,6 @@ Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'f
 Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'messages']);
 
 
-//delete a single message in a conversation
-
-Route::post('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
-
-
-//delete a conversation between two users
-
-Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController::class, 'deleteConversation']);
-
-
 //create user profile
 
 Route::post('/profile', [TweetController::class, 'createProfile']);
@@ -101,6 +91,26 @@ Route::post('/profile', [TweetController::class, 'createProfile']);
 //update user profile
 
 Route::put('/update/{user_id}', [TweetController::class, 'editProfile']);
+
+
+
+
+//DELETE
+
+//delete a user's tweet by it's Id
+
+Route::delete('tweet/delete/{tweet_id}', [TweetController::class, 'deleteTweet']);
+
+
+//delete a conversation between two users
+
+Route::delete('/deleteConversation/{sender_id}/{receiver_id}', [TweetController::class, 'deleteConversation']);
+
+
+//delete a single message in a conversation
+
+Route::delete('/deleteOneMessage/{message_id}', [TweetController::class, 'deleteOneMessage']);
+
 
 
 
@@ -134,11 +144,6 @@ Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
 
 
-//delete a user's tweet by it's Id
-
-Route::delete('tweet/delete/{tweet_id}', [TweetController::class, 'deleteTweet']);
-
-
 //get all the users that are following me
 
 Route::get('/myFollowers/{myId}', [TweetController::class, 'showFollowers']);
@@ -160,8 +165,6 @@ Route::get('/userLikedTweets/{user_id}', [TweetController::class, 'getUserLikedT
 
 
 //get all comments of a user
-
-Route::get('/userTweetComments/{user_id}', [TweetController::class, 'getUserTweetComments']);
 
 Route::get('/highlights/{user_id}', [TweetController::class, 'showHighlights']);
 
@@ -194,3 +197,7 @@ Route::get('/notifications/{user_id}', [TweetController::class, 'getNotification
 //user mentions api
 
 Route::get('/mentions/{created_by}/{user_id}', [TweetController::class, 'getMentions']);
+
+//get conversations
+
+Route::get('/conversations/{user_id}', [TweetController::class, 'userConversations']);
