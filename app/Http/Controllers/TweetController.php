@@ -1124,15 +1124,15 @@ class TweetController extends Controller
     {
         $record = Profile::where('user_id', $user_id)->get();
 
-        // $record->name = $request->name;
+        $record->name = $request->name;
 
-        // $record->bio = $request->bio;
+        $record->bio = $request->bio;
     
-        // $record->location = $request->location;
+        $record->location = $request->location;
     
-        // $record->website = $request->website;
+        $record->website = $request->website;
     
-        // $record->birth_date = $request->birth_date;
+        $record->birth_date = $request->birth_date;
 
 
         \Log::debug($request);
@@ -1161,7 +1161,7 @@ class TweetController extends Controller
 
             'comment' => $comments,
 
-            'message' => $comments ? 'User comments displayed successfully' : 'No user comment found'
+            'message' => !$comments->isEmpty() ? 'User comments displayed successfully' : 'No user comment found'
         ]);
     }
 
@@ -1170,6 +1170,8 @@ class TweetController extends Controller
         $conversations = Message::where('receivers_id', $receiver_id)
 
                                 ->where('sender_id', $sender_id)
+
+                                ->latest()
                                 
                                 ->get();
 
