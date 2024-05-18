@@ -110,7 +110,7 @@ class TweetController extends Controller
             'mention' => $mention,
 
             'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
-            
+
         ],200);
     }
     
@@ -186,6 +186,14 @@ class TweetController extends Controller
         $mention->seen = false;
 
         $mention->save();
+
+        return response()->json([
+
+            'mention' => $mention,
+
+            'message' => !$mention->isEmpty() ? 'Mention created successfully' : 'Failed to create mention'
+
+        ]);
 
 
         $user = User::findOrFail($userId);
