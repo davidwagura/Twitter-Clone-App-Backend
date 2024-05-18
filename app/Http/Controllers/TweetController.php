@@ -193,7 +193,7 @@ class TweetController extends Controller
 
             'message' => !$mention->isEmpty() ? 'Mention created successfully' : 'Failed to create mention'
 
-        ]);
+        ],200);
 
 
         $user = User::findOrFail($userId);
@@ -211,6 +211,14 @@ class TweetController extends Controller
         $notifications->seen = false;
 
         $notifications->save();
+
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => $notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
+
+        ],200);
 
     }
 
