@@ -251,15 +251,13 @@ class TweetController extends Controller
 
     public function userTweets($id) //get
     {
-        // $comments = Comment::where( 'user_id', $id)->with( 'user')->get();
-
         $comments = Comment::where('tweet_id', $id)->with('tweet')->get();
 
         return response()->json([
 
-            'comments' => $comments,
+            'Tweets' => $comments,
 
-            'message' => !$comments->isEmpty() ? 'Comments displayed successfully' : 'No comments found'
+            'message' => !$comments->isEmpty() ? 'Tweets displayed successfully' : 'No tweets found'
 
         ],200);
     }
@@ -269,7 +267,12 @@ class TweetController extends Controller
     {
         $tweet = Tweet::with('comment')->findOrFail($id);
 
-        return response()->json($tweet);
+        return response()->json([
+
+            'tweet' => $tweet,
+
+            'message' => !$tweet->isEmpty() ? 'Comments displayed successfully' : 'No comments found'
+        ],200);
     }
 
 
