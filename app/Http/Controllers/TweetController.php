@@ -216,7 +216,7 @@ class TweetController extends Controller
 
             'notification' => $notifications,
 
-            'message' => $notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
 
         ],200);
 
@@ -230,7 +230,7 @@ class TweetController extends Controller
 
             'tweets' => $tweets,
 
-            'message' => $tweets ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+            'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
 
         ], 200);
     }
@@ -244,9 +244,9 @@ class TweetController extends Controller
 
             'comment' => $comment,
 
-            'message' => $comment ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+            'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
     
-        ]);
+        ],200);
     }
 
     public function userTweets($id) //get
@@ -255,7 +255,13 @@ class TweetController extends Controller
 
         $comments = Comment::where('tweet_id', $id)->with('tweet')->get();
 
-        return response()->json($comments);
+        return response()->json([
+
+            'comments' => $comments,
+
+            'message' => !$comments->isEmpty() ? 'Comments displayed successfully' : 'No comments found'
+
+        ],200);
     }
 
 
