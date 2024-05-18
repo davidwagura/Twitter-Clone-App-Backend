@@ -104,6 +104,13 @@ class TweetController extends Controller
         $mention->seen = false;
     
         $mention->save();
+
+        return response()->json([
+
+            'mention' => $mention,
+
+            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
+        ]);
     }
     
     
@@ -1122,7 +1129,7 @@ class TweetController extends Controller
 
     public function editProfile(Request $request , $user_id)
     {
-        $record = Profile::where('user_id', $user_id)->get();
+        $record = Profile::where('user_id', $user_id)->first();
 
         $record->name = $request->name;
 
@@ -1134,14 +1141,13 @@ class TweetController extends Controller
     
         $record->birth_date = $request->birth_date;
 
-
-        \Log::debug($request);
+        $record->save();
     
         return response()->json([
 
             'userProfile' => $record,
 
-        //     'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
+            'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
 
         ],200);
     }
