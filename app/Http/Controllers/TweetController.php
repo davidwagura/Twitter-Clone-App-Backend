@@ -110,7 +110,8 @@ class TweetController extends Controller
             'mention' => $mention,
 
             'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
-        ]);
+            
+        ],200);
     }
     
     
