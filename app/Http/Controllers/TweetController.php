@@ -272,6 +272,7 @@ class TweetController extends Controller
             'tweet' => $tweet,
 
             'message' => !$tweet->isEmpty() ? 'Comments displayed successfully' : 'No comments found'
+
         ],200);
     }
 
@@ -339,7 +340,15 @@ class TweetController extends Controller
             
         $notifications->seen = false;
 
-        $notifications->save();        
+        $notifications->save();   
+        
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'No notification found'
+
+        ],200);
 
     }
 
@@ -451,6 +460,14 @@ class TweetController extends Controller
 
         $notifications->save();
 
+        return response()->json([
+
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is empty',
+
+            'notification' => $notifications
+
+        ],200);
+
     }
     
     public function unretweet($tweet_id, $user_id)
@@ -509,7 +526,7 @@ class TweetController extends Controller
             
                 'message' => $tweet ? 'Tweet deleted successfully' : 'Failed to delete tweet'
 
-            ]);
+            ],200);
 
         }
 
@@ -568,6 +585,14 @@ class TweetController extends Controller
 
         $notifications->save();
 
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is Empty'
+
+        ],200);
+
     }
 
 
@@ -598,6 +623,7 @@ class TweetController extends Controller
                     'message' => "login successful",
 
                     'token' => $token
+
                 ],200);
             }
 
@@ -718,6 +744,14 @@ class TweetController extends Controller
         $notifications->seen = false;
 
         $notifications->save();
+
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is empty'
+
+        ],200);
 
     }
 
@@ -973,26 +1007,26 @@ class TweetController extends Controller
 
     }
 
-    public function getMentions($createdBy, $user_id)
-    {
-        $mentions = Notification::where('createdBy', $createdBy)
+    // public function getMentions($createdBy, $user_id)
+    // {
+    //     $mentions = Notification::where('createdBy', $createdBy)
 
-                                ->orderBy('created_at', 'desc')
+    //                             ->orderBy('created_at', 'desc')
 
-                                ->get();
+    //                             ->get();
 
-        $user =  Notification::where('user_id', $user_id)->get();
+    //     $user =  Notification::where('user_id', $user_id)->get();
         
-        return response()->json([
+    //     return response()->json([
 
-            'user' => $user,
+    //         'user' => $user,
 
-            'mentions' => $mentions,
+    //         'mentions' => $mentions,
 
-            'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
+    //         'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
 
-        ]);
-    }
+    //     ],200);
+    // }
     
 
     public function getNotifications($user_id)
@@ -1121,7 +1155,7 @@ class TweetController extends Controller
 
             'trending' => $tweetWithMostComments,
 
-            'message' => $tweetWithMostComments ? 'Trending tweets displayed successfully' : 'Error displaying trends',
+            'message' => !$tweetWithMostComments->isEmpty() ? 'Trending tweets displayed successfully' : 'No comments found',
 
         ], 200);
     }
@@ -1149,6 +1183,7 @@ class TweetController extends Controller
             'profile' => $profile,
 
             'message' => $profile ? 'Profile created successfully' : 'Error creating profile',
+
         ],200);
         
     }
@@ -1173,7 +1208,7 @@ class TweetController extends Controller
 
             'userProfile' => $record,
 
-            'message' => $record ? 'Profile updated successfully' : 'Failed to updated profile'
+            'message' => !$record->isEmpty() ? 'Profile updated successfully' : 'Profile not found'
 
         ],200);
     }
