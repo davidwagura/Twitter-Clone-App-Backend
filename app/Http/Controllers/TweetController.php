@@ -1007,26 +1007,28 @@ class TweetController extends Controller
 
     }
 
-    // public function getMentions($createdBy, $user_id)
-    // {
-    //     $mentions = Notification::where('createdBy', $createdBy)
+    public function getMentions($createdBy, $user_id)
+    {
+        $mentions = Notification::where('createdBy', $createdBy)
 
-    //                             ->orderBy('created_at', 'desc')
+                                ->with('user')
 
-    //                             ->get();
+                                ->orderBy('created_at', 'desc')
 
-    //     $user =  Notification::where('user_id', $user_id)->get();
+                                ->get();
+
+        $user =  Notification::where('user_id', $user_id)->get();
         
-    //     return response()->json([
+        return response()->json([
 
-    //         'user' => $user,
+            'user' => $user,
 
-    //         'mentions' => $mentions,
+            'mentions' => $mentions,
 
-    //         'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
+            'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
 
-    //     ],200);
-    // }
+        ],200);
+    }
     
 
     public function getNotifications($user_id)
@@ -1119,7 +1121,7 @@ class TweetController extends Controller
             'message' => $tweet ? 'Displaying tweets' :  'Failed to display tweets',
 
             'tweet' => $tweet
-        ]);
+        ],200);
 
     }
 
