@@ -1140,7 +1140,7 @@ class TweetController extends Controller
             'user' => $users,
 
             'message' => $users ? 'Tweets displayed successfully' : 'Failed to load tweets',
-        ]);
+        ],200);
     }
 
     public function trends()
