@@ -1249,7 +1249,7 @@ class TweetController extends Controller
             'conversations' => $conversations,
 
             'message' => !$conversations->isEmpty() ? 'Conversation displayed successfully' : 'Empty conversation'
-        ]);
+        ],200);
     }
 }
     
