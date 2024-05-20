@@ -187,11 +187,13 @@ class TweetController extends Controller
 
         $mention->save();
 
+        \Log::debug($mention);
+
         return response()->json([
 
             'mention' => $mention,
 
-            'message' => !$mention->isEmpty() ? 'Mention created successfully' : 'Failed to create mention'
+            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
 
         ],200);
 
@@ -251,7 +253,7 @@ class TweetController extends Controller
 
     public function userTweets($id) //get
     {
-        $comments = Comment::where('tweet_id', $id)->with('tweet')->get();
+        $comments = Tweet::where('user_id', $id)->get();
 
         return response()->json([
 
