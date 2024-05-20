@@ -187,8 +187,6 @@ class TweetController extends Controller
 
         $mention->save();
 
-        \Log::debug($mention);
-
         return response()->json([
 
             'mention' => $mention,
@@ -238,18 +236,18 @@ class TweetController extends Controller
     }
     
 
-    // public function comments($id) //get
-    // {
-    //     $comment = Comment::where('tweet_id', $id)->get();
+    public function comments($id) //get
+    {
+        $comment = Comment::where('tweet_id', $id)->get();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'comment' => $comment,
+            'comment' => $comment,
 
-    //         'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+            'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
     
-    //     ],200);
-    // }
+        ],200);
+    }
 
     public function userTweets($id) //get
     {
@@ -747,7 +745,7 @@ class TweetController extends Controller
 
             'notification' => $notifications,
 
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is empty'
+            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
         ],200);
 
@@ -974,22 +972,6 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function getUserTweetComments($user_id)
-    {
-        $user = User::findOrFail($user_id);
-    
-        $comment = $user->comment()->with('tweet')->get();
-        
-        return response()->json([
-
-            'comments' => $comment,
-
-            'message' => $comment ? 'User comments on tweets retrieved successfully' : 'No comments found for the user on tweets'
-
-        ], 200);
-    }
-
-
     public function showHighlights()
     {
 
@@ -1208,7 +1190,7 @@ class TweetController extends Controller
 
             'userProfile' => $record,
 
-            'message' => !$record->isEmpty() ? 'Profile updated successfully' : 'Profile not found'
+            'message' => $record ? 'Profile updated successfully' : 'Profile not found'
 
         ],200);
     }
