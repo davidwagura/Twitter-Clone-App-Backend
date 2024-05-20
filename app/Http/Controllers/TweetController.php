@@ -267,7 +267,7 @@ class TweetController extends Controller
 
     public function tweetComments($id) //get
     {
-        $tweet = Tweet::with('comment')->findOrFail($id);
+        $tweet = Comment::where('tweet_id', $id)->with('tweet')->get();
 
         return response()->json([
 
