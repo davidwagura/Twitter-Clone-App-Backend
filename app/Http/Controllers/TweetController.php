@@ -238,28 +238,28 @@ class TweetController extends Controller
     }
     
 
-    public function comments($id) //get
-    {
-        $comment = Comment::where('tweet_id', $id)->get();
+    // public function comments($id) //get
+    // {
+    //     $comment = Comment::where('tweet_id', $id)->get();
 
-        return response()->json([
+    //     return response()->json([
 
-            'comment' => $comment,
+    //         'comment' => $comment,
 
-            'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+    //         'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
     
-        ],200);
-    }
+    //     ],200);
+    // }
 
     public function userTweets($id) //get
     {
-        $comments = Tweet::where('user_id', $id)->get();
+        $tweets = Tweet::where('user_id', $id)->with('user')->get();
 
         return response()->json([
 
-            'Tweets' => $comments,
+            'Tweets' => $tweets,
 
-            'message' => !$comments->isEmpty() ? 'Tweets displayed successfully' : 'No tweets found'
+            'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found'
 
         ],200);
     }
@@ -348,7 +348,7 @@ class TweetController extends Controller
 
             'notification' => $notifications,
 
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'No notification found'
+            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
 
         ],200);
 
@@ -464,9 +464,9 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is empty',
+            'notification' => $notifications,
 
-            'notification' => $notifications
+            'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
 
         ],200);
 
@@ -561,7 +561,7 @@ class TweetController extends Controller
                         
                     'message' => $user ? 'Password reset successfully' : 'Password reset failed',
         
-                    'user' => $user
+                    'user' => $user->password = $request->new_password
                     
                 ],200);
             }
@@ -591,7 +591,7 @@ class TweetController extends Controller
 
             'notification' => $notifications,
 
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Notification data is Empty'
+            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
         ],200);
 
@@ -670,14 +670,10 @@ class TweetController extends Controller
     }
         
     public function profile($user_id)
-    {
-        $user = User::findOrFail($user_id);
-    
-        $tweets = Tweet::where('user_id', $user->id)->get();
+    {    
+        $tweets = User::where('id', $user_id)->with('tweet')->get();
     
         return response()->json([
-
-            'user' => $user,
 
             'tweets' => $tweets,
 
