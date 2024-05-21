@@ -1101,6 +1101,7 @@ class TweetController extends Controller
             'message' => $tweet ? 'Displaying tweets' :  'Failed to display tweets',
 
             'tweet' => $tweet
+
         ],200);
 
     }
@@ -1120,6 +1121,7 @@ class TweetController extends Controller
             'user' => $users,
 
             'message' => $users ? 'Tweets displayed successfully' : 'Failed to load tweets',
+
         ],200);
     }
 
@@ -1229,6 +1231,7 @@ class TweetController extends Controller
             'conversations' => $conversations,
 
             'message' => !$conversations->isEmpty() ? 'Conversation displayed successfully' : 'Empty conversation'
+            
         ],200);
     }
 }
