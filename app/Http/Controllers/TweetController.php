@@ -72,7 +72,7 @@ class TweetController extends Controller
 
         if ($tweet) {
 
-            $this->tweetMention($tweet, $request->receiver_id);
+            // $this->tweetMention($tweet, $request->receiver_id);
 
             return response()->json([
 
@@ -85,34 +85,34 @@ class TweetController extends Controller
 
     }
 
-    public function tweetMention(Tweet $tweet,$receiverId)
-    {
-        $user = $tweet->user;
+    // public function tweetMention(Tweet $tweet,$receiverId)
+    // {
+    //     $user = $tweet->user;
     
-        $mention = new Notification;
+    //     $mention = new Notification;
     
-        $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
+    //     $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
     
-        $mention->createdBy = $receiverId;
+    //     $mention->createdBy = $receiverId;
     
-        $mention->related_item_id = $tweet->id;
+    //     $mention->related_item_id = $tweet->id;
     
-        $mention->user_id = $user->id;
+    //     $mention->user_id = $user->id;
     
-        $mention->action_type = 'tweet';
+    //     $mention->action_type = 'tweet';
     
-        $mention->seen = false;
+    //     $mention->seen = false;
     
-        $mention->save();
+    //     $mention->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'mention' => $mention,
+    //         'mention' => $mention,
 
-            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
+    //         'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
 
-        ],200);
-    }
+    //     ],200);
+    // }
     
     
     public function user(Request $request)
@@ -155,7 +155,7 @@ class TweetController extends Controller
 
         if ($comment->save()) {
 
-            $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
+            // $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
 
             return response()->json([
                 
@@ -167,60 +167,60 @@ class TweetController extends Controller
         }
     }
 
-    public function commentMention($userId, $receiverId, $tweetId)
-    {
-        $user = User::findOrFail($userId);
+    // public function commentMention($userId, $receiverId, $tweetId)
+    // {
+    //     $user = User::findOrFail($userId);
 
-        $mention = new Notification;
+    //     $mention = new Notification;
 
-        $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
+    //     $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
 
-        $mention->createdBy = $receiverId;
+    //     $mention->createdBy = $receiverId;
 
-        $mention->related_item_id = $tweetId;
+    //     $mention->related_item_id = $tweetId;
 
-        $mention->user_id = $userId;
+    //     $mention->user_id = $userId;
 
-        $mention->action_type = 'comment';
+    //     $mention->action_type = 'comment';
         
-        $mention->seen = false;
+    //     $mention->seen = false;
 
-        $mention->save();
+    //     $mention->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'mention' => $mention,
+    //         'mention' => $mention,
 
-            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
+    //         'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
 
-        ],200);
+    //     ],200);
 
 
-        $user = User::findOrFail($userId);
+    //     $user = User::findOrFail($userId);
 
-        $notifications = new Notification;
+    //     $notifications = new Notification;
 
-        $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
+    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
 
-        $notifications->related_item_id = $tweetId;
+    //     $notifications->related_item_id = $tweetId;
 
-        $notifications->user_id = $userId;
+    //     $notifications->user_id = $userId;
 
-        $notifications->action_type = 'comment';
+    //     $notifications->action_type = 'comment';
         
-        $notifications->seen = false;
+    //     $notifications->seen = false;
 
-        $notifications->save();
+    //     $notifications->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'notification' => $notifications,
+    //         'notification' => $notifications,
 
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
+    //         'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
 
-        ],200);
+    //     ],200);
 
-    }
+    // }
 
     public function showTweet($user_id) //get
     {
