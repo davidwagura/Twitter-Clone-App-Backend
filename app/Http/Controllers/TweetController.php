@@ -235,10 +235,10 @@ class TweetController extends Controller
         ], 200);
     }
     
-
-    public function comments($id) //get
+//Tweet comments
+    public function comments($tweet_id) //get
     {
-        $comment = Comment::where('tweet_id', $id)->get();
+        $comment = Comment::where('tweet_id', $tweet_id)->get();
 
         return response()->json([
 
@@ -255,27 +255,12 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'Tweets' => $tweets,
+            'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found',
 
-            'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found'
-
-        ],200);
-    }
-
-
-    public function tweetComments($id) //get
-    {
-        $tweet = Comment::where('tweet_id', $id)->with('tweet')->get();
-
-        return response()->json([
-
-            'tweet' => $tweet,
-
-            'message' => !$tweet->isEmpty() ? 'Comments displayed successfully' : 'No comments found'
+            'Tweets' => $tweets
 
         ],200);
     }
-
 
     public function likeTweet($tweet_id, $user_id)
     {

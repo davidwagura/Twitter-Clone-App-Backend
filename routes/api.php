@@ -124,19 +124,14 @@ Route::delete('/deleteOneMessage/{message_id}', [TweetController::class, 'delete
 Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
 
 
-//get  all the comments of a tweet by it's Id
+//get  all the comments of a tweet by it's Id 
 
-Route::get('/comments/{id}', [TweetController::class, 'comments']);
+Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 
 //get all user tweets
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
-
-
-//get all user comments
-
-Route::get('tweet/comments/{id}', [TweetController::class, 'tweetComments']);
 
 
 //show the profile details of the user
