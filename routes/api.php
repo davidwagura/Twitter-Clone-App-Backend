@@ -40,7 +40,7 @@ Route::post('/like/{tweet_id}/{user_id}', [TweetController::class, 'likeTweet'])
 
 //unlike a already liked tweet
 
-Route::post('/unlike/{tweet_id}/{likes_id}', [TweetController::class, 'unlikeTweet']);
+Route::post('/unlike/{tweet_id}/{user_id}', [TweetController::class, 'unlikeTweet']);
 
 
 //retweet a tweet

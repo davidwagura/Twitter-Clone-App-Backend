@@ -375,7 +375,7 @@ class TweetController extends Controller
 
         return response()->json([
             
-            'message' => $tweet ? 'Tweet unlike successfully' : 'Tweet unlike not successful',
+            'message' => $tweet ? 'Tweet unlike successful' : 'Tweet unlike not successful',
         
             'tweet' => $tweet
         
