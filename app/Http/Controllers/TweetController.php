@@ -539,7 +539,7 @@ class TweetController extends Controller
 
             if ($user->save())
             {
-                $this->resetPasswordNotification($user_id);
+                // $this->resetPasswordNotification($user_id);
         
                 return response()->json([
                         
@@ -553,33 +553,33 @@ class TweetController extends Controller
 
     }
 
-    public function resetPasswordNotification($user_id)
-    {
-        $user = User::findOrFail($user_id);
+    // public function resetPasswordNotification($user_id)
+    // {
+    //     $user = User::findOrFail($user_id);
 
-        $notifications = new Notification;
+    //     $notifications = new Notification;
 
-        $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
+    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
 
-        $notifications->related_item_id = $user_id;
+    //     $notifications->related_item_id = $user_id;
 
-        $notifications->user_id = $user_id;
+    //     $notifications->user_id = $user_id;
 
-        $notifications->action_type = 'password reset';
+    //     $notifications->action_type = 'password reset';
         
-        $notifications->seen = false;
+    //     $notifications->seen = false;
 
-        $notifications->save();
+    //     $notifications->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'notification' => $notifications,
+    //         'notification' => $notifications,
 
-            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
+    //         'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
-        ],200);
+    //     ],200);
 
-    }
+    // }
 
 
 
