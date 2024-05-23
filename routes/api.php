@@ -50,7 +50,7 @@ Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']
 
 //remove a retweeted tweet
 
-Route::post('/unretweet/{tweet_id}/{likes_id}', [TweetController::class, 'unretweet']);
+Route::post('/unretweet/{tweet_id}/{user_id}', [TweetController::class, 'unretweet']);
 
 
 //reset user password

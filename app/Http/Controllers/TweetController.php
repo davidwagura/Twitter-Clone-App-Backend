@@ -416,7 +416,7 @@ class TweetController extends Controller
 
         if($tweet->save())
         {
-            $this->retweetNotification($user_id,$tweet_id);
+            // $this->retweetNotification($user_id,$tweet_id);
 
             return response()->json([
                 
@@ -428,33 +428,33 @@ class TweetController extends Controller
         }
     }
 
-    public function retweetNotification($user_id,$tweet_id)
-    {
-        $user = User::findOrFail($user_id);
+    // public function retweetNotification($user_id,$tweet_id)
+    // {
+    //     $user = User::findOrFail($user_id);
 
-        $notifications = new Notification;
+    //     $notifications = new Notification;
 
-        $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
+    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
 
-        $notifications->related_item_id = $tweet_id;
+    //     $notifications->related_item_id = $tweet_id;
 
-        $notifications->user_id = $user_id;
+    //     $notifications->user_id = $user_id;
 
-        $notifications->action_type = 'retweet';
+    //     $notifications->action_type = 'retweet';
                 
-        $notifications->seen = false;
+    //     $notifications->seen = false;
 
-        $notifications->save();
+    //     $notifications->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'notification' => $notifications,
+    //         'notification' => $notifications,
 
-            'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
+    //         'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
 
-        ],200);
+    //     ],200);
 
-    }
+    // }
     
     public function unretweet($tweet_id, $user_id)
     {

@@ -26,6 +26,7 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment1 = Comment::create([
+            'id' => 1,
 
             'body' => 'First comment',
 
@@ -35,6 +36,7 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment2 = Comment::create([
+            'id' => 2,
 
             'body' => 'Second comment',
 
@@ -43,31 +45,15 @@ class GetTweetCommentsTest extends TestCase
             'user_id' => $tweet->id
         ]);
 
-        $response = $this->get('/api/comments/{tweet_id}');
+        $response = $this->get('/api/comments/1');
 
         $response->assertStatus(200);
 
         $response->assertJson([
 
-            'message' => 'Comments failed to be displayed',
+            'message' => 'Comments displayed successfully',
 
             // 'comment' => $comment1, $comment2
-            // [
-            //     'id' => $comment1->id,
-
-            //     'body' => 'First comment',
-
-            //     'user_id' => $tweet->user_id,
-            // ],
-
-            // [
-            //     'id' => $comment2->id,
-
-            //     'body' => 'Second comment',
-
-            //     'user_id' => $tweet->user_id
-            // ]
-
         ]);
         
     }
