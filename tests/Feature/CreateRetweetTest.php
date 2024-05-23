@@ -43,7 +43,7 @@ class CreateRetweetTest extends TestCase
             'user_id' => $user->id
         ]);
         
-        $response = $this->get('/api/retweet/{tweet_id}/{user_id}');
+        $response = $this->post('/api/retweet/1/1');
 
         $response->assertStatus(200);
 

@@ -22,7 +22,7 @@ class CreateUnretweetTest extends TestCase
             
             'id' => 1,
 
-            'username' => 'Alex',
+            'first_name' => 'Alex',
 
             'last_name' => 'Williams',
 
@@ -37,12 +37,13 @@ class CreateUnretweetTest extends TestCase
 
             'id' => 1,
 
-            'body' => 'This is a tweet',
+            'body' => 'My new tweet',
 
             'user_id' => $user->id
+
         ]);
 
-        $response = $this->get('/api/unretweet/{tweet_id}/{user_id}');
+        $response = $this->post('/api/unretweet/1/1');
 
         $response->assertStatus(200);
 

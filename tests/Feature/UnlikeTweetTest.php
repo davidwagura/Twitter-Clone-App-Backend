@@ -44,13 +44,9 @@ class UnlikeTweetTest extends TestCase
 
         ]);
 
-        $tweet_id = $tweet->id;
+        $response = $this->post('/api/unlike/1/1');
 
-        $user_id = $user->id;
-        
-        $response = $this->post('/api/unlike/{tweet_id}/{user_id}');
-
-        // $response->assertStatus(200);
+        $response->assertStatus(200);
 
         $response->assertJson([
 

@@ -17,7 +17,7 @@ class LikeTweetTest extends TestCase
     public function test_like_tweet(): void
     {   
         $user = User::create([
-            'id' => 5,
+            'id' => 1,
 
             'first_name' => 'John',
 
@@ -37,11 +37,11 @@ class LikeTweetTest extends TestCase
 
             'body' => 'Thi is my first tweet',
 
-            'user-id' => 5
+            'user_id' => 1
 
         ]);
 
-        $response = $this->post('/api/like/{tweet_id}/{user_id}');
+        $response = $this->post('/api/like/1/1');
 
         $response->assertStatus(200);
 
