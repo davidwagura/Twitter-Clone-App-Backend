@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Tweet extends Model
 {
     use HasFactory;
+
+    protected $table = 'Tweets';
+    
     protected $fillable =[
         'body',
+        
         'user_id'
     ];
 

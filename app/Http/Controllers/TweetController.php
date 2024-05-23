@@ -235,7 +235,8 @@ class TweetController extends Controller
         ], 200);
     }
     
-//Tweet comments
+    //Tweet comments
+
     public function comments($tweet_id) //get
     {
         $comment = Comment::where('tweet_id', $tweet_id)->get();
@@ -297,7 +298,7 @@ class TweetController extends Controller
         if($tweet->save())
         {
 
-            $this->likeNotification($tweet_id,$user_id);
+            // $this->likeNotification($tweet_id,$user_id);
 
             return response()->json([
                 
@@ -309,33 +310,33 @@ class TweetController extends Controller
         }
     }
     
-    public function likeNotification($tweet_id,$user_id)
-    {
-        $user = User::findOrFail($user_id);
+    // public function likeNotification($tweet_id,$user_id)
+    // {
+    //     $user = User::findOrFail($user_id);
 
-        $notifications = new Notification;
+    //     $notifications = new Notification;
 
-        $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
 
-        $notifications->related_item_id = $tweet_id;
+    //     $notifications->related_item_id = $tweet_id;
 
-        $notifications->user_id = $user_id;
+    //     $notifications->user_id = $user_id;
 
-        $notifications->action_type = 'like';
+    //     $notifications->action_type = 'like';
             
-        $notifications->seen = false;
+    //     $notifications->seen = false;
 
-        $notifications->save();   
+    //     $notifications->save();   
         
-        return response()->json([
+    //     return response()->json([
 
-            'notification' => $notifications,
+    //         'notification' => $notifications,
 
-            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
+    //         'message' => $notifications ? 'Notification created successfully' : 'No notification found'
 
-        ],200);
+    //     ],200);
 
-    }
+    // }
 
 
     public function unlikeTweet($tweet_id, $user_id)

@@ -9,6 +9,15 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $fillable =
+    [
+        'body',
+
+        'tweet_id',
+
+        'user_id'
+    ];
+
     public function tweet()
     {
         return $this->belongsTo(Tweet::class);

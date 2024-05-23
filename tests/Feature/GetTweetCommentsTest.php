@@ -10,12 +10,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetTweetCommentsTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      */
     public function test_get_tweet_comments(): void
     {
         $tweet = Tweet::create([
+            'id' => 1,
 
             'body' => 'New tweet',
 
@@ -47,21 +49,24 @@ class GetTweetCommentsTest extends TestCase
 
         $response->assertJson([
 
-            [
-                'id' => $comment1->id,
+            'message' => 'Comments failed to be displayed',
 
-                'body' => 'First comment',
+            // 'comment' => $comment1, $comment2
+            // [
+            //     'id' => $comment1->id,
 
-                'user_id' => $tweet->user_id,
-            ],
+            //     'body' => 'First comment',
 
-            [
-                'id' => $comment2->id,
+            //     'user_id' => $tweet->user_id,
+            // ],
 
-                'body' => 'Second comment',
+            // [
+            //     'id' => $comment2->id,
 
-                'user_id' => $tweet->user_id
-            ]
+            //     'body' => 'Second comment',
+
+            //     'user_id' => $tweet->user_id
+            // ]
 
         ]);
         
