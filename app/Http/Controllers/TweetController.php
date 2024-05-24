@@ -904,6 +904,8 @@ class TweetController extends Controller
     
         return response()->json([
 
+            // 'message' => !$follower->isEmpty() ? 'Followers displayed successfully' : 'No followers found', 
+
             'followers' => $followers
 
         ], 200);
