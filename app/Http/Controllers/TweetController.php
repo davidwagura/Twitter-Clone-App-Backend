@@ -697,7 +697,7 @@ class TweetController extends Controller
 
         if($userToFollow->save()){
 
-            $this->followerNotification($follower_id, $user_to_follow_id);
+            // $this->followerNotification($follower_id, $user_to_follow_id);
    
             return response()->json([
                 
@@ -709,33 +709,33 @@ class TweetController extends Controller
         }
     }
 
-    public function followerNotification($follower_id,$user_to_follow_id)
-    {
-        $user = User::findOrFail($follower_id);
+    // public function followerNotification($follower_id,$user_to_follow_id)
+    // {
+    //     $user = User::findOrFail($follower_id);
 
-        $notifications = new Notification;
+    //     $notifications = new Notification;
         
-        $notifications->body = $user->first_name .' ' . $user->last_name . ' started following you';
+    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' started following you';
 
-        $notifications->related_item_id = $user_to_follow_id;
+    //     $notifications->related_item_id = $user_to_follow_id;
 
-        $notifications->user_id = $follower_id;
+    //     $notifications->user_id = $follower_id;
 
-        $notifications->action_type = 'follower';
+    //     $notifications->action_type = 'follower';
         
-        $notifications->seen = false;
+    //     $notifications->seen = false;
 
-        $notifications->save();
+    //     $notifications->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'notification' => $notifications,
+    //         'notification' => $notifications,
 
-            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
+    //         'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
-        ],200);
+    //     ],200);
 
-    }
+    // }
 
     public function followersUnFollow($follower_id,$user_id)
     {
