@@ -47,7 +47,7 @@ class UserFollowerUnfollowTest extends TestCase
             'password' => 'Peter1234'
         ]);
 
-        $response = $this->get('/api/unfollow/1/1');
+        $response = $this->post('/api/unfollow/1/1');
 
         $response->assertStatus(200);
 
@@ -61,9 +61,9 @@ class UserFollowerUnfollowTest extends TestCase
 
             'id' => 1,
 
-            'first_name' => 'Smith'
+            'first_name' => 'John'
         ]);
 
     }
-    
+
 }

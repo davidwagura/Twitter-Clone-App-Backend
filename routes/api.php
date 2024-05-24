@@ -70,7 +70,7 @@ Route::post('/unfollow/{follower_id}/{user_id}', [TweetController::class, 'follo
 
 //follow a user
 
-Route::post('/following/{following_id}/{user_to_follow_id}', [TweetController::class, 'following']);
+Route::post('/following/{user_id}/{user_to_follow_id}', [TweetController::class, 'following']);
 
 
 //unfollow a user you were following

@@ -57,7 +57,7 @@ class UserFollowerTest extends TestCase
             'password' => 'password123',       
         ]);
 
-        $response = $this->get('/api/followers/1/2');
+        $response = $this->post('/api/followers/1/2');
 
         $response->assertStatus(200);
     }

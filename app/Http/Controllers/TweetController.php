@@ -782,9 +782,9 @@ class TweetController extends Controller
     }
 
 
-    public function following($following_id, $user_to_follow_id)
+    public function following($user_id, $user_to_follow_id)
     {
-        $userToFollow = User::findOrFail($following_id);
+        $userToFollow = User::findOrFail($user_id);
     
         $followingId = $userToFollow->followings_id;
     
