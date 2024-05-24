@@ -15,24 +15,24 @@ class ResetPasswordTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_reset_password(): void
+    public function reset_password(): void
     {
-        $user = User::create([
+        // $user = User::create([
 
-            'id' => 1,
+        //     'id' => 1,
 
-            'first_name' => 'John',
+        //     'first_name' => 'John',
 
-            'last_name' => 'White',
+        //     'last_name' => 'White',
 
-            'email' => 'John@gmail.com',
+        //     'email' => 'John@gmail.com',
 
-            'username' => 'White',
+        //     'username' => 'White',
 
-            'password' => 'john1234'
-        ]);
+        //     'password' => 'john1234'
+        // ]);
         
-        $response = $this->post('/api/resetPassword/1');
+        $response = $this->post('/api/resetPassword/{user_id}');
 
         $response->assertStatus(200);
 

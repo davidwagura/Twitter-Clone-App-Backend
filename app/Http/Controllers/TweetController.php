@@ -606,7 +606,7 @@ class TweetController extends Controller
 
                     'status' => true,
 
-                    'message' => "login successful",
+                    'message' => "Login successful",
 
                     'token' => $token
 
