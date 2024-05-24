@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class GetFollowersTest extends TestCase
+class GetFollowingTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -15,7 +15,7 @@ class GetFollowersTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_get_user_followers(): void
+    public function test_get_users_following(): void
     {
         $follower = User::create([
 
@@ -47,12 +47,11 @@ class GetFollowersTest extends TestCase
 
             'password' => 'john1234',
 
-            'followers_id' => $follower->id
+            'followings_id' => $follower->id
             
         ]);
 
-        
-        $response = $this->get('/api/myFollowers/1');
+        $response = $this->get('/api/showFollowing/1');
 
         $response->assertStatus(200);
 
@@ -60,10 +59,9 @@ class GetFollowersTest extends TestCase
 
         //     'id' => 1,
 
-        //     'first_name' => 'Kings'
+        //     'first_name' => 'Mary'
 
         // ]);
 
     }
-
 }
