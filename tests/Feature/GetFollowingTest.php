@@ -55,13 +55,13 @@ class GetFollowingTest extends TestCase
 
         $response->assertStatus(200);
 
-        // $response->assertJsonFragment([
+        $response->assertJsonFragment([
 
-        //     'id' => 1,
+            'id' => 1,
 
-        //     'first_name' => 'Mary'
+            'first_name' => 'Mary'
 
-        // ]);
+        ]);
 
     }
 }
