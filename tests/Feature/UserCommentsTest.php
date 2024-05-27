@@ -9,13 +9,15 @@ use App\Models\Comment;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class GetTweetCommentsTest extends TestCase
+class UserCommentsTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
-    public function test_get_tweet_comments(): void
+
+    public function test_user_comments(): void
     {
         $user = User::create([
 
@@ -35,6 +37,7 @@ class GetTweetCommentsTest extends TestCase
 
 
         $tweet = Tweet::create([
+
             'id' => 1,
 
             'body' => 'New tweet',
@@ -44,6 +47,7 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment1 = Comment::create([
+
             'id' => 1,
 
             'body' => 'First comment',
@@ -54,6 +58,7 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment2 = Comment::create([
+
             'id' => 2,
 
             'body' => 'Second comment',
@@ -63,16 +68,16 @@ class GetTweetCommentsTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->get('/api/comments/1');
+        $response = $this->get('/api/commented/comments/1');
 
         $response->assertStatus(200);
 
         $response->assertJson([
 
-            'message' => 'Comments displayed successfully',
+            'message' => 'User comments displayed successfully'
 
         ]);
-        
+
     }
-    
+
 }
