@@ -8,7 +8,7 @@ use App\Models\Message;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteConversationTest extends TestCase
+class UserConversationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -16,7 +16,7 @@ class DeleteConversationTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_delete_conversation(): void
+    public function test_user_conversation(): void
     {
         $sender = User::create([
 
@@ -62,15 +62,16 @@ class DeleteConversationTest extends TestCase
             'receivers_id' => $receiver->id
         ]);
 
-
-        $response = $this->delete('/api/deleteConversation/1/2');
+        $response = $this->get('/api/conversations/1/2');
 
         $response->assertStatus(200);
 
         $response->assertJson([
 
-            'message' => 'All messages between sender and receiver have been deleted'
-            
+            'message' => 'Conversation displayed successfully'
+
         ]);
+
     }
+
 }
