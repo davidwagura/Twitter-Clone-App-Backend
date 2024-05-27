@@ -20,8 +20,6 @@ class EditProfileTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -34,18 +32,26 @@ class EditProfileTest extends TestCase
 
         ]);
 
-        $profile = Profile::created([
+        $profile = Profile::create([
 
-            'id' => 1,
+            'user_id' => 1,
 
             'name' => 'John',
 
             'bio' => 'consistency'
-
         ]);
 
+        $request = [
 
-        $response = $this->put('/api/update/1');
+            'name' => 'Doe',
+
+            'location' => 'New York',
+
+            'bio' => 'new account'
+        ];
+
+
+        $response = $this->put('/api/update/1',$request);
 
         $response->assertStatus(200);
 

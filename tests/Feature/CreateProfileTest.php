@@ -20,8 +20,6 @@ class CreateProfileTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -35,19 +33,18 @@ class CreateProfileTest extends TestCase
         ]);
 
 
-        $profile = Profile::created([
+        $data = [
 
-            'id' => 1,
-
-            'user_id' => $user->id,
+            'user_id' => 1,
 
             'name' => 'John',
 
             'bio' => 'consistency'
 
-        ]);
+        ];
+
         
-        $response = $this->post('/api/profile');
+        $response = $this->post('/api/profile',$data);
 
         $response->assertStatus(200);
 

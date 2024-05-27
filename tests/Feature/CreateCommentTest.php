@@ -47,8 +47,6 @@ class CreateCommentTest extends TestCase
 
         ]);
 
-        $comment = Comment::where('user_id', 4)->first();
-
         // dd($comment);
 
      }

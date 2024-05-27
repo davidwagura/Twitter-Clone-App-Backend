@@ -52,7 +52,7 @@ class MessageTest extends TestCase
 
         ]);
 
-        $message = Message::create([
+        $data = [
 
             'id' => 1,
 
@@ -61,9 +61,9 @@ class MessageTest extends TestCase
             'sender_id' => $sender->id,
 
             'receivers_id' => $receiver->id
-        ]);
+        ];
 
-        $response = $this->post('/api/messages/1/1');
+        $response = $this->post('/api/messages/1/1',$data);
 
         $response->assertStatus(200);
 
