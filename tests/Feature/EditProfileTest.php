@@ -8,7 +8,7 @@ use App\Models\Profile;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CreateProfileTest extends TestCase
+class EditProfileTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -16,7 +16,7 @@ class CreateProfileTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_create_profile(): void
+    public function test_update_profile(): void
     {
         $user = User::create([
 
@@ -34,26 +34,24 @@ class CreateProfileTest extends TestCase
 
         ]);
 
-
         $profile = Profile::created([
 
             'id' => 1,
-
-            'user_id' => $user->id,
 
             'name' => 'John',
 
             'bio' => 'consistency'
 
         ]);
-        
-        $response = $this->post('/api/profile');
+
+
+        $response = $this->put('/api/update/1');
 
         $response->assertStatus(200);
 
         $response->assertJson([
-           
-            'message' => 'Profile created successfully'
+
+            'message' => 'Profile updated successfully'
 
         ]);
 
