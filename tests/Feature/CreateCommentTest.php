@@ -47,7 +47,5 @@ class CreateCommentTest extends TestCase
 
         ]);
 
-        // dd($comment);
-
      }
 }

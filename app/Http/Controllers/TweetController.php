@@ -72,7 +72,7 @@ class TweetController extends Controller
 
         if ($tweet) {
 
-            // $this->tweetMention($tweet, $request->receiver_id);
+            $this->tweetMention($tweet, $request->receiver_id);
 
             return response()->json([
 
@@ -85,34 +85,34 @@ class TweetController extends Controller
 
     }
 
-    // public function tweetMention(Tweet $tweet,$receiverId)
-    // {
-    //     $user = $tweet->user;
+    public function tweetMention(Tweet $tweet,$receiverId)
+    {
+        $user = $tweet->user;
     
-    //     $mention = new Notification;
+        $mention = new Notification;
     
-    //     $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
+        $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
     
-    //     $mention->createdBy = $receiverId;
+        $mention->createdBy = $receiverId;
     
-    //     $mention->related_item_id = $tweet->id;
+        $mention->related_item_id = $tweet->id;
     
-    //     $mention->user_id = $user->id;
+        $mention->user_id = $user->id;
     
-    //     $mention->action_type = 'tweet';
+        $mention->action_type = 'tweet';
     
-    //     $mention->seen = false;
+        $mention->seen = false;
     
-    //     $mention->save();
+        $mention->save();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'mention' => $mention,
+            'mention' => $mention,
 
-    //         'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
+            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
 
-    //     ],200);
-    // }
+        ],200);
+    }
     
     
     public function user(Request $request)
@@ -155,7 +155,7 @@ class TweetController extends Controller
 
         if ($comment->save()) {
 
-            // $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
+            $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id); 
 
             return response()->json([
                 
@@ -167,85 +167,85 @@ class TweetController extends Controller
         }
     }
 
-    // public function commentMention($userId, $receiverId, $tweetId)
-    // {
-    //     $user = User::findOrFail($userId);
-
-    //     $mention = new Notification;
-
-    //     $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
-
-    //     $mention->createdBy = $receiverId;
-
-    //     $mention->related_item_id = $tweetId;
-
-    //     $mention->user_id = $userId;
-
-    //     $mention->action_type = 'comment';
-        
-    //     $mention->seen = false;
-
-    //     $mention->save();
-
-    //     return response()->json([
-
-    //         'mention' => $mention,
-
-    //         'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
-
-    //     ],200);
-
-
-    //     $user = User::findOrFail($userId);
-
-    //     $notifications = new Notification;
-
-    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
-
-    //     $notifications->related_item_id = $tweetId;
-
-    //     $notifications->user_id = $userId;
-
-    //     $notifications->action_type = 'comment';
-        
-    //     $notifications->seen = false;
-
-    //     $notifications->save();
-
-    //     return response()->json([
-
-    //         'notification' => $notifications,
-
-    //         'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
-
-    //     ],200);
-
-    // }
-
-    public function showTweet($user_id) //get
+    public function commentMention($userId, $receiverId, $tweetId)
     {
-        $tweets = Tweet::where('user_id', $user_id)->get();
-    
+        $user = User::findOrFail($userId);
+
+        $mention = new Notification;
+
+        $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
+
+        $mention->createdBy = $receiverId;
+
+        $mention->related_item_id = $tweetId;
+
+        $mention->user_id = $userId;
+
+        $mention->action_type = 'comment';
+        
+        $mention->seen = false;
+
+        $mention->save();
+
         return response()->json([
 
-            'tweets' => $tweets,
+            'mention' => $mention,
 
-            'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
 
-        ], 200);
+        ],200);
+
+
+        $user = User::findOrFail($userId);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' commented on your tweet';
+
+        $notifications->related_item_id = $tweetId;
+
+        $notifications->user_id = $userId;
+
+        $notifications->action_type = 'comment';
+        
+        $notifications->seen = false;
+
+        $notifications->save();
+
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
+
+        ],200);
+
     }
+
+    // public function showTweet($user_id) //get
+    // {
+    //     $tweets = Tweet::where('user_id', $user_id)->get();
+    
+    //     return response()->json([
+
+    //         'tweets' => $tweets,
+
+    //         'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+
+    //     ], 200);
+    // }
     
     //Tweet comments
 
     public function comments($tweet_id) //get
     {
-        $comment = Comment::where('tweet_id', $tweet_id)->get();
+        $comment = Comment::where('tweet_id', $tweet_id)->with('tweet')->get();
 
         return response()->json([
 
             'comment' => $comment,
 
-            'message' => !$comment->isEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+            'message' => $comment ? 'Comments displayed successfully' : 'Comments failed to be displayed'
     
         ],200);
     }
@@ -298,7 +298,7 @@ class TweetController extends Controller
         if($tweet->save())
         {
 
-            // $this->likeNotification($tweet_id,$user_id);
+            $this->likeNotification($tweet_id,$user_id);
 
             return response()->json([
                 
@@ -310,33 +310,33 @@ class TweetController extends Controller
         }
     }
     
-    // public function likeNotification($tweet_id,$user_id)
-    // {
-    //     $user = User::findOrFail($user_id);
+    public function likeNotification($tweet_id,$user_id)
+    {
+        $user = User::findOrFail($user_id);
 
-    //     $notifications = new Notification;
+        $notifications = new Notification;
 
-    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
 
-    //     $notifications->related_item_id = $tweet_id;
+        $notifications->related_item_id = $tweet_id;
 
-    //     $notifications->user_id = $user_id;
+        $notifications->user_id = $user_id;
 
-    //     $notifications->action_type = 'like';
+        $notifications->action_type = 'like';
             
-    //     $notifications->seen = false;
+        $notifications->seen = false;
 
-    //     $notifications->save();   
+        $notifications->save();   
         
-    //     return response()->json([
+        return response()->json([
 
-    //         'notification' => $notifications,
+            'notification' => $notifications,
 
-    //         'message' => $notifications ? 'Notification created successfully' : 'No notification found'
+            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
 
-    //     ],200);
+        ],200);
 
-    // }
+    }
 
 
     public function unlikeTweet($tweet_id, $user_id)
@@ -416,7 +416,7 @@ class TweetController extends Controller
 
         if($tweet->save())
         {
-            // $this->retweetNotification($user_id,$tweet_id);
+            $this->retweetNotification($user_id,$tweet_id);
 
             return response()->json([
                 
@@ -428,33 +428,33 @@ class TweetController extends Controller
         }
     }
 
-    // public function retweetNotification($user_id,$tweet_id)
-    // {
-    //     $user = User::findOrFail($user_id);
+    public function retweetNotification($user_id,$tweet_id)
+    {
+        $user = User::findOrFail($user_id);
 
-    //     $notifications = new Notification;
+        $notifications = new Notification;
 
-    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
 
-    //     $notifications->related_item_id = $tweet_id;
+        $notifications->related_item_id = $tweet_id;
 
-    //     $notifications->user_id = $user_id;
+        $notifications->user_id = $user_id;
 
-    //     $notifications->action_type = 'retweet';
+        $notifications->action_type = 'retweet';
                 
-    //     $notifications->seen = false;
+        $notifications->seen = false;
 
-    //     $notifications->save();
+        $notifications->save();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'notification' => $notifications,
+            'notification' => $notifications,
 
-    //         'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
+            'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
 
-    //     ],200);
+        ],200);
 
-    // }
+    }
     
     public function unretweet($tweet_id, $user_id)
     {
@@ -539,7 +539,7 @@ class TweetController extends Controller
 
             if ($user->save())
             {
-                // $this->resetPasswordNotification($user_id);
+                $this->resetPasswordNotification($user_id);
         
                 return response()->json([
                         
@@ -553,33 +553,33 @@ class TweetController extends Controller
 
     }
 
-    // public function resetPasswordNotification($user_id)
-    // {
-    //     $user = User::findOrFail($user_id);
+    public function resetPasswordNotification($user_id)
+    {
+        $user = User::findOrFail($user_id);
 
-    //     $notifications = new Notification;
+        $notifications = new Notification;
 
-    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' your password have been successfully reset';
 
-    //     $notifications->related_item_id = $user_id;
+        $notifications->related_item_id = $user_id;
 
-    //     $notifications->user_id = $user_id;
+        $notifications->user_id = $user_id;
 
-    //     $notifications->action_type = 'password reset';
+        $notifications->action_type = 'password reset';
         
-    //     $notifications->seen = false;
+        $notifications->seen = false;
 
-    //     $notifications->save();
+        $notifications->save();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'notification' => $notifications,
+            'notification' => $notifications,
 
-    //         'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
+            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
-    //     ],200);
+        ],200);
 
-    // }
+    }
 
 
 
@@ -633,23 +633,31 @@ class TweetController extends Controller
 
     public function logout(Request $request)
     {
-        if ($request->user()) {
+        // if ($request->user()) {
 
-            $request->user()->currentAccessToken()->delete();
+        //     $request->user()->currentAccessToken()->delete();
     
+        //     return response()->json([
+
+        //         'message' => 'Logged out successfully'
+
+        //     ], 200);
+
+        // } else {
+
+        //     return response()->json([
+
+        //         'error' => 'Unauthorized'
+
+        //     ], 401);
+        // }
+
+        {
+            auth()->user()->tokens()->delete();
             return response()->json([
-
-                'message' => 'Logged out successfully'
-
-            ], 200);
-
-        } else {
-
-            return response()->json([
-
-                'error' => 'Unauthorized'
-
-            ], 401);
+                'status' => true,
+                'message' => 'User logged out'
+            ]);
         }
     }
         
@@ -938,7 +946,7 @@ class TweetController extends Controller
 
             'followings' => $followings,
 
-            'massage' => $following ? 'Displayed successfully' : 'Failed to display'
+            'message' => $following ? 'Displayed successfully' : 'Failed to display'
 
         ],200);
     }

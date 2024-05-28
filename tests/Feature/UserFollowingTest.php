@@ -19,8 +19,6 @@ class UserFollowingTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Ken',
 
             'last_name' => 'Johnson',
@@ -34,8 +32,6 @@ class UserFollowingTest extends TestCase
         ]);
 
         $following = User::create([
-
-            'id' => 1,
 
             'first_name' => 'Moses',
 
@@ -59,8 +55,6 @@ class UserFollowingTest extends TestCase
         ]);
 
         $response->assertJsonFragment([
-
-            'id' => 1,
 
             'username' => 'Johnson'
         ]);

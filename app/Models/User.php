@@ -13,11 +13,20 @@ class User extends Model
     protected $fillable = 
     [
         'first_name',
+
         'last_name',
+
         'email',
+
         'username',
+
         'password',
-        'password_confirmation'
+        
+        'password_confirmation',
+
+        'followings_id',
+
+        'followers_id'
     ];
 
     public function tweet()

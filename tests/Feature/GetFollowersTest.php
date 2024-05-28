@@ -19,8 +19,6 @@ class GetFollowersTest extends TestCase
     {
         $follower = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Mary',
 
             'last_name' => 'Johnson',
@@ -34,8 +32,6 @@ class GetFollowersTest extends TestCase
         ]);
 
         $user = User::create([
-
-            'id' => 1,
 
             'first_name' => 'Kings',
 
@@ -57,8 +53,6 @@ class GetFollowersTest extends TestCase
         $response->assertStatus(200);
 
         // $response->assertJsonFragment([
-
-        //     'id' => 1,
 
         //     'first_name' => 'Kings'
 

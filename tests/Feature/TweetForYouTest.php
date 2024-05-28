@@ -20,8 +20,6 @@ class TweetForYouTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 2,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -37,16 +35,12 @@ class TweetForYouTest extends TestCase
 
         $tweet1 = Tweet::create([
 
-            'id' => 1,
-
             'body' => 'Tweet one',
 
             'user_id' => $user->id
         ]);
 
         $tweet1 = Tweet::create([
-
-            'id' => 2,
 
             'body' => 'Tweet two',
 

@@ -17,7 +17,6 @@ class LikeTweetTest extends TestCase
     public function test_like_tweet(): void
     {   
         $user = User::create([
-            'id' => 1,
 
             'first_name' => 'John',
 
@@ -33,8 +32,6 @@ class LikeTweetTest extends TestCase
         
         $tweet = Tweet::create([
 
-            'id' => 1,
-
             'body' => 'Thi is my first tweet',
 
             'user_id' => 1
@@ -49,8 +46,8 @@ class LikeTweetTest extends TestCase
 
             'message' => 'Tweet liked successfully',
 
-            // 'tweet' => $tweet
-
         ]);
+
     }
+    
 }

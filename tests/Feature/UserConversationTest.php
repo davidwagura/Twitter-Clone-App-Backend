@@ -20,8 +20,6 @@ class UserConversationTest extends TestCase
     {
         $sender = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -36,8 +34,6 @@ class UserConversationTest extends TestCase
 
         $receiver = User::create([
 
-            'id' => 2,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -48,18 +44,16 @@ class UserConversationTest extends TestCase
 
             'password' => 'john1234',
 
-
         ]);
 
         $message = Message::create([
-
-            'id' => 1,
 
             'body' => 'Good morning',
 
             'sender_id' => $sender->id,
 
             'receivers_id' => $receiver->id
+
         ]);
 
         $response = $this->get('/api/conversations/1/2');

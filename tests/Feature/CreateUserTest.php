@@ -27,7 +27,7 @@ class CreateUserTest extends TestCase
 
             'email' => 'john.doe@example.com',
 
-            'username' => 'johndoe',
+            'username' => 'john',
 
             'password' => 'password123',
 
@@ -49,7 +49,7 @@ class CreateUserTest extends TestCase
 
                 'email' => 'john.doe@example.com',
 
-                'username' => 'johndoe',
+                'username' => 'john',
             ],
 
         ]);
@@ -58,13 +58,11 @@ class CreateUserTest extends TestCase
 
             'email' => 'john.doe@example.com',
 
-            'username' => 'johndoe',
+            'username' => 'john',
 
         ]);
 
         $user = User::where('email', 'john.doe@example.com')->first();
-
-        // dd($user);
 
         $this->assertTrue(Hash::check('password123', $user->password));
     }

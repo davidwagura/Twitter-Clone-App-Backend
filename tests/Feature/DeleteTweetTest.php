@@ -19,8 +19,6 @@ class DeleteTweetTest extends TestCase
     {
         $tweet = Tweet::create([
 
-            'id' => 1,
-
             'body' => 'Tweet created successfully',
 
             'user_id' => 1

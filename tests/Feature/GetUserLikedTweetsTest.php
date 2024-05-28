@@ -19,8 +19,6 @@ class GetUserLikedTweetsTest extends TestCase
     {
         $like = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -35,8 +33,6 @@ class GetUserLikedTweetsTest extends TestCase
         ]);
 
         $user = User::create([
-
-            'id' => 2,
 
             'first_name' => 'Kings',
 

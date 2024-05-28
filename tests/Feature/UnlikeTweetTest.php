@@ -21,8 +21,6 @@ class UnlikeTweetTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'David',
 
             'last_name' => 'Wanjohi',
@@ -35,8 +33,6 @@ class UnlikeTweetTest extends TestCase
         ]);
 
         $tweet = Tweet::create([
-
-            'id' => 1,
 
             'body' => 'My new tweet',
 
@@ -53,5 +49,7 @@ class UnlikeTweetTest extends TestCase
             'message' => 'Tweet unlike successful',
 
         ]);
+
     }
+    
 }

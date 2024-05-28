@@ -20,8 +20,6 @@ class CreateRetweetTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'James',
 
             'last_name' => 'Peter',
@@ -35,8 +33,6 @@ class CreateRetweetTest extends TestCase
         ]);
 
         $tweet = Tweet::create([
-
-            'id' => 1,
 
             'body' => 'A new tweet it is.',
 

@@ -20,8 +20,6 @@ class UserProfileTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'John',
 
             'last_name' => 'Doe',
@@ -35,8 +33,6 @@ class UserProfileTest extends TestCase
         ]);
 
         $tweet1 = Tweet::create([
-
-            'id' => 1,
             
             'body' => 'My first tweet',
 
@@ -46,16 +42,12 @@ class UserProfileTest extends TestCase
 
         $tweet2 = Tweet::create([
 
-            'id' => 2,
-
             'body' => 'This is my second tweet',
 
             'user_id' => $user->id
         ]);
 
         $tweet3 = Tweet::create([
-
-            'id' => 3,
 
             'body' => 'This is my third tweet',
 

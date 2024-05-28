@@ -18,7 +18,6 @@ class UserFollowerTest extends TestCase
     public function test_user_follower(): void
     {
         $user = User::create([
-            'id' => 1,
 
             'first_name' => 'John',
 
@@ -28,10 +27,10 @@ class UserFollowerTest extends TestCase
 
             'username' => 'johnDoe',
 
-            'password' => 'password123',       
+            'password' => 'password123', 
+
         ]);
         $follower1 = User::create([
-            'id' => 1,
 
             'first_name' => 'John',
 
@@ -41,10 +40,10 @@ class UserFollowerTest extends TestCase
 
             'username' => 'johnDoe',
 
-            'password' => 'password123',       
+            'password' => 'password123', 
+
         ]);
         $follower2 = User::create([
-            'id' => 2,
 
             'first_name' => 'John',
 
@@ -54,7 +53,8 @@ class UserFollowerTest extends TestCase
 
             'username' => 'johnDoe',
 
-            'password' => 'password123',       
+            'password' => 'password123', 
+
         ]);
 
         $response = $this->post('/api/followers/1/2');

@@ -21,8 +21,6 @@ class UserCommentsTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -38,8 +36,6 @@ class UserCommentsTest extends TestCase
 
         $tweet = Tweet::create([
 
-            'id' => 1,
-
             'body' => 'New tweet',
 
             'user_id' => 2
@@ -48,24 +44,22 @@ class UserCommentsTest extends TestCase
 
         $comment1 = Comment::create([
 
-            'id' => 1,
-
             'body' => 'First comment',
 
             'tweet_id' => $tweet->id,
 
             'user_id' => $user->id
+
         ]);
 
         $comment2 = Comment::create([
-
-            'id' => 2,
 
             'body' => 'Second comment',
 
             'tweet_id' => $tweet->id,
 
             'user_id' => $user->id
+            
         ]);
 
         $response = $this->get('/api/commented/comments/1');

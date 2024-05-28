@@ -20,8 +20,6 @@ class DeleteConversationTest extends TestCase
     {
         $sender = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -35,8 +33,6 @@ class DeleteConversationTest extends TestCase
         ]);
 
         $receiver = User::create([
-
-            'id' => 2,
 
             'first_name' => 'Kings',
 
@@ -53,8 +49,6 @@ class DeleteConversationTest extends TestCase
 
         $message = Message::create([
 
-            'id' => 1,
-
             'body' => 'Good morning',
 
             'sender_id' => $sender->id,
@@ -63,7 +57,7 @@ class DeleteConversationTest extends TestCase
         ]);
 
 
-        $response = $this->delete('/api/deleteConversation/1/2');
+        $response = $this->delete('/api/deleteConversation/1/1');
 
         $response->assertStatus(200);
 

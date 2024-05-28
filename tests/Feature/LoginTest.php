@@ -15,7 +15,7 @@ class LoginTest extends TestCase
      * A basic feature test example.
      */
 
-    public function login(): void
+    public function test_login(): void
     {
         $user = User::create([
 

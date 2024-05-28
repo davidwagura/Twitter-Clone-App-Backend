@@ -20,8 +20,6 @@ class FollowingTweetsTest extends TestCase
     {
         $user1 = User::create([
 
-            'id' => 2,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -32,12 +30,9 @@ class FollowingTweetsTest extends TestCase
 
             'password' => 'john1234',
 
-
         ]);
 
         $user2 = User::create([
-
-            'id' => 2,
 
             'first_name' => 'Kings',
 
@@ -54,8 +49,6 @@ class FollowingTweetsTest extends TestCase
         ]);
 
         $tweet = Tweet::create([
-
-            'id' => 1,
 
             'body' => 'This is a tweet',
 

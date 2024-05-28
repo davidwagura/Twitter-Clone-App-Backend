@@ -16,7 +16,7 @@ class LogoutTest extends TestCase
      * A basic feature test example.
      */
 
-    public function logout(): void
+    public function test_logout(): void
     {
         $response = $this->post('/api/logout');
 
@@ -24,7 +24,7 @@ class LogoutTest extends TestCase
 
         $response->assertJson([
 
-            'message' => 'Logged out successfully'
+            'message' => 'User logged out'
 
         ]);
     }

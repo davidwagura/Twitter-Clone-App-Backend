@@ -20,8 +20,6 @@ class CreateUnretweetTest extends TestCase
     {
         $user = User::create([
             
-            'id' => 1,
-
             'first_name' => 'Alex',
 
             'last_name' => 'Williams',
@@ -34,8 +32,6 @@ class CreateUnretweetTest extends TestCase
         ]);
 
         $tweet = Tweet::create([
-
-            'id' => 1,
 
             'body' => 'My new tweet',
 

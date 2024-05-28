@@ -19,8 +19,6 @@ class UserFollowerUnfollowTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'John',
 
             'last_name' => 'Doe',
@@ -30,11 +28,10 @@ class UserFollowerUnfollowTest extends TestCase
             'username' => 'Doe',
 
             'password' => 'John1234'
+
         ]);
 
         $follower = User::create([
-
-            'id' => 1,
 
             'first_name' => 'Peter',
 
@@ -45,6 +42,7 @@ class UserFollowerUnfollowTest extends TestCase
             'username' => 'Smith',
 
             'password' => 'Peter1234'
+
         ]);
 
         $response = $this->post('/api/unfollow/1/1');

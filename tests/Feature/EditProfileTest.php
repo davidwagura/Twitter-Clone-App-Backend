@@ -43,6 +43,8 @@ class EditProfileTest extends TestCase
 
         $request = [
 
+            'user_id' => 1,
+
             'name' => 'Doe',
 
             'location' => 'New York',

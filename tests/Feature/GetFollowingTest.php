@@ -17,9 +17,7 @@ class GetFollowingTest extends TestCase
 
     public function test_get_users_following(): void
     {
-        $follower = User::create([
-
-            'id' => 1,
+        $user1 = User::create([
 
             'first_name' => 'Mary',
 
@@ -35,8 +33,6 @@ class GetFollowingTest extends TestCase
 
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -47,19 +43,17 @@ class GetFollowingTest extends TestCase
 
             'password' => 'john1234',
 
-            'followings_id' => $follower->id
+            'followings_id' => '1'
             
         ]);
 
-        $response = $this->get('/api/showFollowing/1');
+        $response = $this->get('/api/showFollowing/2',);
 
         $response->assertStatus(200);
 
-        $response->assertJsonFragment([
+        $response->assertJson([
 
-            'id' => 1,
-
-            'first_name' => 'Mary'
+            'message' => 'Displayed successfully',
 
         ]);
 

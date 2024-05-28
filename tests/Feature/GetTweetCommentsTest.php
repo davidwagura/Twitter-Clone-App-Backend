@@ -19,8 +19,6 @@ class GetTweetCommentsTest extends TestCase
     {
         $user = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -35,7 +33,6 @@ class GetTweetCommentsTest extends TestCase
 
 
         $tweet = Tweet::create([
-            'id' => 1,
 
             'body' => 'New tweet',
 
@@ -44,7 +41,6 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment1 = Comment::create([
-            'id' => 1,
 
             'body' => 'First comment',
 
@@ -54,7 +50,6 @@ class GetTweetCommentsTest extends TestCase
         ]);
 
         $comment2 = Comment::create([
-            'id' => 2,
 
             'body' => 'Second comment',
 

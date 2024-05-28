@@ -37,8 +37,6 @@ class MessageTest extends TestCase
 
         $receiver = User::create([
 
-            'id' => 1,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -53,8 +51,6 @@ class MessageTest extends TestCase
         ]);
 
         $data = [
-
-            'id' => 1,
 
             'body' => 'Good morning',
 

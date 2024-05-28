@@ -19,8 +19,6 @@ class DeleteOneMessageTest extends TestCase
     {
         $sender = User::create([
 
-            'id' => 2,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -36,8 +34,6 @@ class DeleteOneMessageTest extends TestCase
 
         $receiver = User::create([
 
-            'id' => 2,
-
             'first_name' => 'Kings',
 
             'last_name' => 'John',
@@ -51,8 +47,6 @@ class DeleteOneMessageTest extends TestCase
         ]);
 
         $message = Message::create([
-
-            'id' => 1,
 
             'body' => 'Good morning',
 

@@ -20,8 +20,6 @@ class TrendsTest extends TestCase
     {       
     $tweet = Tweet::create([
         
-        'id' => 1,
-
         'body' => 'New tweet',
 
         'user_id' => 2
@@ -29,7 +27,6 @@ class TrendsTest extends TestCase
     ]);
 
     $comment1 = Comment::create([
-        'id' => 1,
 
         'body' => 'First comment',
 
@@ -39,7 +36,6 @@ class TrendsTest extends TestCase
     ]);
 
     $comment2 = Comment::create([
-        'id' => 2,
 
         'body' => 'Second comment',
 
@@ -50,15 +46,12 @@ class TrendsTest extends TestCase
 
     $tweet1 = Tweet::create([
 
-        'id' => 2,
-
         'body' => 'This is a tweet',
 
         'user_id' => 5,
     ]);
 
     $comment2 = Comment::create([
-        'id' => 2,
 
         'body' => 'Second comment',
 

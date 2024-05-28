@@ -54,52 +54,8 @@ class ShowTweetTest extends TestCase
 
             'message' => 'Tweets displayed successfully',
         
-    //         'Tweets' =>
-
-    //         [
-    //             'id' => $tweet1->id,
-
-    //             'body' => 'First tweet',
-
-    //             'user_id' => $user->id,
-
-    //             'user' => [
-                
-    //                 'first_name' => 'John',
-    
-    //                 'last_name' => 'Doe',
-        
-    //                 'email' => 'john.doe@example.com',
-        
-    //                 'username' => 'johnDoe',
-        
-    //                 'password' => 'password123',     
-    //             ],
-    
-    //         ],
-
-    //         [
-    //             'id' => $tweet2->id,
-
-    //             'body' => 'Second tweet',
-
-    //             'user_id' => $user->id,
-
-    //             'user' => [
-                
-    //                 'first_name' => 'John',
-    
-    //                 'last_name' => 'Doe',
-        
-    //                 'email' => 'john.doe@example.com',
-        
-    //                 'username' => 'johnDoe',
-        
-    //                 'password' => 'password123',     
-    //             ],
-    
-    //         ]
-
         ]);
+
     }
+    
 }
