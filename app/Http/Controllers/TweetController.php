@@ -633,32 +633,32 @@ class TweetController extends Controller
 
     public function logout(Request $request)
     {
-        // if ($request->user()) {
+        if ($request->user()) {
 
-        //     $request->user()->currentAccessToken()->delete();
+            $request->user()->currentAccessToken()->delete();
     
-        //     return response()->json([
-
-        //         'message' => 'Logged out successfully'
-
-        //     ], 200);
-
-        // } else {
-
-        //     return response()->json([
-
-        //         'error' => 'Unauthorized'
-
-        //     ], 401);
-        // }
-
-        {
-            auth()->user()->tokens()->delete();
             return response()->json([
-                'status' => true,
-                'message' => 'User logged out'
-            ]);
+
+                'message' => 'Logged out successfully'
+
+            ], 200);
+
+        } else {
+
+            return response()->json([
+
+                'error' => 'Unauthorized'
+
+            ], 401);
         }
+
+        // {
+        //     auth()->user()->tokens()->delete();
+        //     return response()->json([
+        //         'status' => true,
+        //         'message' => 'User logged out'
+        //     ]);
+        // }
     }
         
     public function profile($user_id)
@@ -705,7 +705,7 @@ class TweetController extends Controller
 
         if($userToFollow->save()){
 
-            // $this->followerNotification($follower_id, $user_to_follow_id);
+            $this->followerNotification($follower_id, $user_to_follow_id);
    
             return response()->json([
                 
@@ -717,33 +717,33 @@ class TweetController extends Controller
         }
     }
 
-    // public function followerNotification($follower_id,$user_to_follow_id)
-    // {
-    //     $user = User::findOrFail($follower_id);
+    public function followerNotification($follower_id,$user_to_follow_id)
+    {
+        $user = User::findOrFail($follower_id);
 
-    //     $notifications = new Notification;
+        $notifications = new Notification;
         
-    //     $notifications->body = $user->first_name .' ' . $user->last_name . ' started following you';
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' started following you';
 
-    //     $notifications->related_item_id = $user_to_follow_id;
+        $notifications->related_item_id = $user_to_follow_id;
 
-    //     $notifications->user_id = $follower_id;
+        $notifications->user_id = $follower_id;
 
-    //     $notifications->action_type = 'follower';
+        $notifications->action_type = 'follower';
         
-    //     $notifications->seen = false;
+        $notifications->seen = false;
 
-    //     $notifications->save();
+        $notifications->save();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'notification' => $notifications,
+            'notification' => $notifications,
 
-    //         'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
+            'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
-    //     ],200);
+        ],200);
 
-    // }
+    }
 
     public function followersUnFollow($follower_id,$user_id)
     {
@@ -912,7 +912,7 @@ class TweetController extends Controller
     
         return response()->json([
 
-            // 'message' => !$follower->isEmpty() ? 'Followers displayed successfully' : 'No followers found', 
+            'message' => !$follower->isEmpty() ? 'Followers displayed successfully' : 'No followers found', 
 
             'followers' => $followers
 
