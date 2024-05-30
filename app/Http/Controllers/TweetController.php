@@ -1110,7 +1110,7 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'user' => $tweet,
+            'tweets' => $tweet,
 
             'message' => $tweet ? 'Tweets displayed successfully' : 'Failed to load tweets',
 
