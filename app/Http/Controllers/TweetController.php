@@ -2,23 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Alert;
 use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
-use App\Models\Mention;
 use App\Models\Message;
 use App\Models\Profile;
-use App\Models\Follower;
-use App\Models\Following;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Ramsey\Collection\Collection;
-use function Laravel\Prompts\alert;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class TweetController extends Controller
@@ -34,6 +26,7 @@ class TweetController extends Controller
 
     public function tweet(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
 
             'body' => 'required',
