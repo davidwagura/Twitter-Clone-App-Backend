@@ -608,7 +608,9 @@ class TweetController extends Controller
 
                     'message' => "Login successful",
 
-                    'token' => $token
+                    'token' => $token,
+
+                    'user' => $user
 
                 ],200);
             }
@@ -1104,19 +1106,13 @@ class TweetController extends Controller
 
     public function tweetsForYou()
     {
-
-        $users = User::with(['tweet' => function ($query) {
-
-            $query->orderBy('created_at', 'desc');
-
-        }])->get();
-            
+        $tweet = Tweet::latest()->get();
 
         return response()->json([
 
-            'user' => $users,
+            'user' => $tweet,
 
-            'message' => $users ? 'Tweets displayed successfully' : 'Failed to load tweets',
+            'message' => $tweet ? 'Tweets displayed successfully' : 'Failed to load tweets',
 
         ],200);
     }

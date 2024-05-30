@@ -179,7 +179,7 @@ Route::get('/followingTweets/{user_id}',[TweetController::class, 'followingTweet
 
 //for you tweets api route
 
-Route::get('/for you',[TweetController::class,'tweetsForYou']);
+Route::get('/for-you',[TweetController::class,'tweetsForYou']);
 
 //trending tweets api
 
