@@ -215,18 +215,18 @@ class TweetController extends Controller
 
     }
 
-    // public function showTweet($user_id) //get
-    // {
-    //     $tweets = Tweet::where('user_id', $user_id)->get();
+    public function showTweet($id) //get
+    {
+        $tweets = Tweet::with('comments')->where('id', $id)->get();
     
-    //     return response()->json([
+        return response()->json([
 
-    //         'tweets' => $tweets,
+            'tweets' => $tweets,
 
-    //         'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+            'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
 
-    //     ], 200);
-    // }
+        ], 200);
+    }
     
     //Tweet comments
 
@@ -1099,7 +1099,7 @@ class TweetController extends Controller
 
     public function tweetsForYou()
     {
-        $tweet = Tweet::latest()->get();
+        $tweet = Tweet::with('user')->latest()->get();
 
         return response()->json([
 
