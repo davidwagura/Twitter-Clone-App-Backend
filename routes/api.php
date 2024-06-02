@@ -129,6 +129,12 @@ Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
 Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 
+//get an user by id
+
+
+Route::get('/user/{id}', [TweetController::class, 'getUser']);
+
+
 //get all user tweets
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
