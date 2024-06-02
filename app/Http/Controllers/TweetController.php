@@ -217,15 +217,29 @@ class TweetController extends Controller
 
     public function showTweet($id) //get
     {
-        $tweets = Tweet::with('comments')->where('id', $id)->get();
+        $tweets = Tweet::where('id', $id)->with('user')->with('comments')->get();
     
         return response()->json([
 
-            'tweets' => $tweets,
+            'tweet' => $tweets,
 
             'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
 
         ], 200);
+    }
+
+    public function getUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        return response()->json([
+
+            'user' => $user,
+
+            'message' => $user ? 'User displayed successfully' : 'User not found'
+
+        ]);
+        
     }
     
     //Tweet comments
@@ -243,18 +257,18 @@ class TweetController extends Controller
         ],200);
     }
 
-    public function userTweets($id) //get
-    {
-        $tweets = Tweet::where('user_id', $id)->with('user')->get();
+    // public function userTweets($id) //get
+    // {
+    //     $tweets = Tweet::where('user_id', $id)->with('user')->get();
 
-        return response()->json([
+    //     return response()->json([
 
-            'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found',
+    //         'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found',
 
-            'Tweets' => $tweets
+    //         'Tweets' => $tweets
 
-        ],200);
-    }
+    //     ],200);
+    // }
 
     public function likeTweet($tweet_id, $user_id)
     {
