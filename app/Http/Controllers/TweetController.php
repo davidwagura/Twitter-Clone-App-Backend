@@ -230,7 +230,7 @@ class TweetController extends Controller
 
     public function getUser($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('id', $id)->get();
 
         return response()->json([
 
