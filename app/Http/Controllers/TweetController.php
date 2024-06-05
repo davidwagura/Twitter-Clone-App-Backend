@@ -251,7 +251,7 @@ class TweetController extends Controller
         
                     ->with('user')
 
-                    ->orderBy('created_at', 'desc')
+                    ->latest()
 
                     ->get();
 
