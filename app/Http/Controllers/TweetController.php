@@ -249,10 +249,10 @@ class TweetController extends Controller
     {
         $comment = Comment::where('tweet_id', $tweet_id)
         
-                    ->with('tweet')
+                    ->with('user')
 
                     ->orderBy('created_at', 'desc')
-                    
+
                     ->get();
 
         return response()->json([
