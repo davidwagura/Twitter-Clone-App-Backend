@@ -47,6 +47,11 @@ Route::post('/likeComment/{comment_id}/{user_id}', [TweetController::class, 'lik
 Route::post('/unlike/{tweet_id}/{user_id}', [TweetController::class, 'unlikeTweet']);
 
 
+//unlike comment
+
+Route::post('/unlikeComment/{comment_id}/{user_id}', [TweetController::class, 'unlikeComment']);
+
+
 //retweet a tweet
 
 Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']);
@@ -54,12 +59,18 @@ Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']
 
 //remove a retweeted tweet
 
-Route::post('/unretweet/{tweet_id}/{user_id}', [TweetController::class, 'unretweet']);
+Route::post('/unretweet/{comment_id}/{user_id}', [TweetController::class, 'unretweet']);
 
 
-//unretweet comment
+//retweet comment
 
-Route::post('/unretweetComment/{comment_id}/{user_id}', [TweetController::class, 'unretweetComment']);
+Route::post('/retweetComment/{comment_id}/{user_id}', [TweetController::class, 'retweetComment']);
+
+
+
+// //unretweet comment
+
+// Route::post('/unretweetComment/{comment_id}/{user_id}', [TweetController::class, 'unlikeComment']);
 
 
 //reset user password

@@ -508,9 +508,9 @@ class TweetController extends Controller
 
         return response()->json([
             
-            'message' => $comment ? 'Tweet unlike successful' : 'Tweet unlike not successful',
+            'message' => $comment ? 'Comment unlike successful' : 'Tweet unlike not successful',
         
-            'tweet' => $comment
+            'comment' => $comment
         
         ],200);
     }
@@ -589,6 +589,80 @@ class TweetController extends Controller
         ],200);
 
     }
+
+    public function retweetComment($comment_id, $user_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+
+        $user = User::findOrFail($user_id);
+    
+        $retweetsId = $comment->retweets_id;
+    
+        if(!empty($retweetsId)){
+
+            $retweetsId = explode(',' , $retweetsId);
+
+            if(!in_array($user_id, $retweetsId)){
+
+                $retweetsId[] = $user_id;
+
+                $comment->retweets_id = implode(',', $retweetsId);
+
+                $comment->retweets++;
+
+            }
+
+        } else {
+
+            $comment->retweets_id = $user_id;
+
+            $comment->retweets = 1;
+        }
+    
+        $comment->save();
+
+        if($comment->save())
+        {
+            $this->retweetCommentNotification($user_id,$comment_id);
+
+            return response()->json([
+                
+                'message' => $comment ? 'Retweet successful' : 'Retweet not successful',
+            
+                'comment' => $comment
+            
+            ],200);
+        }
+    }
+
+    public function retweetCommentNotification($user_id,$comment_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' retweeted your tweet';
+
+        $notifications->related_item_id = $comment_id;
+
+        $notifications->user_id = $user_id;
+
+        $notifications->action_type = 'retweet';
+                
+        $notifications->seen = false;
+
+        $notifications->save();
+
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
+
+        ],200);
+
+    }
+
     
     public function unretweet($tweet_id, $user_id)
     {
