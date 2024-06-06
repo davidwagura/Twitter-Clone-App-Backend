@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->text('body');
+            $table->string('likes_id')->nullable();
+            $table->string('retweets_id')->nullable();
             $table->unsignedBigInteger('tweet_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('receiver_id')->nullable();

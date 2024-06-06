@@ -352,6 +352,82 @@ class TweetController extends Controller
 
     }
 
+    public function likeComment($comment_id, $user_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+
+        $user = User::findOrFail($user_id);
+    
+        $likesId = $comment->likes_id;
+    
+        if (!empty($likesId)) {
+
+            $likesId = explode(',', $likesId);
+
+            if (!in_array($user_id, $likesId)) {
+
+                $likesId[] = $user_id;
+
+                $comment->likes_id = implode(',', $likesId);
+
+                $comment->likes++;
+        
+            }
+
+        } 
+        else {
+
+            $comment->likes_id = $user_id;
+
+            $comment->likes = 1;
+        }
+
+        $comment->save();
+
+        if($comment->save())
+        {
+
+            $this->commentLikeNotification($comment_id,$user_id);
+
+            return response()->json([
+                
+                'message' => $comment ? 'Comment liked successfully' : 'Error liking tweet',
+
+                'comment' => $comment
+            
+            ],200);
+        }
+    }
+    
+    public function commentLikeNotification($comment_id,$user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notifications = new Notification;
+
+        $notifications->body = $user->first_name .' ' . $user->last_name . ' liked your tweet';
+
+        $notifications->related_item_id = $comment_id;
+
+        $notifications->user_id = $user_id;
+
+        $notifications->action_type = 'like';
+            
+        $notifications->seen = false;
+
+        $notifications->save();   
+        
+        return response()->json([
+
+            'notification' => $notifications,
+
+            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
+
+        ],200);
+
+    }
+
+
 
     public function unlikeTweet($tweet_id, $user_id)
     {
