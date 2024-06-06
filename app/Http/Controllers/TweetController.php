@@ -472,6 +472,50 @@ class TweetController extends Controller
         ],200);
     }
 
+    public function unlikeComment($comment_id, $user_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+        
+        $likesId = $comment->likes_id;
+        
+        if (!empty($likesId)) {
+
+            $explodedLikesId = explode(',', $likesId);
+
+            $index = array_search(strval($user_id), $explodedLikesId);
+            
+            if ($index !== false) {
+
+                unset($explodedLikesId[$index]);
+
+                $comment->likes_id = implode(',', $explodedLikesId);
+
+                $comment->likes = max(0, $comment->likes - 1);
+
+            }
+            // If likes array is empty, set likes to zero
+            if (empty($explodedLikesId)) {
+
+                $comment->likes = 0;
+
+            }
+        } else {
+
+            $comment->likes = 0;
+        }
+    
+        $comment->save();
+
+        return response()->json([
+            
+            'message' => $comment ? 'Tweet unlike successful' : 'Tweet unlike not successful',
+        
+            'tweet' => $comment
+        
+        ],200);
+    }
+
+
 
     public function retweet($tweet_id, $user_id)
     {
