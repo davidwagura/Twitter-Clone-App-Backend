@@ -37,6 +37,10 @@ Route::post('/tweet/comment', [TweetController::class, 'comment']);
 
 Route::post('/like/{tweet_id}/{user_id}', [TweetController::class, 'likeTweet']);
 
+//like a comment
+
+Route::post('/likeComment/{comment_id}/{user_id}', [TweetController::class, 'likeComment']);
+
 
 //unlike a already liked tweet
 
