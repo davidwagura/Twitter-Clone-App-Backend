@@ -695,7 +695,41 @@ class TweetController extends Controller
             'tweet' => $tweet
 
         ],200);
-}
+    }
+
+    public function unretweetComment($comment_id, $user_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+    
+        $retweetsId = $comment->retweets_id;
+    
+        if (!empty($retweetsId)) {
+
+            $explodedRetweetsId = explode(',' , $retweetsId);
+            
+            $index = array_search(strval($user_id), $explodedRetweetsId);
+    
+            if ($index !== false) {
+
+                unset($explodedRetweetsId[$index]);
+
+                $comment->retweets_id = implode(',', $explodedRetweetsId);
+
+                $comment->retweets = max(0, count($explodedRetweetsId));
+
+            }
+        }
+        $comment->save();
+    
+        return response()->json([
+                    
+            'message' => $comment ? 'Unretweet successful' : 'Unretweet not successful',
+        
+            'comment' => $comment
+
+        ],200);
+    }
+
 
     public function deleteTweet($tweet_id) //get
     {

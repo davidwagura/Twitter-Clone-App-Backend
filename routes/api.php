@@ -67,10 +67,9 @@ Route::post('/unretweet/{comment_id}/{user_id}', [TweetController::class, 'unret
 Route::post('/retweetComment/{comment_id}/{user_id}', [TweetController::class, 'retweetComment']);
 
 
+//unretweet comment
 
-// //unretweet comment
-
-// Route::post('/unretweetComment/{comment_id}/{user_id}', [TweetController::class, 'unlikeComment']);
+Route::post('/unretweetComment/{comment_id}/{user_id}', [TweetController::class, 'unretweetComment']);
 
 
 //reset user password
