@@ -64,4 +64,8 @@ class User extends Model
         return $this->hasMany(Receiver::class);
     }
 
+    public function commentComment()
+    {
+        return $this->hasMany(commentComment::class);
+    }
 }
