@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Tweet;
 use App\Models\Comment;
+use App\Models\commentComment;
 use App\Models\Message;
 use App\Models\Profile;
 use App\Models\Notification;
@@ -728,6 +729,28 @@ class TweetController extends Controller
             'comment' => $comment
 
         ],200);
+    }
+
+    public function addCommentComments(Request $request)
+    {
+        $comment = new commentComment;
+
+        $comment->body = $request->body;
+
+        $comment->tweet_id = $request->tweet_id;
+
+        $comment->user_id = $request->user_id;
+
+        $comment->save();
+
+        return response()->json([
+
+            'message' => $comment ? 'Request successful' : 'Request failed',
+
+            'comment' => $comment
+            
+        ]);
+
     }
 
 
