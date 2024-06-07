@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
+use Tests\Feature\TweetForYouTest;
 
 //home page
 
@@ -162,6 +163,11 @@ Route::get('/user/{id}', [TweetController::class, 'getUser']);
 //get all user tweets
 
 Route::get('/user/tweets/{id}', [TweetController::class, 'userTweets']);
+
+
+//get comment comments by comment_id
+
+Route::get('/commentComment/{comment_id}', [TweetController::class, 'getCommentComments']);
 
 
 //show the profile details of the user
