@@ -737,7 +737,7 @@ class TweetController extends Controller
 
         $comment->body = $request->body;
 
-        $comment->tweet_id = $request->tweet_id;
+        $comment->comment_id = $request->comment_id;
 
         $comment->user_id = $request->user_id;
 
@@ -748,7 +748,7 @@ class TweetController extends Controller
             'message' => $comment ? 'Request successful' : 'Request failed',
 
             'comment' => $comment
-            
+
         ]);
 
     }
