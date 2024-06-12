@@ -265,18 +265,18 @@ class TweetController extends Controller
         ],200);
     }
 
-    // public function userTweets($id) //get
-    // {
-    //     $tweets = Tweet::where('user_id', $id)->with('user')->get();
+    public function getComment($id) //get
+    {
+        $comment = Comment::where('id', $id)->with('user')->get();
 
-    //     return response()->json([
+        return response()->json([
 
-    //         'message' => $tweets ? 'Tweets displayed successfully' : 'No tweets found',
+            'message' => $comment ? 'Comment displayed successfully' : 'Comment not found',
 
-    //         'Tweets' => $tweets
+            'Comment' => $comment
 
-    //     ],200);
-    // }
+        ],200);
+    }
 
     public function likeTweet($tweet_id, $user_id)
     {
@@ -749,8 +749,27 @@ class TweetController extends Controller
 
             'comment' => $comment
 
-        ]);
+        ], 200);
 
+    }
+
+    public function getCommentComments($comment_id)
+    {
+        $comment = commentComment::where('comment_id', $comment_id)
+
+                                ->with('user')
+
+                                ->latest()
+
+                                ->get();
+        
+        return response()->json([
+
+            'message' => $comment ? 'Request successful' : 'Request failed',
+
+            'comment' => $comment
+
+        ], 200);
     }
 
 

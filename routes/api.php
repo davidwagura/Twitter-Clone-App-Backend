@@ -60,7 +60,7 @@ Route::post('/retweet/{tweet_id}/{user_id}', [TweetController::class, 'retweet']
 
 //remove a retweeted tweet
 
-Route::post('/unretweet/{comment_id}/{user_id}', [TweetController::class, 'unretweet']);
+Route::post('/unretweet/{tweet_id}/{user_id}', [TweetController::class, 'unretweet']);
 
 
 //retweet comment
@@ -154,8 +154,12 @@ Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
 Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 
-//get an user by id
+//get comment by Id
 
+Route::get('/comment/{id}', [TweetController::class, 'getComment']);
+
+
+//get an user by id
 
 Route::get('/user/{id}', [TweetController::class, 'getUser']);
 
