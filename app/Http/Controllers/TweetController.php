@@ -252,6 +252,8 @@ class TweetController extends Controller
         
                     ->with('user')
 
+                    ->with('commentComment')
+
                     ->latest()
 
                     ->get();
@@ -267,7 +269,7 @@ class TweetController extends Controller
 
     public function getComment($id) //get
     {
-        $comment = Comment::where('id', $id)->with('user')->get();
+        $comment = comment::where('id', $id)->with('user')->first();
 
         return response()->json([
 
