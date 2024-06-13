@@ -1392,7 +1392,13 @@ class TweetController extends Controller
 
     public function tweetsForYou()
     {
-        $tweet = Tweet::with('user')->latest()->get();
+        $tweet = Tweet::with('user')
+
+                        ->with('comments')
+
+                        ->latest()
+                        
+                        ->get();
 
         return response()->json([
 
