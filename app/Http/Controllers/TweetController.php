@@ -1390,7 +1390,7 @@ class TweetController extends Controller
     
         $followings_ids = explode(',', $user->followings_id);
     
-        $tweets = Tweet::whereIn('user_id', $followings_ids)->get();
+        $tweets = Tweet::whereIn('user_id', $followings_ids)->with('user')->get();
     
         return response()->json([
 
@@ -1399,7 +1399,7 @@ class TweetController extends Controller
             'tweets' => $tweets,
 
         ], 200);
-        
+
     }
 
     public function tweetsForYou()
