@@ -1376,18 +1376,30 @@ class TweetController extends Controller
     
     public function followingTweets($user_id)
     {
-       $user = User::where('id', $user_id)->pluck('followings_id', 'id');
+        $user = User::find($user_id);
+    
+        if (!$user) {
 
-        $tweet = Tweet::where('user_id', $user)->get();
+            return response()->json([
 
+                'message' => 'User not found',
+
+            ], 404);
+
+        }
+    
+        $followings_ids = explode(',', $user->followings_id);
+    
+        $tweets = Tweet::whereIn('user_id', $followings_ids)->get();
+    
         return response()->json([
 
-            'message' => $tweet ? 'Displaying tweets' :  'Failed to display tweets',
+            'message' => $tweets->isEmpty() ? 'No tweets found' : 'Displaying tweets',
 
-            'tweet' => $tweet
+            'tweets' => $tweets,
 
-        ],200);
-
+        ], 200);
+        
     }
 
     public function tweetsForYou()
