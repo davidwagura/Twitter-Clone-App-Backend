@@ -1251,7 +1251,7 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'notification' => $user,
+            'user' => $user,
 
             'message' => $user ? 'Notifications displayed successfully' : 'Failed to display notifications'
 

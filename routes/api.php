@@ -75,7 +75,7 @@ Route::post('/unretweetComment/{comment_id}/{user_id}', [TweetController::class,
 
 //create comment comment
 
-Route::post('/commentComment',[TweetController::class, 'addCommentComments']);
+Route::post('/commentComment', [TweetController::class, 'addCommentComments']);
 
 
 //reset user password
@@ -186,7 +186,7 @@ Route::get('/myFollowers/{myId}', [TweetController::class, 'showFollowers']);
 
 //show all the users I'm following
 
-Route::get('/showFollowing/{myId}',[TweetController::class, 'showFollowing']);
+Route::get('/showFollowing/{myId}', [TweetController::class, 'showFollowing']);
 
 
 //show the following and followers count
@@ -214,12 +214,12 @@ Route::get('/commented/comments/{user_id}', [TweetController::class, 'userCommen
 
 //get all users I'm following tweets
 
-Route::get('/followingTweets/{user_id}',[TweetController::class, 'followingTweets']);
+Route::get('/followingTweets/{user_id}', [TweetController::class, 'followingTweets']);
 
 
 //for you tweets api route
 
-Route::get('/for-you',[TweetController::class,'tweetsForYou']);
+Route::get('/for-you', [TweetController::class, 'tweetsForYou']);
 
 //trending tweets api
 
