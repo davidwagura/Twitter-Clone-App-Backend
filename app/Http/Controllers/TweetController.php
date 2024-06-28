@@ -278,7 +278,7 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $user = User::findOrFail($user_id);
+        $tweetOwner = $tweet->user;
 
         $likesId = $tweet->likes_id;
 
@@ -305,7 +305,7 @@ class TweetController extends Controller
 
         if ($tweet->save()) {
 
-            $this->likeNotification($tweet_id, $user_id);
+            $this->likeNotification($tweet_id, $user_id, $tweetOwner->id);
 
             return response()->json([
 
@@ -317,29 +317,29 @@ class TweetController extends Controller
         }
     }
 
-    public function likeNotification($tweet_id, $user_id)
+    public function likeNotification($tweet_id, $liker_id, $owner_id)
     {
-        $user = User::findOrFail($user_id);
+        $liker = User::findOrFail($liker_id);
 
-        $notifications = new Notification;
+        $notification = new Notification;
 
-        $notifications->body = $user->first_name . ' ' . $user->last_name . ' liked your tweet';
+        $notification->body = $liker->first_name . ' ' . $liker->last_name . ' liked your tweet';
 
-        $notifications->related_item_id = $tweet_id;
+        $notification->related_item_id = $tweet_id;
 
-        $notifications->user_id = $user_id;
+        $notification->user_id = $owner_id;
 
-        $notifications->action_type = 'like';
+        $notification->action_type = 'like';
 
-        $notifications->seen = false;
+        $notification->seen = false;
 
-        $notifications->save();
+        $notification->save();
 
         return response()->json([
 
-            'notification' => $notifications,
+            'notification' => $notification,
 
-            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
+            'message' => $notification ? 'Notification created successfully' : 'No notification found'
 
         ], 200);
     }
@@ -348,7 +348,7 @@ class TweetController extends Controller
     {
         $comment = Comment::findOrFail($comment_id);
 
-        $user = User::findOrFail($user_id);
+        $commentOwner = $comment->user;
 
         $likesId = $comment->likes_id;
 
@@ -375,7 +375,7 @@ class TweetController extends Controller
 
         if ($comment->save()) {
 
-            $this->commentLikeNotification($comment_id, $user_id);
+            $this->commentLikeNotification($commentOwner, $comment_id, $user_id);
 
             return response()->json([
 
@@ -387,7 +387,7 @@ class TweetController extends Controller
         }
     }
 
-    public function commentLikeNotification($comment_id, $user_id)
+    public function commentLikeNotification($commentOwner, $comment_id, $user_id)
     {
         $user = User::findOrFail($user_id);
 
@@ -397,7 +397,7 @@ class TweetController extends Controller
 
         $notifications->related_item_id = $comment_id;
 
-        $notifications->user_id = $user_id;
+        $notifications->user_id = $commentOwner;
 
         $notifications->action_type = 'like';
 
@@ -504,7 +504,7 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $user = User::findOrFail($user_id);
+        $tweetOwner = $tweet->user;
 
         $retweetsId = $tweet->retweets_id;
 
@@ -530,7 +530,8 @@ class TweetController extends Controller
         $tweet->save();
 
         if ($tweet->save()) {
-            $this->retweetNotification($user_id, $tweet_id);
+
+            $this->retweetNotification($tweetOwner, $user_id, $tweet_id);
 
             return response()->json([
 
@@ -542,7 +543,7 @@ class TweetController extends Controller
         }
     }
 
-    public function retweetNotification($user_id, $tweet_id)
+    public function retweetNotification($tweetOwner, $user_id, $tweet_id)
     {
         $user = User::findOrFail($user_id);
 
@@ -552,7 +553,7 @@ class TweetController extends Controller
 
         $notifications->related_item_id = $tweet_id;
 
-        $notifications->user_id = $user_id;
+        $notifications->user_id = $tweetOwner;
 
         $notifications->action_type = 'retweet';
 
@@ -573,7 +574,7 @@ class TweetController extends Controller
     {
         $comment = Comment::findOrFail($comment_id);
 
-        $user = User::findOrFail($user_id);
+        $commentOwner = $comment->user;
 
         $retweetsId = $comment->retweets_id;
 
@@ -599,7 +600,8 @@ class TweetController extends Controller
         $comment->save();
 
         if ($comment->save()) {
-            $this->retweetCommentNotification($user_id, $comment_id);
+
+            $this->retweetCommentNotification($commentOwner, $user_id, $comment_id);
 
             return response()->json([
 
@@ -611,7 +613,7 @@ class TweetController extends Controller
         }
     }
 
-    public function retweetCommentNotification($user_id, $comment_id)
+    public function retweetCommentNotification($commentOwner, $user_id, $comment_id)
     {
         $user = User::findOrFail($user_id);
 
@@ -621,7 +623,7 @@ class TweetController extends Controller
 
         $notifications->related_item_id = $comment_id;
 
-        $notifications->user_id = $user_id;
+        $notifications->user_id = $commentOwner;
 
         $notifications->action_type = 'retweet';
 
