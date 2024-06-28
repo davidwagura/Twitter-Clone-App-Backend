@@ -1244,16 +1244,19 @@ class TweetController extends Controller
 
     public function getNotifications($user_id)
     {
-        $user = User::where('id', $user_id)->with(['notifications' => function ($query) {
+        $notifications = Notification::where('user_id', $user_id)
 
-            $query->orderBy('created_at', 'desc');
-        }])->get();
+            ->orderBy('created_at', 'desc')
+
+            ->with('user')
+
+            ->get();
 
         return response()->json([
 
-            'user' => $user,
+            'notifications' => $notifications,
 
-            'message' => $user ? 'Notifications displayed successfully' : 'Failed to display notifications'
+            'message' => $notifications ? 'Notifications displayed successfully' : 'Failed to display notifications'
 
         ], 200);
     }
