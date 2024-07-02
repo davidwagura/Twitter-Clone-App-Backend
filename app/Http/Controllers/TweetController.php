@@ -1167,7 +1167,7 @@ class TweetController extends Controller
     public function getUserLikedTweets($user_id)
     {
         // Retrieve all tweets where the likes_id column contains the user_id
-        $likedTweets = Tweet::whereRaw("FIND_IN_SET(?, likes_id)", [$user_id])->get();
+        $likedTweets = Tweet::whereRaw("FIND_IN_SET(?, likes_id)", [$user_id])->with('user')->get();
 
         return response()->json([
 
@@ -1410,6 +1410,8 @@ class TweetController extends Controller
         $comments = Comment::where('user_id', $user_id)
 
             ->with('tweet')
+
+            ->with('user')
 
             ->latest()
 
