@@ -63,8 +63,6 @@ class TweetController extends Controller
 
         if ($tweet) {
 
-            $this->tweetMention($tweet, $request->receiver_id);
-
             return response()->json([
 
                 'message' => $tweet ? 'Tweet created successfully' : 'Validation failed',
@@ -74,36 +72,6 @@ class TweetController extends Controller
             ], 200);
         }
     }
-
-    public function tweetMention(Tweet $tweet, $receiverId)
-    {
-        $user = $tweet->user;
-
-        $mention = new Notification;
-
-        $mention->body = $user->first_name . ' ' . $user->last_name . ' tagged you in a tweet.';
-
-        $mention->createdBy = $receiverId;
-
-        $mention->related_item_id = $tweet->id;
-
-        $mention->user_id = $user->id;
-
-        $mention->action_type = 'tweet';
-
-        $mention->seen = false;
-
-        $mention->save();
-
-        return response()->json([
-
-            'mention' => $mention,
-
-            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
-
-        ], 200);
-    }
-
 
     public function user(Request $request)
     {
@@ -137,8 +105,6 @@ class TweetController extends Controller
 
         $comment->body = $request->body;
 
-        $comment->user_id = $request->user_id;
-
         $comment->tweet_id = $request->tweet_id;
 
         $comment->save();
@@ -165,11 +131,11 @@ class TweetController extends Controller
 
         $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
 
-        $mention->createdBy = $receiverId;
+        $mention->createdBy = $userId;
 
         $mention->related_item_id = $tweetId;
 
-        $mention->user_id = $userId;
+        $mention->user_id = $receiverId;
 
         $mention->action_type = 'comment';
 
@@ -504,7 +470,7 @@ class TweetController extends Controller
     {
         $tweet = Tweet::findOrFail($tweet_id);
 
-        $tweetOwner = $tweet->user;
+        $tweetOwner = $tweet->user_id;
 
         $retweetsId = $tweet->retweets_id;
 
@@ -535,11 +501,18 @@ class TweetController extends Controller
 
             return response()->json([
 
-                'message' => $tweet ? 'Retweet successful' : 'Retweet not successful',
+                'message' => 'Retweet successful',
 
                 'tweet' => $tweet
 
             ], 200);
+        } else {
+
+            return response()->json([
+
+                'message' => 'Retweet not successful',
+
+            ], 400);
         }
     }
 
@@ -547,25 +520,25 @@ class TweetController extends Controller
     {
         $user = User::findOrFail($user_id);
 
-        $notifications = new Notification;
+        $notification = new Notification;
 
-        $notifications->body = $user->first_name . ' ' . $user->last_name . ' retweeted your tweet';
+        $notification->body = $user->first_name . ' ' . $user->last_name . ' retweeted your tweet';
 
-        $notifications->related_item_id = $tweet_id;
+        $notification->related_item_id = $tweet_id;
 
-        $notifications->user_id = $tweetOwner;
+        $notification->user_id = $tweetOwner;
 
-        $notifications->action_type = 'retweet';
+        $notification->action_type = 'retweet';
 
-        $notifications->seen = false;
+        $notification->seen = false;
 
-        $notifications->save();
+        $notification->save();
 
         return response()->json([
 
-            'notification' => $notifications,
+            'notification' => $notification,
 
-            'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
+            'message' => $notification ? 'Notification created successfully' : 'Notification creation failed',
 
         ], 200);
     }
@@ -1193,15 +1166,12 @@ class TweetController extends Controller
 
     public function getUserLikedTweets($user_id)
     {
-        $tweet = Tweet::findOrFail($user_id);
-
-        $likedTweetIds = explode(',', $tweet->likes_id);
-
-        $likedTweets = User::whereIn('id', $likedTweetIds)->get();
+        // Retrieve all tweets where the likes_id column contains the user_id
+        $likedTweets = Tweet::whereRaw("FIND_IN_SET(?, likes_id)", [$user_id])->get();
 
         return response()->json([
 
-            'message' => $tweet ? 'User liked tweets got successfully' : 'Failed to get user liked tweets',
+            'message' => $likedTweets->isNotEmpty() ? 'User liked tweets retrieved successfully' : 'No liked tweets found',
 
             'liked_tweets' => $likedTweets,
 
@@ -1221,8 +1191,11 @@ class TweetController extends Controller
     }
 
     public function getMentions($createdBy, $user_id)
+
     {
         $mentions = Notification::where('createdBy', $createdBy)
+
+            ->where('user_id', $user_id)
 
             ->with('user')
 
@@ -1230,11 +1203,7 @@ class TweetController extends Controller
 
             ->get();
 
-        $user =  Notification::where('user_id', $user_id)->get();
-
         return response()->json([
-
-            'user' => $user,
 
             'mentions' => $mentions,
 
@@ -1371,22 +1340,14 @@ class TweetController extends Controller
 
     public function trends()
     {
-        //withCount-> count the number of comments associated with each tweet
 
-        $tweetWithMostComments = Tweet::withCount('comments')
-
-            ->orderByDesc('comments_count')
-
-            ->with('user')
-
-            ->take(10)->get();
-
+        $count = Tweet::withCount('comments')->orderByDesc('comments_count')->with('user')->take(10)->get();
 
         return response()->json([
 
-            'trending' => $tweetWithMostComments,
+            'trending' => $count,
 
-            'message' => !$tweetWithMostComments->isEmpty() ? 'Trending tweets displayed successfully' : 'No comments found',
+            'message' => !$count->isEmpty() ? 'Trending tweets displayed successfully' : 'No comments found',
 
         ], 200);
     }

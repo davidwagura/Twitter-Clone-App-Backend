@@ -9,10 +9,10 @@ class Tweet extends Model
 {
     use HasFactory;
 
-    
-    protected $fillable =[
+
+    protected $fillable = [
         'body',
-        
+
         'user_id',
 
         'likes_id',
