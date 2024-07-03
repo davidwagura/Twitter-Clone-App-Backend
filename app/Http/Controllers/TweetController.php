@@ -191,6 +191,20 @@ class TweetController extends Controller
         ], 200);
     }
 
+    public function userTweets($userId)
+    {
+        $tweet = Tweet::where('user_id', $userId)->with('user')->latest()->get();
+
+        return response()->json([
+
+            'tweet' => $tweet,
+
+            'message' => $tweet ? 'Tweet displayed successfully' : 'No tweets found'
+
+        ], 200);
+    }
+
+
     public function getUser($id)
     {
         $user = User::where('id', $id)->first();
@@ -1223,14 +1237,32 @@ class TweetController extends Controller
 
             ->get();
 
+        $notifications->transform(function ($notification) {
+
+            if ($notification->action_type == 'follower') {
+
+                $relatedUser = User::find($notification->related_item_id);
+
+                $notification->related_item = $relatedUser;
+            } else {
+
+                $relatedTweet = Tweet::find($notification->related_item_id);
+
+                $notification->related_item = $relatedTweet;
+            }
+
+            return $notification;
+        });
+
         return response()->json([
 
             'notifications' => $notifications,
 
-            'message' => $notifications ? 'Notifications displayed successfully' : 'Failed to display notifications'
+            'message' => $notifications->isNotEmpty() ? 'Notifications displayed successfully' : 'Failed to display notifications'
 
         ], 200);
     }
+
 
     public function messages(Request $request, $sender_id, $receiver_id)
     {
