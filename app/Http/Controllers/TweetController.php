@@ -353,47 +353,43 @@ class TweetController extends Controller
 
         $comment->save();
 
-        if ($comment->save()) {
-
-            $this->commentLikeNotification($commentOwner, $comment_id, $user_id);
-
-            return response()->json([
-
-                'message' => $comment ? 'Comment liked successfully' : 'Error liking tweet',
-
-                'comment' => $comment
-
-            ], 200);
-        }
-    }
-
-    public function commentLikeNotification($commentOwner, $comment_id, $user_id)
-    {
-        $user = User::findOrFail($user_id);
-
-        $notifications = new Notification;
-
-        $notifications->body = $user->first_name . ' ' . $user->last_name . ' liked your tweet';
-
-        $notifications->related_item_id = $comment_id;
-
-        $notifications->user_id = $commentOwner;
-
-        $notifications->action_type = 'like';
-
-        $notifications->seen = false;
-
-        $notifications->save();
+        $this->commentLikeNotification($commentOwner->id, $comment_id, $user_id); // Pass the user_id, not the user object
 
         return response()->json([
 
-            'notification' => $notifications,
+            'message' => $comment ? 'Comment liked successfully' : 'Error liking tweet',
 
-            'message' => $notifications ? 'Notification created successfully' : 'No notification found'
+            'comment' => $comment
 
         ], 200);
     }
 
+    public function commentLikeNotification($commentOwner_id, $comment_id, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        $notification = new Notification;
+
+        $notification->body = $user->first_name . ' ' . $user->last_name . ' liked your comment';
+
+        $notification->related_item_id = $comment_id;
+
+        $notification->user_id = $commentOwner_id;
+
+        $notification->action_type = 'like';
+
+        $notification->seen = false;
+
+        $notification->save();
+
+        return response()->json([
+
+            'notification' => $notification,
+
+            'message' => $notification ? 'Notification created successfully' : 'Failed to create notification'
+
+        ], 200);
+    }
 
 
     public function unlikeTweet($tweet_id, $user_id)
@@ -588,7 +584,7 @@ class TweetController extends Controller
 
         if ($comment->save()) {
 
-            $this->retweetCommentNotification($commentOwner, $user_id, $comment_id);
+            $this->retweetCommentNotification($commentOwner->id, $user_id, $comment_id);
 
             return response()->json([
 
