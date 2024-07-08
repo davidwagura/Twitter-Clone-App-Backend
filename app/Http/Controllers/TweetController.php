@@ -27,10 +27,9 @@ class TweetController extends Controller
 
     public function tweet(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
 
-            'body' => 'required',
+            'body' => 'required|string',
 
             'user_id' => ['required', 'integer', function ($attribute, $value, $fail) {
 
@@ -38,7 +37,9 @@ class TweetController extends Controller
 
                     $fail('The ' . $attribute . ' must be an integer.');
                 }
-            }]
+            }],
+
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ]);
 
@@ -50,27 +51,39 @@ class TweetController extends Controller
 
                 'message' => 'Validation failed',
 
-            ]);
+                'errors' => $validator->errors(),
+
+            ], 400);
         }
 
-        $tweet = Tweet::create([
+        $tweetData = [
 
             'body' => $request->body,
 
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
 
-        ]);
+        ];
 
-        if ($tweet) {
+        if ($request->hasFile('image')) {
 
-            return response()->json([
+            $image = $request->file('image');
 
-                'message' => $tweet ? 'Tweet created successfully' : 'Validation failed',
+            $originalPath = $image->store('images/tweet', 'public');
 
-                'tweet' => $tweet
-
-            ], 200);
+            $tweetData['image_path'] = $originalPath;
         }
+
+        $tweet = Tweet::create($tweetData);
+
+        return response()->json([
+
+            'status' => true,
+
+            'message' => 'Tweet created successfully',
+
+            'data' => $tweet,
+
+        ], 201);
     }
 
     public function user(Request $request)
@@ -100,30 +113,37 @@ class TweetController extends Controller
 
     public function comment(Request $request)
     {
-
         $comment = new Comment;
 
         $comment->body = $request->body;
 
         $comment->tweet_id = $request->tweet_id;
 
+        $comment->user_id = $request->user_id;
+
         $comment->save();
 
         if ($comment->save()) {
 
-            $this->commentMention($request->user_id, $request->receiver_id, $request->tweet_id);
+            $this->commentMention($request->user_id, $request->tweet_id);
 
             return response()->json([
 
-                'message' => $comment ? 'Comment created successfully' : 'Error creating comment',
+                'message' => 'Comment created successfully',
 
                 'comment' => $comment
 
             ], 200);
         }
+
+        return response()->json([
+
+            'message' => 'Error creating comment'
+
+        ], 500);
     }
 
-    public function commentMention($userId, $receiverId, $tweetId)
+    public function commentMention($userId, $tweetId)
     {
         $user = User::findOrFail($userId);
 
@@ -131,11 +151,11 @@ class TweetController extends Controller
 
         $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
 
-        $mention->createdBy = $userId;
+        // $mention->createdBy = $userId;
 
         $mention->related_item_id = $tweetId;
 
-        $mention->user_id = $receiverId;
+        $mention->user_id = $userId;
 
         $mention->action_type = 'comment';
 

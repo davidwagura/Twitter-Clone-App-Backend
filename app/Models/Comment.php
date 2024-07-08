@@ -15,7 +15,9 @@ class Comment extends Model
 
         'tweet_id',
 
-        'user_id'
+        'user_id',
+
+        'image_path'
     ];
 
     public function tweet()
@@ -32,5 +34,4 @@ class Comment extends Model
     {
         return $this->hasMany(commentComment::class);
     }
-    
 }

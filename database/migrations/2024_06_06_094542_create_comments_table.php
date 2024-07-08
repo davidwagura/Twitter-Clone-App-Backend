@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->text('body');
+            $table->string('image_path')->nullable();
             $table->string('likes_id')->nullable();
             $table->string('retweets_id')->nullable();
             $table->unsignedBigInteger('tweet_id');
@@ -30,6 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+
         Schema::dropIfExists('comments');
     }
 };

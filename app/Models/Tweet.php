@@ -15,6 +15,8 @@ class Tweet extends Model
 
         'user_id',
 
+        'image_path',
+
         'likes_id',
 
         'retweet_id'
