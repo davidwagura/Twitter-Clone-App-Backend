@@ -27,19 +27,14 @@ class TweetController extends Controller
 
     public function tweet(Request $request)
     {
+        // Validate the request data
         $validator = Validator::make($request->all(), [
 
             'body' => 'required|string',
 
-            'user_id' => ['required', 'integer', function ($attribute, $value, $fail) {
+            'user_id' => ['required', 'integer'],
 
-                if (!is_int($value)) {
-
-                    $fail('The ' . $attribute . ' must be an integer.');
-                }
-            }],
-
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ]);
 
@@ -56,6 +51,7 @@ class TweetController extends Controller
             ], 400);
         }
 
+        // Prepare tweet data
         $tweetData = [
 
             'body' => $request->body,
@@ -64,15 +60,17 @@ class TweetController extends Controller
 
         ];
 
-        if ($request->hasFile('image')) {
+        // Handle image upload if present
+        if ($request->hasFile('image_path')) {
 
-            $image = $request->file('image');
+            $image = $request->file('image_path');
 
             $originalPath = $image->store('images/tweet', 'public');
 
             $tweetData['image_path'] = $originalPath;
         }
 
+        // Create the tweet
         $tweet = Tweet::create($tweetData);
 
         return response()->json([
