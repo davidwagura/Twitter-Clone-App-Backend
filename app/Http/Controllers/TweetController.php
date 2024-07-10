@@ -10,7 +10,6 @@ use App\Models\Message;
 use App\Models\Profile;
 use App\Models\Notification;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -315,9 +314,9 @@ class TweetController extends Controller
         }
     }
 
-    public function likeNotification($tweet_id, $liker_id, $owner_id)
+    public function likeNotification($tweet_id, $user_id, $tweetOwner)
     {
-        $liker = User::findOrFail($liker_id);
+        $liker = User::findOrFail($user_id);
 
         $notification = new Notification;
 
@@ -325,7 +324,9 @@ class TweetController extends Controller
 
         $notification->related_item_id = $tweet_id;
 
-        $notification->user_id = $owner_id;
+        $notification->user_id = $tweetOwner;
+
+        $notification->createdBy =  $user_id;
 
         $notification->action_type = 'like';
 
@@ -391,6 +392,8 @@ class TweetController extends Controller
         $notification->body = $user->first_name . ' ' . $user->last_name . ' liked your comment';
 
         $notification->related_item_id = $comment_id;
+
+        $notification->createdBy =  $user_id;
 
         $notification->user_id = $commentOwner_id;
 
@@ -554,6 +557,8 @@ class TweetController extends Controller
 
         $notification->related_item_id = $tweet_id;
 
+        $notification->createdBy =  $user_id;
+
         $notification->user_id = $tweetOwner;
 
         $notification->action_type = 'retweet';
@@ -623,6 +628,8 @@ class TweetController extends Controller
         $notifications->body = $user->first_name . ' ' . $user->last_name . ' retweeted your tweet';
 
         $notifications->related_item_id = $comment_id;
+
+        $notifications->createdBy =  $user_id;
 
         $notifications->user_id = $commentOwner;
 
