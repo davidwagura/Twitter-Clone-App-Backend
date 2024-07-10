@@ -29,7 +29,7 @@ class TweetController extends Controller
         // Validate the request data
         $validator = Validator::make($request->all(), [
 
-            'body' => 'required|string',
+            'body' => 'nullable|string',
 
             'user_id' => ['required', 'integer'],
 
