@@ -201,9 +201,9 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'tweet' => $tweet
+            'tweet' => $tweet,
 
-            // 'message' => !$tweets->isEmpty() ? 'Tweets displayed successfully' : 'Tweet  not displayed'
+            'message' => $tweet ? 'Tweets displayed successfully' : 'Tweet  not displayed'
 
         ], 200);
     }
@@ -326,7 +326,7 @@ class TweetController extends Controller
 
         $notification->user_id = $tweetOwner;
 
-        $notification->createdBy =  $user_id;
+        $notification->createdBy = $tweetOwner;
 
         $notification->action_type = 'like';
 
@@ -935,6 +935,8 @@ class TweetController extends Controller
     {
         $userToFollow = User::findOrFail($follower_id);
 
+        $owner = $userToFollow;
+
         $followersId = $userToFollow->followers_id;
 
         if (!empty($followersId)) {
@@ -960,7 +962,7 @@ class TweetController extends Controller
 
         if ($userToFollow->save()) {
 
-            $this->followerNotification($follower_id, $user_to_follow_id);
+            $this->followerNotification($follower_id, $user_to_follow_id, $owner->id);
 
             return response()->json([
 
@@ -972,7 +974,7 @@ class TweetController extends Controller
         }
     }
 
-    public function followerNotification($follower_id, $user_to_follow_id)
+    public function followerNotification($follower_id, $user_to_follow_id, $owner)
     {
         $user = User::findOrFail($follower_id);
 
@@ -982,7 +984,9 @@ class TweetController extends Controller
 
         $notifications->related_item_id = $user_to_follow_id;
 
-        $notifications->user_id = $follower_id;
+        $notifications->createdBy =  $follower_id;
+
+        $notifications->user_id = $owner;
 
         $notifications->action_type = 'follower';
 
@@ -1363,6 +1367,16 @@ class TweetController extends Controller
 
         $tweets = Tweet::whereIn('user_id', $followings_ids)->with('user')->with('comments')->get();
 
+        // $tweets = $tweets->map(function ($tweet) use ($user_id) {
+
+        //     $tweet->isLiked = $tweet->isLikedByUser($user_id);
+
+        //     $tweet->isRetweeted = $tweet->isRetweetedByUser($user_id);
+
+        //     return $tweet;
+        // });
+
+
         return response()->json([
 
             'message' => $tweets->isEmpty() ? 'No tweets found' : 'Displaying tweets',
@@ -1372,21 +1386,26 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function tweetsForYou()
+    public function tweetsForYou(Request $request)
     {
-        $tweet = Tweet::with('user')
+        $userId = $request->user()->id;
 
-            ->with('comments')
+        $tweets = Tweet::with('user', 'comments')->latest()->get();
 
-            ->latest()
+        $tweets = $tweets->map(function ($tweet) use ($userId) {
 
-            ->get();
+            $tweet->isLiked = $tweet->isLikedByUser($userId);
+
+            $tweet->isRetweeted = $tweet->isRetweetedByUser($userId);
+
+            return $tweet;
+        });
 
         return response()->json([
 
-            'tweets' => $tweet,
+            'tweets' => $tweets,
 
-            'message' => $tweet ? 'Tweets displayed successfully' : 'Failed to load tweets',
+            'message' => $tweets ? 'Tweets displayed successfully' : 'Failed to load tweets',
 
         ], 200);
     }
