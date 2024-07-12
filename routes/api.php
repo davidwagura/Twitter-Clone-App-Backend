@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TweetController;
+use App\Models\Tweet;
 use Tests\Feature\TweetForYouTest;
 
 //home page
@@ -23,6 +24,7 @@ Route::post('/logout', [TweetController::class, 'logout']);
 
 Route::post('/tweet', [TweetController::class, 'tweet']);
 
+Route::post('/conversations/{sender_id}/{receiver_id}', [TweetController::class, 'createConversation']);
 
 //create a new user(register)
 
@@ -105,7 +107,7 @@ Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'f
 
 //send a message to an user
 
-Route::post('/messages/{sender_id}/{receiver_id}', [TweetController::class, 'messages']);
+Route::post('/messages/{conversation_id}/{sender_id}', [TweetController::class, 'sendMessage']);
 
 
 //create user profile
@@ -158,6 +160,8 @@ Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 Route::get('/comment/{id}', [TweetController::class, 'getComment']);
 
+//get conversation
+Route::get('/conversations/{conversation_id}/messages', [TweetController::class, 'getConversationMessages']);
 
 //get an user by id
 
