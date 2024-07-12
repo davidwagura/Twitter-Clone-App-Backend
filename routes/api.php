@@ -24,8 +24,6 @@ Route::post('/logout', [TweetController::class, 'logout']);
 
 Route::post('/tweet', [TweetController::class, 'tweet']);
 
-Route::post('/conversations/{sender_id}/{receiver_id}', [TweetController::class, 'createConversation']);
-
 //create a new user(register)
 
 Route::post('/user', [TweetController::class, 'user']);
@@ -107,7 +105,7 @@ Route::post('/unfollowing/{following_id}/{user_id}', [TweetController::class, 'f
 
 //send a message to an user
 
-Route::post('/messages/{conversation_id}/{sender_id}', [TweetController::class, 'sendMessage']);
+Route::post('/messages/{sender_id}/{receivers_id}', [TweetController::class, 'messages']);
 
 
 //create user profile
@@ -156,12 +154,20 @@ Route::get('/tweet/{id}', [TweetController::class, 'showTweet']);
 Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 
+//get conversation
+
+Route::get('/conversation/{sender_id}', [TweetController::class, 'conversation']);
+
+
 //get comment by Id
 
 Route::get('/comment/{id}', [TweetController::class, 'getComment']);
 
+
 //get conversation
-Route::get('/conversations/{conversation_id}/messages', [TweetController::class, 'getConversationMessages']);
+
+Route::get('/messages/{sender_id}/{receivers_id}', [TweetController::class, 'getMessages']);
+
 
 //get an user by id
 

@@ -16,19 +16,11 @@ class Message extends Model
         'sender_id',
 
         'receivers_id'
-
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function conversation()
-    {
-        return $this->belongsTo(Conversation::class);
-    }
-    public function sender()
-    {
-        return $this->belongsTo(User::class, 'sender_id');
-    }
+
 }

@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conversations', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('receivers_id');
-            $table->timestamps();
+        Schema::table('messages', function (Blueprint $table) {
+            // Drop the existing sender_id column
+            $table->renameColumn('conversation_id', 'receivers_id');
         });
     }
 
@@ -24,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversations');
+        Schema::table('messages', function (Blueprint $table) {
+            // Reverse the column renaming
+            $table->renameColumn('sender_id', 'receivers_id');
+        });
     }
 };

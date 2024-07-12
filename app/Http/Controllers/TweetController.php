@@ -225,7 +225,7 @@ class TweetController extends Controller
 
     public function getUser($id)
     {
-        $user = User::where('id', $id)->with('message')->get();
+        $user = User::where('id', $id)->get();
 
         return response()->json([
 
@@ -1290,7 +1290,7 @@ class TweetController extends Controller
     }
 
 
-    public function messages(Request $request, $conversation_id, $sender_id)
+    public function messages(Request $request, $sender_id, $receivers_id)
     {
 
         $message = new Message;
@@ -1299,7 +1299,7 @@ class TweetController extends Controller
 
         $message->sender_id = $sender_id;
 
-        $message->conversation_id = $conversation_id;
+        $message->receivers_id = $receivers_id;
 
         $message->save();
 
@@ -1477,7 +1477,6 @@ class TweetController extends Controller
 
     public function userComments($user_id)
     {
-
         $comments = Comment::where('user_id', $user_id)
 
             ->with('tweet')
@@ -1496,11 +1495,13 @@ class TweetController extends Controller
         ]);
     }
 
-    public function userMessages($sender_id, $receiver_id)
+    public function getMessages($sender_id, $receivers_id)
     {
-        $message = Message::where('receivers_id', $receiver_id)
+        $message = Message::where('receivers_id', $receivers_id)
 
             ->where('sender_id', $sender_id)
+
+            ->with('user')
 
             ->latest()
 
@@ -1508,41 +1509,41 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'message' => $message,
+            'data' => $message,
 
             'message' => !$message->isEmpty() ? 'Conversation displayed successfully' : 'Empty conversation'
 
         ], 200);
     }
-    public function createConversation(Request $request, $sender_id, $receiver_id)
-    {
-        // Check if a conversation already exists
-        $conversation = Conversation::where(function ($query) use ($sender_id, $receiver_id) {
-            $query->where('sender_id', $sender_id)->where('receiver_id', $receiver_id);
-        })->orWhere(function ($query) use ($sender_id, $receiver_id) {
-            $query->where('sender_id', $receiver_id)->where('receiver_id', $sender_id);
-        })->first();
 
-        // If conversation doesn't exist, create a new one
-        if (!$conversation) {
-            $conversation = Conversation::create([
-                'sender_id' => $sender_id,
-                'receiver_id' => $receiver_id
-            ]);
-        }
+    public function conversation($sender_id) {
 
+        $conversation = Message::where(function($query) use ($sender_id) {
+
+            $query->where('sender_id', $sender_id)
+
+                  ->orWhere('receivers_id', $sender_id);
+
+        })
+
+        ->orderByDesc('created_at')
+
+        ->get()
+
+        ->groupBy(function($item) use ($sender_id) {
+
+            return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
+
+        });
+    
         return response()->json([
-            'message' => 'Conversation retrieved successfully',
-            'data' => $conversation
-        ], 200);
-    }
-    public function getConversationMessages($conversation_id)
-    {
-        $messages = Message::where('conversation_id', $conversation_id)->get();
 
-        return response()->json([
-            'message' => 'Messages retrieved successfully',
-            'data' => $messages
-        ], 200);
+            'data' => $conversation,
+
+            'message' => $conversation ? 'Conversation displayed successfully' : 'No comments found'
+
+        ]);
+        
     }
+
 }
