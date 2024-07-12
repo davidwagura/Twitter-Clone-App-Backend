@@ -122,7 +122,7 @@ class TweetController extends Controller
 
         if ($comment->save()) {
 
-            $this->commentMention($request->user_id, $request->tweet_id);
+            // $this->commentMention($request->user_id, $request->tweet_id);
 
             return response()->json([
 
@@ -224,7 +224,7 @@ class TweetController extends Controller
 
     public function getUser($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::where('id', $id)->with('message')->get();
 
         return response()->json([
 
@@ -1388,18 +1388,16 @@ class TweetController extends Controller
 
     public function tweetsForYou(Request $request)
     {
-        $userId = $request->user()->id;
-
         $tweets = Tweet::with('user', 'comments')->latest()->get();
 
-        $tweets = $tweets->map(function ($tweet) use ($userId) {
+        // $tweets = $tweets->map(function ($tweet) use ($userId) {
 
-            $tweet->isLiked = $tweet->isLikedByUser($userId);
+        //     $tweet->isLiked = $tweet->isLikedByUser($userId);
 
-            $tweet->isRetweeted = $tweet->isRetweetedByUser($userId);
+        //     $tweet->isRetweeted = $tweet->isRetweetedByUser($userId);
 
-            return $tweet;
-        });
+        //     return $tweet;
+        // });
 
         return response()->json([
 
