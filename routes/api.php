@@ -156,7 +156,7 @@ Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 
 //get conversation
 
-Route::get('/conversation/{sender_id}', [TweetController::class, 'conversation']);
+Route::get('/conversation/{sender_id}/', [TweetController::class, 'conversation']);
 
 
 //get comment by Id

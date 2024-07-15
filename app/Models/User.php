@@ -56,16 +56,17 @@ class User extends Model
 
     public function sender()
     {
-        return $this->hasMany(Sender::class);
+        return $this->hasMany(Sender::class, 'sender_id');
     }
 
     public function receiver()
     {
-        return $this->hasMany(Receiver::class);
+        return $this->hasMany(Receiver::class, 'receiver_id');
     }
 
     public function commentComment()
     {
         return $this->hasMany(commentComment::class);
     }
+
 }

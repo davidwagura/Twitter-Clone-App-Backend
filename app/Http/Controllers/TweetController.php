@@ -1518,12 +1518,12 @@ class TweetController extends Controller
 
     public function conversation($sender_id) {
 
-        $conversation = Message::where(function($query) use ($sender_id) {
+        $conversations = Message::where(function($query) use ($sender_id) {
 
             $query->where('sender_id', $sender_id)
 
-                  ->orWhere('receivers_id', $sender_id);
-
+                ->orWhere('receivers_id', $sender_id);
+                  
         })
 
         ->orderByDesc('created_at')
@@ -1535,12 +1535,28 @@ class TweetController extends Controller
             return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
 
         });
-    
+
+        $cleanConversations = [];
+
+        foreach ( $conversations as  $key => $conversation) {
+
+            $user = User::find($key);
+
+            $cleanConversations[] = [
+
+                'user' => $user,
+
+                'conversation' => $conversation
+
+            ];
+
+        }
+
         return response()->json([
 
-            'data' => $conversation,
+            'data' => $cleanConversations,
 
-            'message' => $conversation ? 'Conversation displayed successfully' : 'No comments found'
+            'message' => $cleanConversations ? 'Conversation displayed successfully' : 'No comments found'
 
         ]);
         
