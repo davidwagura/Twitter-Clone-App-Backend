@@ -1526,7 +1526,7 @@ class TweetController extends Controller
                   
         })
 
-        ->orderByDesc('created_at')
+        ->oldest()
 
         ->get()
 
