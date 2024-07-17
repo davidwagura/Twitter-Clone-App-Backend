@@ -1292,7 +1292,14 @@ class TweetController extends Controller
 
     public function messages(Request $request, $sender_id, $receivers_id)
     {
+        $request->validate([
 
+            'body' => 'required|string',
+
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ]);
+    
         $message = new Message;
 
         $message->body = $request->body;
@@ -1300,9 +1307,19 @@ class TweetController extends Controller
         $message->sender_id = $sender_id;
 
         $message->receivers_id = $receivers_id;
+    
+        if ($request->hasFile('image')) {
 
+            $image = $request->file('image');
+
+            $imagePath = $image->store('images/messages', 'public');
+
+            $message->image_path = $imagePath;
+
+        }
+    
         $message->save();
-
+    
         return response()->json([
 
             'message' => $message ? 'Message sent successfully' : 'Error sending message',
@@ -1310,8 +1327,9 @@ class TweetController extends Controller
             'data' => $message
 
         ], 200);
-    }
 
+    }
+    
     public function deleteOneMessage($message_id)
     {
         $message = Message::findOrFail($message_id);
