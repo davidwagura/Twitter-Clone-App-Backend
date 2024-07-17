@@ -1294,9 +1294,9 @@ class TweetController extends Controller
     {
         $request->validate([
 
-            'body' => 'required|string',
+            'body' => 'nullable|string',
 
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
     
@@ -1308,9 +1308,9 @@ class TweetController extends Controller
 
         $message->receivers_id = $receivers_id;
     
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image_path')) {
 
-            $image = $request->file('image');
+            $image = $request->file('image_path');
 
             $imagePath = $image->store('images/messages', 'public');
 
