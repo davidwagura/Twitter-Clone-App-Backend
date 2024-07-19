@@ -113,11 +113,20 @@ Route::post('/messages/{sender_id}/{receivers_id}', [TweetController::class, 'me
 Route::post('/profile', [TweetController::class, 'createProfile']);
 
 
+//create a group
+
+Route::post('/group', [TweetController::class, 'usersGroup']);
+
+
 //update user profile
 
 Route::put('/update/{user_id}', [TweetController::class, 'editProfile']);
 
+Route::post('/groups', [TweetController::class, 'createGroup']);
 
+Route::post('/groups/{groupId}/messages', [TweetController::class, 'addMessage']);
+
+Route::post('/groups/{groupId}/members', [TweetController::class, 'addMembers']);
 
 
 //DELETE

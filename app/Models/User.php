@@ -69,4 +69,7 @@ class User extends Model
         return $this->hasMany(commentComment::class);
     }
 
-}
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_user');
+    }}

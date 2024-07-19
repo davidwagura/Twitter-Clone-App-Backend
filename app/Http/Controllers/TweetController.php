@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Group;
 use App\Models\Tweet;
+use App\Models\GroupUser;
 use App\Models\Comment;
 use App\Models\Message;
 use App\Models\Profile;
@@ -1299,7 +1301,7 @@ class TweetController extends Controller
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
-    
+
         $message = new Message;
 
         $message->body = $request->body;
@@ -1307,7 +1309,7 @@ class TweetController extends Controller
         $message->sender_id = $sender_id;
 
         $message->receivers_id = $receivers_id;
-    
+
         if ($request->hasFile('image_path')) {
 
             $image = $request->file('image_path');
@@ -1315,11 +1317,10 @@ class TweetController extends Controller
             $imagePath = $image->store('images/messages', 'public');
 
             $message->image_path = $imagePath;
-
         }
-    
+
         $message->save();
-    
+
         return response()->json([
 
             'message' => $message ? 'Message sent successfully' : 'Error sending message',
@@ -1327,9 +1328,8 @@ class TweetController extends Controller
             'data' => $message
 
         ], 200);
-
     }
-    
+
     public function deleteOneMessage($message_id)
     {
         $message = Message::findOrFail($message_id);
@@ -1534,29 +1534,28 @@ class TweetController extends Controller
         ], 200);
     }
 
-    public function conversation($sender_id) {
+    public function conversation($sender_id)
+    {
 
-        $conversations = Message::where(function($query) use ($sender_id) {
+        $conversations = Message::where(function ($query) use ($sender_id) {
 
             $query->where('sender_id', $sender_id)
 
                 ->orWhere('receivers_id', $sender_id);
-                  
         })
 
-        ->oldest()
+            ->oldest()
 
-        ->get()
+            ->get()
 
-        ->groupBy(function($item) use ($sender_id) {
+            ->groupBy(function ($item) use ($sender_id) {
 
-            return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
-
-        });
+                return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
+            });
 
         $cleanConversations = [];
 
-        foreach ( $conversations as  $key => $conversation) {
+        foreach ($conversations as  $key => $conversation) {
 
             $user = User::find($key);
 
@@ -1567,8 +1566,7 @@ class TweetController extends Controller
                 'conversation' => $conversation
 
             ];
-
-        }
+        };
 
         return response()->json([
 
@@ -1577,7 +1575,137 @@ class TweetController extends Controller
             'message' => $cleanConversations ? 'Conversation displayed successfully' : 'No comments found'
 
         ]);
-        
     }
 
+    public function createGroup(Request $request)
+    {
+
+        $request->validate([
+
+            'name' => 'required|string|max:255',
+
+            'image_path' => 'nullable|string|max:255',
+
+            'creator_id' => 'required|exists:users,id',
+
+        ]);
+
+        $group = Group::create([
+
+            'name' => $request->name,
+
+            'image_path' => $request->image_path,
+
+            'creator_id' => $request->creator_id,
+
+        ]);
+
+        return response()->json([
+            
+            'group' => $group,
+
+            'message' => $group ? 'Group created successfully' : 'Error creating group'
+        
+        ], 200);
+
+    }
+
+    public function addMembers(Request $request, $groupId)
+    {
+
+        $request->validate([
+
+            'user_id' => 'required',
+
+        ]);
+
+        $groupUser = GroupUser::create([
+
+            'group_id' => $groupId,
+
+            'user_id' => $request->user_id,
+
+        ]);
+
+        if($request->user_id) {
+
+            $this->members($request->user_id, $groupId);
+
+            return response()->json([
+
+                // 'group' => $group, 
+                
+                'new_members' => $request->user_id,
+
+                'message' => $request->user_ids ? 'Members added successfully' : 'Error adding members'
+            
+            ], 200);
+
+        }
+    }
+
+    public function members($user_id, $groupId) {
+
+        $group = Group::findOrFail($groupId);
+
+        $participantsIds = $group->member_id;
+
+        if(!empty($participantsIds)) {
+
+            $participantsIds = explode(',', $participantsIds);
+
+            if(!in_array($user_id, $participantsIds)) {
+
+                $participantsIds[] = $user_id;
+
+                $group->member_id = implode(',', $participantsIds);
+
+            }
+
+        } else {
+
+            $group->member_id = $user_id;
+
+        }
+
+        $group->save();
+
+    }
+
+    public function addMessage(Request $request, $groupId)
+
+    {
+
+        $request->validate([
+
+            'body' => 'required|string',
+
+            'image_path' => 'nullable|string|max:255',
+
+            'sender_id' => 'required',
+
+            'group_id' => 'required'
+
+        ]);
+
+        $message = Message::create([
+
+            'body' => $request->body,
+
+            'image_path' => $request->image_path,
+
+            'sender_id' => $request->sender_id,
+
+            'group_id' => $groupId,
+
+        ]);
+
+        return response()->json([
+            
+            'message' => $message ? 'Message created successfully' : 'Error creating message',
+
+            'data' => $message
+        
+        ], 200);
+    }
 }
