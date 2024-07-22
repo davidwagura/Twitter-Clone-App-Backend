@@ -238,6 +238,20 @@ class TweetController extends Controller
         ]);
     }
 
+    public function getAllUsers() 
+    {
+        $users = User::all();
+
+        return response()->json([
+
+            'message' => $users->isNotEmpty() ? 'Users displayed successfully' : 'Error displaying tweets',
+
+            'users' => $users
+
+        ]);
+
+    }
+
     //Tweet comments
 
     public function comments($tweet_id) //get
@@ -256,7 +270,7 @@ class TweetController extends Controller
 
             'comment' => $comment,
 
-            'message' => $comment ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+            'message' => $comment->isNotEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
 
         ], 200);
     }
@@ -267,7 +281,7 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'message' => $comment ? 'Comment displayed successfully' : 'Comment not found',
+            'message' => $comment->isNotEmpty() ? 'Comment displayed successfully' : 'Comment not found',
 
             'Comment' => $comment
 

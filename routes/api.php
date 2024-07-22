@@ -168,6 +168,11 @@ Route::get('/comments/{tweet_id}', [TweetController::class, 'comments']);
 Route::get('/conversation/{sender_id}/', [TweetController::class, 'conversation']);
 
 
+//get all users in DB 
+
+Route::get('/users',[TweetController::class, 'getAllUsers']);
+
+
 //get comment by Id
 
 Route::get('/comment/{id}', [TweetController::class, 'getComment']);
