@@ -591,6 +591,7 @@ class TweetController extends Controller
             'message' => $notification ? 'Notification created successfully' : 'Notification creation failed',
 
         ], 200);
+
     }
 
     public function retweetComment($comment_id, $user_id)
@@ -613,6 +614,7 @@ class TweetController extends Controller
 
                 $comment->retweets++;
             }
+
         } else {
 
             $comment->retweets_id = $user_id;
@@ -633,7 +635,9 @@ class TweetController extends Controller
                 'comment' => $comment
 
             ], 200);
+
         }
+
     }
 
     public function retweetCommentNotification($commentOwner, $user_id, $comment_id)
@@ -663,6 +667,7 @@ class TweetController extends Controller
             'message' => $notifications ? 'Notification created successfully' : 'Notification data is empty',
 
         ], 200);
+
     }
 
 
@@ -686,7 +691,9 @@ class TweetController extends Controller
 
                 $tweet->retweets = max(0, count($explodedRetweetsId));
             }
+
         }
+
         $tweet->save();
 
         return response()->json([
@@ -696,6 +703,7 @@ class TweetController extends Controller
             'tweet' => $tweet
 
         ], 200);
+
     }
 
     public function unretweetComment($comment_id, $user_id)
@@ -718,7 +726,9 @@ class TweetController extends Controller
 
                 $comment->retweets = max(0, count($explodedRetweetsId));
             }
+
         }
+
         $comment->save();
 
         return response()->json([
@@ -728,6 +738,7 @@ class TweetController extends Controller
             'comment' => $comment
 
         ], 200);
+
     }
 
     public function addCommentComments(Request $request)
@@ -749,6 +760,7 @@ class TweetController extends Controller
             'comment' => $comment
 
         ], 200);
+
     }
 
     public function getCommentComments($comment_id)
@@ -768,6 +780,7 @@ class TweetController extends Controller
             'comment' => $comment
 
         ], 200);
+
     }
 
 
@@ -780,6 +793,7 @@ class TweetController extends Controller
         if ($count > 1) {
 
             return response()->json(['message' => 'You can not delete the tweet with comments'], 403);
+
         } else {
 
             $tweet->comments()->delete();
@@ -793,7 +807,9 @@ class TweetController extends Controller
                 'message' => $tweet ? 'Tweet deleted successfully' : 'Failed to delete tweet'
 
             ], 200);
+
         }
+
     }
 
     public function resetPassword(Request $request, $user_id)
@@ -824,8 +840,11 @@ class TweetController extends Controller
                     'user' => $user->password = $request->new_password
 
                 ], 200);
+
             }
+
         }
+
     }
 
     public function resetPasswordNotification($user_id)
@@ -853,6 +872,7 @@ class TweetController extends Controller
             'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
         ], 200);
+
     }
 
 
@@ -887,6 +907,7 @@ class TweetController extends Controller
                     'user' => $user
 
                 ], 200);
+
             }
 
             return response()->json([
@@ -896,6 +917,7 @@ class TweetController extends Controller
                 'message' => "Email didn't match",
 
             ], 401);
+            
         }
 
         return response()->json([
@@ -903,6 +925,7 @@ class TweetController extends Controller
             'message' => 'User not found.'
 
         ], 404);
+
     }
 
 
@@ -917,6 +940,7 @@ class TweetController extends Controller
                 'message' => 'Logged out successfully'
 
             ], 200);
+
         } else {
 
             return response()->json([
@@ -924,6 +948,7 @@ class TweetController extends Controller
                 'error' => 'Unauthorized'
 
             ], 401);
+
         }
 
         // {
@@ -946,6 +971,7 @@ class TweetController extends Controller
             'message' => 'Profile displayed successfully'
 
         ], 200);
+
     }
 
     public function followers($follower_id, $user_to_follow_id)
@@ -968,6 +994,7 @@ class TweetController extends Controller
 
                 $userToFollow->followers++;
             }
+
         } else {
 
             $userToFollow->followers_id = $user_to_follow_id;
@@ -988,7 +1015,9 @@ class TweetController extends Controller
                 'userToFollow' => $userToFollow
 
             ], 200);
+
         }
+
     }
 
     public function followerNotification($follower_id, $user_to_follow_id, $owner)
@@ -1018,6 +1047,7 @@ class TweetController extends Controller
             'message' => $notifications ? 'Notification created successfully' : 'Failed to create notification'
 
         ], 200);
+
     }
 
     public function followersUnFollow($follower_id, $user_id)
@@ -1041,10 +1071,12 @@ class TweetController extends Controller
 
                 $userToFollow->followers_id = max(0, $userToFollow->followers - 1);
             }
+
             if (empty($explodedFollowersId)) {
 
                 $userToFollow->followers = 0;
             }
+
         } else {
 
             $userToFollow->followers = 0;
@@ -1059,6 +1091,7 @@ class TweetController extends Controller
             'userToFollow' => $userToFollow
 
         ], 200);
+
     }
 
 
@@ -1080,6 +1113,7 @@ class TweetController extends Controller
 
                 $userToFollow->following++;
             }
+
         } else {
 
             $userToFollow->followings_id = $user_to_follow_id;
@@ -1096,6 +1130,7 @@ class TweetController extends Controller
             'user' => $userToFollow
 
         ], 200);
+
     }
 
     public function followingUnfollow($following_id, $user_id)
@@ -1118,6 +1153,7 @@ class TweetController extends Controller
 
                 $userUnFollow->following = count($explodedFollowingId);
             }
+            
         } else {
 
             $userUnFollow->following = 0;
@@ -1132,6 +1168,7 @@ class TweetController extends Controller
             'userToFollow' => $userUnFollow
 
         ], 200);
+
     }
 
 
@@ -1154,6 +1191,7 @@ class TweetController extends Controller
             'following_count' => $followingCount
 
         ], 200);
+
     }
 
     public function showFollowers($myId)
@@ -1187,6 +1225,7 @@ class TweetController extends Controller
             'followers' => $followers
 
         ], 200);
+
     }
 
     public function showFollowing($myId)
@@ -1208,7 +1247,9 @@ class TweetController extends Controller
 
                     'profile' => $following
                 ];
+
             }
+
         }
 
         return response()->json([
@@ -1218,6 +1259,7 @@ class TweetController extends Controller
             'message' => $following ? 'Displayed successfully' : 'Failed to display'
 
         ], 200);
+
     }
 
     public function getUserLikedTweets($user_id)
@@ -1232,6 +1274,7 @@ class TweetController extends Controller
             'liked_tweets' => $likedTweets,
 
         ], 200);
+        
     }
 
     public function showHighlights()
@@ -1458,10 +1501,26 @@ class TweetController extends Controller
     public function createProfile(Request $request)
     {
         $profile = new Profile;
-
+    
         $profile->user_id = $request->user_id;
 
         $profile->name = $request->name;
+    
+        if ($request->hasFile('profile_img')) {
+
+            $profileImgPath = $request->file('profile_img')->store('images/profile', 'public');
+
+            $profile->profile_img = $profileImgPath;
+
+        }
+    
+        if ($request->hasFile('background_img')) {
+
+            $backgroundImgPath = $request->file('background_img')->store('images/background', 'public');
+
+            $profile->background_img = $backgroundImgPath;
+
+        }
 
         $profile->bio = $request->bio;
 
@@ -1470,9 +1529,9 @@ class TweetController extends Controller
         $profile->website = $request->website;
 
         $profile->birth_date = $request->birth_date;
-
+    
         $profile->save();
-
+    
         return response()->json([
 
             'profile' => $profile,
@@ -1480,14 +1539,56 @@ class TweetController extends Controller
             'message' => $profile ? 'Profile created successfully' : 'Error creating profile',
 
         ], 200);
-    }
 
+    }
+    
     public function editProfile(Request $request, $user_id)
     {
+
         $record = Profile::where('user_id', $user_id)->first();
+    
+        if (!$record) {
 
+            return response()->json([
+
+                'message' => 'Profile not found'
+
+            ], 404);
+
+        }
+    
         $record->name = $request->name;
+    
+        if ($request->hasFile('profile_img')) {
 
+            // Delete old profile image if it exists
+            if ($record->profile_img && Storage::disk('public')->exists($record->profile_img)) {
+
+                Storage::disk('public')->delete($record->profile_img);
+
+            }
+    
+            $profileImgPath = $request->file('profile_img')->store('images/profile', 'public');
+
+            $record->profile_img = $profileImgPath;
+
+        }
+    
+        if ($request->hasFile('background_img')) {
+
+            // Delete old background image if it exists
+            if ($record->background_img && Storage::disk('public')->exists($record->background_img)) {
+
+                Storage::disk('public')->delete($record->background_img);
+
+            }
+    
+            $backgroundImgPath = $request->file('background_images')->store('images/background', 'public');
+
+            $record->background_img = $backgroundImgPath;
+
+        }
+    
         $record->bio = $request->bio;
 
         $record->location = $request->location;
@@ -1495,20 +1596,22 @@ class TweetController extends Controller
         $record->website = $request->website;
 
         $record->birth_date = $request->birth_date;
-
+    
         $record->save();
-
+    
         return response()->json([
 
             'userProfile' => $record,
 
-            'message' => $record ? 'Profile updated successfully' : 'Profile not found'
+            'message' => $record ? 'Profile updated successfully' : 'Error updating profile',
 
         ], 200);
+
     }
 
     public function userComments($user_id)
     {
+
         $comments = Comment::where('user_id', $user_id)
 
             ->with('tweet')
