@@ -1609,6 +1609,32 @@ class TweetController extends Controller
 
     }
 
+    public function getProfile($user_id) {
+
+        $profile = Profile::where('user_id', $user_id)->with('user')->get();
+
+        if(!$profile) {
+
+            return response()->json([
+
+                'message' => 'user not found'
+
+            ],404);
+
+        } else {
+
+            return response()->json([
+
+                'message' => 'Profile displayed successfully',
+
+                'data' => $profile
+
+            ],200) ;
+
+        }
+
+    }
+
     public function userComments($user_id)
     {
 

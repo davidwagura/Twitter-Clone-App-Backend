@@ -200,7 +200,7 @@ Route::get('/commentComment/{comment_id}', [TweetController::class, 'getCommentC
 
 //show the profile details of the user
 
-Route::get('/profile/{user_id}', [TweetController::class, 'profile']);
+Route::get('/profile/{user_id}', [TweetController::class, 'getProfile']);
 
 
 //get all the users that are following me
