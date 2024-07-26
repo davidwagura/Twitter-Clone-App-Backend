@@ -200,7 +200,7 @@ Route::get('/commentComment/{comment_id}', [TweetController::class, 'getCommentC
 
 //show the profile details of the user
 
-Route::get('/profile/{user_id}', [TweetController::class, 'getProfile']);
+Route::get('/getProfile/{user_id}', [TweetController::class, 'getProfile']);
 
 
 //get all the users that are following me
@@ -260,3 +260,8 @@ Route::get('/mentions/{created_by}/{user_id}', [TweetController::class, 'getMent
 //get conversations
 
 Route::get('/conversations/{sender_id}/{receiver_id}', [TweetController::class, 'userConversations']);
+
+
+//get groups 
+
+Route::get('/user/groups/{user_id}', [TweetController::class, 'getGroup']);

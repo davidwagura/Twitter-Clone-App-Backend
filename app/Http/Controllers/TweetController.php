@@ -1545,73 +1545,90 @@ class TweetController extends Controller
     public function editProfile(Request $request, $user_id)
     {
 
-        $record = Profile::where('user_id', $user_id)->first();
-    
-        if (!$record) {
+        try {
 
+            $record = Profile::where('user_id', $user_id)->first();
+        
+            if (!$record) {
+
+                return response()->json([
+
+                    'message' => 'Profile not found'
+
+                ], 404);
+
+            }
+    
+            $record->name = $request->name;
+    
+            if ($request->hasFile('profile_img')) {
+
+                if ($record->profile_img && Storage::disk('public')->exists($record->profile_img)) {
+
+                    Storage::disk('public')->delete($record->profile_img);
+
+                }
+    
+                $profileImgPath = $request->file('profile_img')->store('images/profile', 'public');
+
+                $record->profile_img = $profileImgPath;
+            }
+    
+            if ($request->hasFile('background_img')) { // Ensure the form field name matches here
+
+                // Delete old background image if it exists
+                if ($record->background_img && Storage::disk('public')->exists($record->background_img)) {
+
+                    Storage::disk('public')->delete($record->background_img);
+
+                }
+    
+                $backgroundImgPath = $request->file('background_img')->store('images/background', 'public'); // Ensure the form field name matches here
+
+                $record->background_img = $backgroundImgPath;
+            }
+            
+            $record->bio = $request->bio;
+
+            $record->location = $request->location;
+
+            $record->website = $request->website;
+
+            $record->birth_date = $request->birth_date;
+    
+            $record->save();
+
+            \Log::debug($record);
+    
             return response()->json([
 
-                'message' => 'Profile not found'
+                'userProfile' => $record,
 
-            ], 404);
+                'message' => 'Profile updated successfully',
 
-        }
-    
-        $record->name = $request->name;
-    
-        if ($request->hasFile('profile_img')) {
+            ], 200);
 
-            // Delete old profile image if it exists
-            if ($record->profile_img && Storage::disk('public')->exists($record->profile_img)) {
+        } catch (\Exception $e) {
 
-                Storage::disk('public')->delete($record->profile_img);
+            // Log the error message
+            \Log::error('Profile update error: '.$e->getMessage());
+            
+            return response()->json([
 
-            }
-    
-            $profileImgPath = $request->file('profile_img')->store('images/profile', 'public');
+                'message' => 'Internal server error',
 
-            $record->profile_img = $profileImgPath;
+                'error' => $e->getMessage()
+
+            ], 500);
 
         }
-    
-        if ($request->hasFile('background_img')) {
-
-            // Delete old background image if it exists
-            if ($record->background_img && Storage::disk('public')->exists($record->background_img)) {
-
-                Storage::disk('public')->delete($record->background_img);
-
-            }
-    
-            $backgroundImgPath = $request->file('background_images')->store('images/background', 'public');
-
-            $record->background_img = $backgroundImgPath;
-
-        }
-    
-        $record->bio = $request->bio;
-
-        $record->location = $request->location;
-
-        $record->website = $request->website;
-
-        $record->birth_date = $request->birth_date;
-    
-        $record->save();
-    
-        return response()->json([
-
-            'userProfile' => $record,
-
-            'message' => $record ? 'Profile updated successfully' : 'Error updating profile',
-
-        ], 200);
-
     }
-
+    
     public function getProfile($user_id) {
 
-        $profile = Profile::where('user_id', $user_id)->with('user')->get();
+        $profile = Profile::where('user_id', $user_id)->get();
+
+        \Log::debug($profile);
 
         if(!$profile) {
 
@@ -1851,4 +1868,19 @@ class TweetController extends Controller
         
         ], 200);
     }
+
+    public function getGroup($user_id) {
+
+        $group = Group::where('creator_id', $user_id)->get();
+
+        return response([
+
+            'message' => $group->isNotEmpty() ? 'Groups displayed successfully' : 'No groups found',
+
+            'group' => $group
+
+        ],200);
+
+    }
+
 }
