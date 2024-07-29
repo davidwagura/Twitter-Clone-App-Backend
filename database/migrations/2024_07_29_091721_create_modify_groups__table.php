@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('groups', function (Blueprint $table) {
 
-            $table->string('member_id')->nullable();
+            $table->string('name')->nullable()->change();
+
 
         });
     }
@@ -24,7 +25,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('groups', function (Blueprint $table) {
-            $table->dropColumn('member_id');
+
+            $table->string('name')->nullable(false)->change();
+
         });
+
     }
+    
 };
