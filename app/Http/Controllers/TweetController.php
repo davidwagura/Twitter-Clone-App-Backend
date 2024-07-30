@@ -270,7 +270,7 @@ class TweetController extends Controller
 
             'comment' => $comment,
 
-            'message' => $comment->isNotEmpty() ? 'Comments displayed successfully' : 'Comments failed to be displayed'
+            'message' => $comment ? 'Comments displayed successfully' : 'Comments failed to be displayed'
 
         ], 200);
     }
@@ -281,7 +281,7 @@ class TweetController extends Controller
 
         return response()->json([
 
-            'message' => $comment->isNotEmpty() ? 'Comment displayed successfully' : 'Comment not found',
+            'message' => $comment ? 'Comment displayed successfully' : 'Comment not found',
 
             'Comment' => $comment
 
@@ -1692,6 +1692,22 @@ class TweetController extends Controller
             'message' => !$message->isEmpty() ? 'Conversation displayed successfully' : 'Empty conversation'
 
         ], 200);
+
+    }
+
+    public function getAllMessages($sender_id) 
+    {
+
+        $message = Message::where('sender_id', $sender_id)->latest()->with('user')->with('group')->take(1)->get();
+
+        return response()->json([
+
+            'message' => $message->isNotEmpty() ? 'Message displayed successfully' : 'No message found',
+
+            'data' => $message
+
+        ]);
+
     }
 
     public function conversation($sender_id)
@@ -1701,17 +1717,19 @@ class TweetController extends Controller
 
             $query->where('sender_id', $sender_id)
 
-                ->orWhere('receivers_id', $sender_id);
+            ->orWhere('receivers_id', $sender_id);
+
         })
 
-            ->oldest()
+        ->oldest()
 
-            ->get()
+        ->get()
 
-            ->groupBy(function ($item) use ($sender_id) {
+        ->groupBy(function ($item) use ($sender_id) {
 
-                return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
-            });
+            return $item->sender_id == $sender_id ? $item->receivers_id : $item->sender_id;
+
+        });
 
         $cleanConversations = [];
 
@@ -1833,32 +1851,18 @@ class TweetController extends Controller
     }
 
     public function addMessage(Request $request, $groupId)
-
     {
+        $message = new message;
 
-        $request->validate([
+        $message->body = $request->body;
 
-            'body' => 'required|string',
+        $message->image_path = $request->image_path;
 
-            'image_path' => 'nullable|string|max:255',
+        $message->sender_id = $request->sender_id;
 
-            'sender_id' => 'required',
+        $message->group_id = $groupId;
 
-            'group_id' => 'required'
-
-        ]);
-
-        $message = Message::create([
-
-            'body' => $request->body,
-
-            'image_path' => $request->image_path,
-
-            'sender_id' => $request->sender_id,
-
-            'group_id' => $groupId,
-
-        ]);
+        $message->save();
 
         return response()->json([
             
@@ -1880,6 +1884,20 @@ class TweetController extends Controller
             'group' => $group
 
         ],200);
+
+    }
+
+    public function getGroupMessages($group_id) {
+
+        $message = Message::where('group_id', $group_id)->get();
+
+        return response()->json([
+
+            'data' => $message,
+
+            'message' => $message->isNotEmpty() ? 'Message displayed successfully' : 'No messages found'
+
+        ]);
 
     }
 

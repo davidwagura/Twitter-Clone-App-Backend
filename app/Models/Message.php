@@ -18,6 +18,7 @@ class Message extends Model
         'receivers_id',
 
         'group_id'
+        
     ];
 
     public function user()

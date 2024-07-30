@@ -235,6 +235,10 @@ Route::get('/media/{user_id}', [TweetController::class, 'showMedia']);
 
 Route::get('/commented/comments/{user_id}', [TweetController::class, 'userComments']);
 
+//get all messages
+
+Route::get('/all/messages/{sender_id}', [TweetController::class, 'getAllMessages']);
+
 
 //get all users I'm following tweets
 
@@ -265,3 +269,8 @@ Route::get('/conversations/{sender_id}/{receiver_id}', [TweetController::class, 
 //get groups 
 
 Route::get('/user/groups/{user_id}', [TweetController::class, 'getGroup']);
+
+
+//get group messages
+
+Route::get('/group/messages/{group_id}', [TweetController::class, 'getGroupMessages']);
