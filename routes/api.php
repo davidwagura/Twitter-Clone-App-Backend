@@ -274,3 +274,8 @@ Route::get('/user/groups/{user_id}', [TweetController::class, 'getGroup']);
 //get group messages
 
 Route::get('/group/messages/{group_id}', [TweetController::class, 'getGroupMessages']);
+
+
+//get a single conversation
+
+Route::get('/singleConversation/{sender_id}/{receiver_id}', [TweetController::class, 'getSingleConversation']);

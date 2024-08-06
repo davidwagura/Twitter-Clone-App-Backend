@@ -277,7 +277,7 @@ class TweetController extends Controller
 
     public function getComment($id) //get
     {
-        $comment = comment::where('id', $id)->with('user')->first();
+        $comment = comment::where('id', $id)->with('user')->with('commentComment')->first();
 
         return response()->json([
 
@@ -1544,7 +1544,7 @@ class TweetController extends Controller
     
     public function editProfile(Request $request, $user_id)
     {
-
+        
         try {
 
             $record = Profile::where('user_id', $user_id)->first();
@@ -1707,6 +1707,21 @@ class TweetController extends Controller
             'data' => $message
 
         ]);
+
+    }
+
+    public function getSingleConversation($sender_id, $receiver_id)
+    {
+
+        $message = Message::where('receivers_id', $receiver_id)->where('sender_id', $sender_id)->get();
+
+        return response()->json([
+
+            'message' => $message->isNotEmpty() ? 'Conversation displayed successfully' : 'Conversation does not exist',
+
+            'data' => $message
+
+        ],200);
 
     }
 
@@ -1875,7 +1890,9 @@ class TweetController extends Controller
 
     public function getGroup($user_id) {
 
-        $group = Group::where('creator_id', $user_id)->get();
+        // $group = Group::where('creator_id', $user_id)->get();
+
+        $group = User::where('id', $user_id)->with('groups')->get();
 
         return response([
 
@@ -1889,7 +1906,7 @@ class TweetController extends Controller
 
     public function getGroupMessages($group_id) {
 
-        $message = Message::where('group_id', $group_id)->get();
+        $message = Message::where('group_id', $group_id)->oldest()->get();
 
         return response()->json([
 

@@ -54,22 +54,15 @@ class User extends Model
         return $this->hasOne(Profile::class);
     }
 
-    public function sender()
-    {
-        return $this->hasMany(Sender::class, 'sender_id');
-    }
-
-    public function receiver()
-    {
-        return $this->hasMany(Receiver::class, 'receiver_id');
-    }
-
     public function commentComment()
     {
         return $this->hasMany(commentComment::class);
     }
 
-    public function groups()
-    {
-        return $this->belongsToMany(Group::class, 'group_user');
-    }}
+    public function groups() {
+
+        return $this->belongsToMany(Group::class, 'creator_id', 'member_id');
+
+    }
+    
+}

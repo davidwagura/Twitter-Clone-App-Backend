@@ -9,11 +9,16 @@ class Group extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image_path', 'creator_id'];
+    protected $fillable = [
+        'name',
+        'image_path',
+        'creator_id',
+        'member_id'
+    ];
 
-    public function users()
+    public function users()//attach detach
     {
-        return $this->belongsToMany(User::class, 'group_user');
+        return $this->hasMany(User::class);
     }
     
     public function messages()
@@ -21,10 +26,8 @@ class Group extends Model
         return $this->hasMany(Message::class);
     }
 
-    public function groupUser() {
-
-        return $this->belongsToMany(GroupUser::class);
-
+    public function profile()
+    {
+        return $this->belongsToMany(Profile::class);
     }
-    
 }
