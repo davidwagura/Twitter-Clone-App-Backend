@@ -8,10 +8,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
-    use HasFactory,HasApiTokens;
+    use HasFactory, HasApiTokens;
 
-    protected $fillable = 
-    [
+    protected $fillable = [
+
         'first_name',
 
         'last_name',
@@ -21,48 +21,68 @@ class User extends Model
         'username',
 
         'password',
-        
+
         'password_confirmation',
 
         'followings_id',
 
         'followers_id'
+        
     ];
 
-    public function tweet()
+    public function tweets()
     {
+
         return $this->hasMany(Tweet::class);
+
     }
 
-    public function comment()
+    public function comments()
     {
+
         return $this->hasMany(Comment::class);
+
     }
 
     public function notifications()
     {
+
         return $this->hasMany(Notification::class);
+
     }
 
-    public function message()
+    public function messages()
     {
+
         return $this->hasMany(Message::class);
+
     }
 
     public function profile()
     {
+
         return $this->hasOne(Profile::class);
+
     }
 
-    public function commentComment()
+    public function commentComments()
     {
-        return $this->hasMany(commentComment::class);
+
+        return $this->hasMany(CommentComment::class);
+
     }
 
-    public function groups() {
+    public function groups() 
+    {
 
-        return $this->belongsToMany(Group::class, 'creator_id', 'member_id');
+        return $this->belongsToMany(Group::class);
 
     }
     
+    public function createdGroups()
+    {
+
+        return $this->hasMany(Group::class, 'creator_id');
+
+    }
 }

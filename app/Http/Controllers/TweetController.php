@@ -1349,8 +1349,9 @@ class TweetController extends Controller
     }
 
 
-    public function messages(Request $request, $sender_id, $receivers_id)
+    public function addMessage(Request $request, $group_id)
     {
+        
         $request->validate([
 
             'body' => 'nullable|string',
@@ -1363,9 +1364,9 @@ class TweetController extends Controller
 
         $message->body = $request->body;
 
-        $message->sender_id = $sender_id;
+        $message->sender_id = $request->sender_id;
 
-        $message->receivers_id = $receivers_id;
+        $message->group_id = $group_id;
 
         if ($request->hasFile('image_path')) {
 
@@ -1385,6 +1386,7 @@ class TweetController extends Controller
             'data' => $message
 
         ], 200);
+
     }
 
     public function deleteOneMessage($message_id)
@@ -1713,7 +1715,15 @@ class TweetController extends Controller
     public function getSingleConversation($sender_id, $receiver_id)
     {
 
-        $message = Message::where('receivers_id', $receiver_id)->where('sender_id', $sender_id)->get();
+        $message = Message::where('sender_id', $receiver_id)  
+
+                    ->where('receivers_id', $sender_id)
+
+                    // ->orWhere('sender_id', $sender_id)
+
+                    // ->orWhere('receivers_id', $receiver_id)
+                    
+                    ->get();
 
         return response()->json([
 
@@ -1865,34 +1875,12 @@ class TweetController extends Controller
 
     }
 
-    public function addMessage(Request $request, $groupId)
-    {
-        $message = new message;
-
-        $message->body = $request->body;
-
-        $message->image_path = $request->image_path;
-
-        $message->sender_id = $request->sender_id;
-
-        $message->group_id = $groupId;
-
-        $message->save();
-
-        return response()->json([
-            
-            'message' => $message ? 'Message created successfully' : 'Error creating message',
-
-            'data' => $message
-        
-        ], 200);
-    }
 
     public function getGroup($user_id) {
 
-        // $group = Group::where('creator_id', $user_id)->get();
+        $group = Group::where('creator_id', $user_id)->get();
 
-        $group = User::where('id', $user_id)->with('groups')->get();
+        // $group = User::where('id', $user_id)->with('groups')->get();
 
         return response([
 
