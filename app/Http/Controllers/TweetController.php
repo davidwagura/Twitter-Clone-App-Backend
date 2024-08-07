@@ -933,7 +933,9 @@ class TweetController extends Controller
     {
         if ($request->user()) {
 
-            $request->user()->currentAccessToken()->delete();
+            // $request->user()->currentAccessToken()->delete();
+
+            // $user->tokens()->where('id', $tokenId)->delete();
 
             return response()->json([
 
@@ -951,13 +953,6 @@ class TweetController extends Controller
 
         }
 
-        // {
-        //     auth()->user()->tokens()->delete();
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'User logged out'
-        //     ]);
-        // }
     }
 
     public function profile($user_id)
@@ -1329,6 +1324,7 @@ class TweetController extends Controller
                 $relatedUser = User::find($notification->related_item_id);
 
                 $notification->related_item = $relatedUser;
+                
             } else {
 
                 $relatedTweet = Tweet::find($notification->related_item_id);
@@ -1349,9 +1345,9 @@ class TweetController extends Controller
     }
 
 
-    public function addMessage(Request $request, $group_id)
+    public function messages(Request $request, $sender_id, $receivers_id)
     {
-        
+
         $request->validate([
 
             'body' => 'nullable|string',
@@ -1364,9 +1360,9 @@ class TweetController extends Controller
 
         $message->body = $request->body;
 
-        $message->sender_id = $request->sender_id;
+        $message->sender_id = $sender_id;
 
-        $message->group_id = $group_id;
+        $message->receivers_id = $receivers_id;
 
         if ($request->hasFile('image_path')) {
 
@@ -1712,24 +1708,23 @@ class TweetController extends Controller
 
     }
 
-    public function getSingleConversation($sender_id, $receiver_id)
+    public function getSingleConversation($sender_id, $receivers_id)
     {
 
-        $message = Message::where('sender_id', $receiver_id)  
+        $messages = Message::where('sender_id', $sender_id)
 
-                    ->where('receivers_id', $sender_id)
+            ->where('receivers_id', $receivers_id)
 
-                    // ->orWhere('sender_id', $sender_id)
+            ->orWhere('sender_id', $receivers_id)
 
-                    // ->orWhere('receivers_id', $receiver_id)
-                    
-                    ->get();
+            ->get();
+
 
         return response()->json([
 
-            'message' => $message->isNotEmpty() ? 'Conversation displayed successfully' : 'Conversation does not exist',
+            'message' => $messages->isNotEmpty() ? 'Conversation displayed successfully' : 'Conversation does not exist',
 
-            'data' => $message
+            'data' => $messages
 
         ],200);
 
