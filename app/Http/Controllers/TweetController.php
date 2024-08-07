@@ -10,6 +10,7 @@ use App\Models\Comment;
 use App\Models\Message;
 use App\Models\Profile;
 use App\Models\Conversation;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\commentComment;
@@ -877,81 +878,62 @@ class TweetController extends Controller
 
 
 
+
     public function login(Request $request)
     {
         $request->validate([
 
-            'email' => 'required',
+            'email' => 'required|string|email',
 
-            'password' => 'required',
+            'password' => 'required|string',
 
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $credentials = $request->only('email', 'password');
 
+        if(Auth::attempt($credentials)) {
 
-        if (!empty($user)) {
-
-            if ($user->email === $request->email) {
-
-                $token  = $user->createToken("myToken")->plainTextToken;
-
-                return response()->json([
-
-                    'status' => true,
-
-                    'message' => "Login successful",
-
-                    'token' => $token,
-
-                    'user' => $user
-
-                ], 200);
-
-            }
+            $user = Auth::user();
 
             return response()->json([
 
-                'status' => false,
+                'user' => $user,
 
-                'message' => "Email didn't match",
+                'authorization' => [
 
-            ], 401);
-            
-        }
+                    'token' => $user->createToken('ApiToken')->plainTextToken,
 
-        return response()->json([
+                    'type' => 'bearer',
 
-            'message' => 'User not found.'
-
-        ], 404);
-
-    }
+                ]
 
 
-    public function logout(Request $request)
-    {
-        if ($request->user()) {
-
-            // $request->user()->currentAccessToken()->delete();
-
-            // $user->tokens()->where('id', $tokenId)->delete();
-
-            return response()->json([
-
-                'message' => 'Logged out successfully'
-
-            ], 200);
+            ],200);
 
         } else {
 
             return response()->json([
 
-                'error' => 'Unauthorized'
+                'message' => 'Login unsuccessful',
 
-            ], 401);
+            ],404);
 
         }
+
+    }
+
+
+    public function logout()
+
+    {
+
+        Auth::user()->token()->delete();
+
+        return response()->json([
+
+            'message' => 'Successfully logged out',
+
+        ]);
 
     }
 
@@ -1729,6 +1711,47 @@ class TweetController extends Controller
         ],200);
 
     }
+
+    public function addMessage(Request $request, $group_id)
+    {
+
+        $request->validate([
+
+            'body' => 'nullable|string',
+
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ]);
+
+        $message = new Message;
+
+        $message->body = $request->body;
+
+        $message->sender_id = $request->$sender_id;
+
+        $message->group_id = $group_id;
+
+        if ($request->hasFile('image_path')) {
+
+            $image = $request->file('image_path');
+
+            $imagePath = $image->store('images/messages', 'public');
+
+            $message->image_path = $imagePath;
+        }
+
+        $message->save();
+
+        return response()->json([
+
+            'message' => $message ? 'Message sent successfully' : 'Error sending message',
+
+            'data' => $message
+
+        ], 200);
+
+    }
+
 
     public function conversation($sender_id)
     {
