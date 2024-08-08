@@ -12,12 +12,12 @@ Route::get('/', [TweetController::class, 'home']);
 
 //login to your account
 
-Route::post('/login', [TweetController::class, 'login']);
+Route::post('/login', [TweetController::class, 'login'])->name('login');
 
 
 //logout out of your account
 
-Route::post('/logout', [TweetController::class, 'logout']);
+Route::post('/logout', [TweetController::class, 'logout'])->middleware('auth:sanctum');
 
 
 //create a new tweet
@@ -127,6 +127,11 @@ Route::post('/groups', [TweetController::class, 'createGroup']);
 Route::post('/groups/{groupId}/messages', [TweetController::class, 'addMessage']);
 
 Route::post('/groups/{groupId}/members', [TweetController::class, 'addMembers']);
+
+
+//edit notification seen status
+
+Route::put('/notification/update/{notificationId}', [TweetController::class, 'editNotificationStatus']);
 
 
 //DELETE

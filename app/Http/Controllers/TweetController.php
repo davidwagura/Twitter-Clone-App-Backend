@@ -13,8 +13,10 @@ use App\Models\Conversation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\commentComment;
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Validator;
 
 class TweetController extends Controller
@@ -923,20 +925,25 @@ class TweetController extends Controller
     }
 
 
-    public function logout()
-
+    public function logout(Request $request)
     {
+        // Get the authenticated user
+        $user = $request->user();
 
-        Auth::user()->token()->delete();
+        if ($user) {
+            // Delete all tokens for the authenticated user
+            $user->tokens()->delete();
+
+            return response()->json([
+                'message' => 'Successfully logged out',
+            ], 200);
+        }
 
         return response()->json([
-
-            'message' => 'Successfully logged out',
-
-        ]);
-
+            'message' => 'User not authenticated',
+        ], 401);
     }
-
+        
     public function profile($user_id)
     {
         $tweets = User::where('id', $user_id)->with('tweet')->get();
@@ -1417,21 +1424,12 @@ class TweetController extends Controller
                 'message' => 'User not found',
 
             ], 404);
+
         }
 
         $followings_ids = explode(',', $user->followings_id);
 
         $tweets = Tweet::whereIn('user_id', $followings_ids)->with('user')->with('comments')->get();
-
-        // $tweets = $tweets->map(function ($tweet) use ($user_id) {
-
-        //     $tweet->isLiked = $tweet->isLikedByUser($user_id);
-
-        //     $tweet->isRetweeted = $tweet->isRetweetedByUser($user_id);
-
-        //     return $tweet;
-        // });
-
 
         return response()->json([
 
@@ -1445,15 +1443,6 @@ class TweetController extends Controller
     public function tweetsForYou(Request $request)
     {
         $tweets = Tweet::with('user', 'comments')->latest()->get();
-
-        // $tweets = $tweets->map(function ($tweet) use ($userId) {
-
-        //     $tweet->isLiked = $tweet->isLikedByUser($userId);
-
-        //     $tweet->isRetweeted = $tweet->isRetweetedByUser($userId);
-
-        //     return $tweet;
-        // });
 
         return response()->json([
 
@@ -1590,7 +1579,6 @@ class TweetController extends Controller
 
         } catch (\Exception $e) {
 
-            // Log the error message
             \Log::error('Profile update error: '.$e->getMessage());
             
             return response()->json([
@@ -1921,6 +1909,36 @@ class TweetController extends Controller
             'message' => $message->isNotEmpty() ? 'Message displayed successfully' : 'No messages found'
 
         ]);
+
+    }
+
+    public function editNotificationStatus($notificationId) {
+
+        $notification = Notification::find($notificationId);
+    
+        if ($notification) {
+
+            $notification->seen = 1;
+
+            $notification->save();
+    
+            return response()->json([
+                
+                'message' => 'Notification status updated successfully.',
+
+                'data' => $notification
+
+            ]);
+
+        } else {
+
+            return response()->json([
+                
+                'message' => 'No notification found with the given ID.'
+                        
+            ], 404);
+
+        }
 
     }
 
