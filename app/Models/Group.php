@@ -12,7 +12,8 @@ class Group extends Model
     protected $fillable = [
         'name',
         'image_path',
-        'creator_id'
+        'creator_id',
+        'member_id'
     ];
 
     public function users()

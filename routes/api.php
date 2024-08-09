@@ -118,6 +118,11 @@ Route::post('/profile', [TweetController::class, 'createProfile']);
 Route::post('/group', [TweetController::class, 'usersGroup']);
 
 
+//create mention
+
+Route::post('/mention/{createdBy}/{userId}', [TweetController::class, 'notifyMention']);
+
+
 //update user profile
 
 Route::put('/update/{user_id}', [TweetController::class, 'editProfile']);
@@ -131,7 +136,7 @@ Route::post('/groups/{groupId}/members', [TweetController::class, 'addMembers'])
 
 //edit notification seen status
 
-Route::put('/notification/update/{notificationId}', [TweetController::class, 'editNotificationStatus']);
+Route::put('/notification/update/F{notificationId}', [TweetController::class, 'editNotificationStatus']);
 
 
 //DELETE
@@ -181,6 +186,11 @@ Route::get('/users',[TweetController::class, 'getAllUsers']);
 //get comment by Id
 
 Route::get('/comment/{id}', [TweetController::class, 'getComment']);
+
+
+//search users mention
+
+Route::get('/users/search', [TweetController::class, 'search']);
 
 
 //get conversation

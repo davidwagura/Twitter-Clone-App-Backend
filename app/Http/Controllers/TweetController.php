@@ -146,59 +146,33 @@ class TweetController extends Controller
         ], 500);
     }
 
-    public function commentMention($userId, $tweetId)
-    {
-        $user = User::findOrFail($userId);
+    // public function commentMention($userId, $tweetId)
+    // {
 
-        $mention = new Notification;
+    //     $user = User::findOrFail($userId);
 
-        $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you in a comment.';
+    //     $notifications = new Notification;
 
-        // $mention->createdBy = $userId;
+    //     $notifications->body = $user->first_name . ' ' . $user->last_name . ' commented on your tweet';
 
-        $mention->related_item_id = $tweetId;
+    //     $notifications->related_item_id = $tweetId;
 
-        $mention->user_id = $userId;
+    //     $notifications->user_id = $userId;
 
-        $mention->action_type = 'comment';
+    //     $notifications->action_type = 'comment';
 
-        $mention->seen = false;
+    //     $notifications->seen = false;
 
-        $mention->save();
+    //     $notifications->save();
 
-        return response()->json([
+    //     return response()->json([
 
-            'mention' => $mention,
+    //         'notification' => $notifications,
 
-            'message' => $mention ? 'Mention created successfully' : 'Failed to create mention'
+    //         'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
 
-        ], 200);
-
-
-        $user = User::findOrFail($userId);
-
-        $notifications = new Notification;
-
-        $notifications->body = $user->first_name . ' ' . $user->last_name . ' commented on your tweet';
-
-        $notifications->related_item_id = $tweetId;
-
-        $notifications->user_id = $userId;
-
-        $notifications->action_type = 'comment';
-
-        $notifications->seen = false;
-
-        $notifications->save();
-
-        return response()->json([
-
-            'notification' => $notifications,
-
-            'message' => !$notifications->isEmpty() ? 'Notification created successfully' : 'Failed to create notification'
-
-        ], 200);
-    }
+    //     ], 200);
+    // }
 
     public function showTweet($id) //get
     {
@@ -927,21 +901,27 @@ class TweetController extends Controller
 
     public function logout(Request $request)
     {
-        // Get the authenticated user
+
         $user = $request->user();
 
         if ($user) {
-            // Delete all tokens for the authenticated user
+
             $user->tokens()->delete();
 
             return response()->json([
+
                 'message' => 'Successfully logged out',
+
             ], 200);
+
         }
 
         return response()->json([
+
             'message' => 'User not authenticated',
+
         ], 401);
+
     }
         
     public function profile($user_id)
@@ -1689,7 +1669,6 @@ class TweetController extends Controller
 
             ->get();
 
-
         return response()->json([
 
             'message' => $messages->isNotEmpty() ? 'Conversation displayed successfully' : 'Conversation does not exist',
@@ -1783,8 +1762,10 @@ class TweetController extends Controller
 
             'message' => $cleanConversations ? 'Conversation displayed successfully' : 'No comments found'
 
-        ]);
+        ],200);
+
     }
+
 
     public function createGroup(Request $request)
     {
@@ -1884,20 +1865,24 @@ class TweetController extends Controller
 
     public function getGroup($user_id) {
 
-        $group = Group::where('creator_id', $user_id)->get();
+        $groups = Group::where('creator_id', $user_id)
 
-        // $group = User::where('id', $user_id)->with('groups')->get();
+        ->orWhere(function($query) use ($user_id) {
+
+            $query->whereRaw ("FIND_IN_SET(?,member_id) > 0", [$user_id]);
+
+        })
+
+        ->get();
 
         return response([
 
-            'message' => $group->isNotEmpty() ? 'Groups displayed successfully' : 'No groups found',
-
-            'group' => $group
-
-        ],200);
+            'group' => $groups
+            
+        ]);
 
     }
-
+        
     public function getGroupMessages($group_id) {
 
         $message = Message::where('group_id', $group_id)->oldest()->get();
@@ -1928,7 +1913,7 @@ class TweetController extends Controller
 
                 'data' => $notification
 
-            ]);
+            ],200);
 
         } else {
 
@@ -1942,4 +1927,50 @@ class TweetController extends Controller
 
     }
 
+    public function search(Request $request)
+    {
+
+        $query = $request->query('query');
+
+        $users = User::where('username', 'LIKE', "%{$query}%")->get();
+    
+        return response()->json([
+
+            'message' => $user ? 'Users fetched successfully' : 'Error fetching users',
+
+            'users' => $users,
+
+        ],200);
+
+    }
+
+    public function notifyMention(Request $request, $createdBy, $userId)
+    {
+
+        $mention = new Notification;
+
+        $mention->createdBy = $createdBy;
+
+        $mention->related_item_id = $request->related_item_id;
+
+        $mention->user_id = $userId;
+
+        $mention->action_type = 'mention';
+
+        $mention->save();
+
+        // $mentionedUserId = $request->mentioned_user_id;
+        // $mentioningUserId = $request->mentioning_user_id;
+        // $tweetBody = $request->tweet_body;
+    
+        return response()->json([
+            
+            'message' => 'Notification sent successfully',
+        
+            'data' => $mention
+        
+        ]);
+
+    }
+    
 }
