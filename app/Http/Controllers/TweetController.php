@@ -1949,6 +1949,10 @@ class TweetController extends Controller
 
         $mention = new Notification;
 
+        $user = User::findOrFail($createdBy);
+
+        $mention->body = $user->first_name . ' ' . $user->last_name . ' mentioned you.';
+
         $mention->createdBy = $createdBy;
 
         $mention->related_item_id = $request->related_item_id;
@@ -1957,12 +1961,10 @@ class TweetController extends Controller
 
         $mention->action_type = 'mention';
 
+        $mention->seen = 0;
+
         $mention->save();
 
-        // $mentionedUserId = $request->mentioned_user_id;
-        // $mentioningUserId = $request->mentioning_user_id;
-        // $tweetBody = $request->tweet_body;
-    
         return response()->json([
             
             'message' => 'Notification sent successfully',

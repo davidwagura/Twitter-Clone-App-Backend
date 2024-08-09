@@ -136,7 +136,7 @@ Route::post('/groups/{groupId}/members', [TweetController::class, 'addMembers'])
 
 //edit notification seen status
 
-Route::put('/notification/update/F{notificationId}', [TweetController::class, 'editNotificationStatus']);
+Route::put('/notification/update/{notificationId}', [TweetController::class, 'editNotificationStatus']);
 
 
 //DELETE
