@@ -1253,12 +1253,12 @@ class TweetController extends Controller
     {
     }
 
-    public function getMentions($createdBy, $user_id)
+    public function getMentions($mentionedUser, $actionType)
 
     {
-        $mentions = Notification::where('createdBy', $createdBy)
+        $mentions = Notification::where('user_id', $mentionedUser)
 
-            ->where('user_id', $user_id)
+            ->where('action_type', $actionType)
 
             ->with('user')
 
@@ -1936,7 +1936,7 @@ class TweetController extends Controller
     
         return response()->json([
 
-            'message' => $user ? 'Users fetched successfully' : 'Error fetching users',
+            'message' => $users ? 'Users fetched successfully' : 'Error fetching users',
 
             'users' => $users,
 

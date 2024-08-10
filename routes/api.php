@@ -274,7 +274,7 @@ Route::get('/notifications/{user_id}', [TweetController::class, 'getNotification
 
 //user mentions api
 
-Route::get('/mentions/{created_by}/{user_id}', [TweetController::class, 'getMentions']);
+Route::get('/mentions/{mentionedUser}/{actionType}', [TweetController::class, 'getMentions']);
 
 //get conversations
 
