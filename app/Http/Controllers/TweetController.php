@@ -1254,7 +1254,6 @@ class TweetController extends Controller
     }
 
     public function getMentions($mentionedUser, $actionType)
-
     {
         $mentions = Notification::where('user_id', $mentionedUser)
 
@@ -1273,6 +1272,7 @@ class TweetController extends Controller
             'message' => $mentions->isNotEmpty() ? 'Mentions displayed successfully' : 'No mentions found'
 
         ], 200);
+
     }
 
 
@@ -1302,6 +1302,7 @@ class TweetController extends Controller
             }
 
             return $notification;
+
         });
 
         return response()->json([
@@ -1311,6 +1312,7 @@ class TweetController extends Controller
             'message' => $notifications->isNotEmpty() ? 'Notifications displayed successfully' : 'Failed to display notifications'
 
         ], 200);
+
     }
 
 
@@ -1367,6 +1369,7 @@ class TweetController extends Controller
             'data' => $message
 
         ], 200);
+        
     }
 
     public function deleteConversation($sender_id, $receivers_id)
@@ -1546,8 +1549,6 @@ class TweetController extends Controller
             $record->birth_date = $request->birth_date;
     
             $record->save();
-
-            \Log::debug($record);
     
             return response()->json([
 
