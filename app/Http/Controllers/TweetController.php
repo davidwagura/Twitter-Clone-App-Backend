@@ -1,4 +1,4 @@
-<?php
+utter<?php
 
 namespace App\Http\Controllers;
 
@@ -126,9 +126,7 @@ class TweetController extends Controller
 
         $comment->save();
 
-        if ($comment->save()) {
-
-            // $this->commentMention($request->user_id, $request->tweet_id);
+        if ($comment->
 
             return response()->json([
 
