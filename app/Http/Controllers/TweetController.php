@@ -1,4 +1,4 @@
-utter<?php
+<?php
 
 namespace App\Http\Controllers;
 
@@ -126,7 +126,7 @@ class TweetController extends Controller
 
         $comment->save();
 
-        if ($comment->
+        if ($comment)
 
             return response()->json([
 
@@ -136,14 +136,6 @@ class TweetController extends Controller
 
             ], 200);
         }
-
-        return response()->json([
-
-            'message' => 'Error creating comment'
-
-        ], 500);
-    }
-
     // public function commentMention($userId, $tweetId)
     // {
 
