@@ -32,7 +32,6 @@ class TweetController extends Controller
 
     public function tweet(Request $request)
     {
-        // Validate the request data
         $validator = Validator::make($request->all(), [
 
             'body' => 'nullable|string',
@@ -56,7 +55,6 @@ class TweetController extends Controller
             ], 400);
         }
 
-        // Prepare tweet data
         $tweetData = [
 
             'body' => $request->body,
@@ -65,7 +63,6 @@ class TweetController extends Controller
 
         ];
 
-        // Handle image upload if present
         if ($request->hasFile('image_path')) {
 
             $image = $request->file('image_path');
@@ -75,7 +72,6 @@ class TweetController extends Controller
             $tweetData['image_path'] = $originalPath;
         }
 
-        // Create the tweet
         $tweet = Tweet::create($tweetData);
 
         return response()->json([
